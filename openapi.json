@@ -1,0 +1,1306 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NetIntel API",
+    "description": "Network intelligence API — DNS, SSL, WHOIS, email security, web fingerprinting, OSINT, and more. 25 endpoints, all pay-per-call via x402 micropayments on Base mainnet (USDC). No API keys, no subscriptions, no rate limits.\n\n## Payment\n\nAll endpoints (except /health) require x402 micropayment in USDC on Base mainnet (chain ID eip155:8453). Send a valid `Payment-Signature` or `X-Payment` header with each request. Payment is verified by the CDP facilitator at `https://api.cdp.coinbase.com/platform/v2/x402`. Without a valid payment header, endpoints return HTTP 402 with payment requirements in the `PAYMENT-REQUIRED` response header.\n\nPayee wallet: `0xdaDc335482AD545296Fd7b28518A251fFCbEb9Df`",
+    "version": "1.0.0",
+    "contact": {
+      "name": "NetIntel",
+      "url": "https://netintel-production-440c.up.railway.app"
+    },
+    "x-x402": {
+      "network": "eip155:8453",
+      "payTo": "0xdaDc335482AD545296Fd7b28518A251fFCbEb9Df",
+      "facilitator": "https://api.cdp.coinbase.com/platform/v2/x402",
+      "scheme": "exact",
+      "currency": "USDC"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://netintel-production-440c.up.railway.app",
+      "description": "Production (Railway)"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Returns server health status. Not behind paywall.",
+        "operationId": "getHealth",
+        "tags": ["System"],
+        "responses": {
+          "200": {
+            "description": "Server is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ok" },
+                    "version": { "type": "string", "example": "1.0.0" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dns/lookup": {
+      "get": {
+        "summary": "DNS lookup",
+        "description": "Resolves all DNS record types for a domain, parses SPF/DKIM/DMARC from TXT records, and compares A records across Google/Cloudflare/Quad9 resolvers for propagation consistency.",
+        "operationId": "dnsLookup",
+        "tags": ["DNS"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "query",
+            "required": true,
+            "description": "Domain name to query (e.g. example.com)",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNS records resolved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "records": {
+                      "type": "object",
+                      "properties": {
+                        "A": { "type": "array", "items": { "type": "string" } },
+                        "AAAA": { "type": "array", "items": { "type": "string" } },
+                        "MX": { "type": "array", "items": { "type": "object", "properties": { "priority": { "type": "integer" }, "exchange": { "type": "string" } } } },
+                        "NS": { "type": "array", "items": { "type": "string" } },
+                        "TXT": { "type": "array", "items": { "type": "string" } },
+                        "SOA": { "type": ["object", "null"], "properties": { "mname": { "type": "string" }, "rname": { "type": "string" }, "serial": { "type": "integer" }, "refresh": { "type": "integer" }, "retry": { "type": "integer" }, "expire": { "type": "integer" }, "minimum": { "type": "integer" } } },
+                        "CNAME": { "type": "array", "items": { "type": "string" } },
+                        "PTR": { "type": "array", "items": { "type": "string" } }
+                      }
+                    },
+                    "security": {
+                      "type": "object",
+                      "properties": {
+                        "spf": { "type": ["object", "null"], "properties": { "raw": { "type": "string" }, "version": { "type": "string" }, "mechanisms": { "type": "array", "items": { "type": "string" } }, "all_qualifier": { "type": ["string", "null"] } } },
+                        "dkim": { "type": ["object", "null"], "properties": { "raw": { "type": "string" }, "version": { "type": ["string", "null"] }, "key_type": { "type": ["string", "null"] }, "public_key": { "type": ["string", "null"] } } },
+                        "dmarc": { "type": ["object", "null"], "properties": { "raw": { "type": "string" }, "version": { "type": ["string", "null"] }, "policy": { "type": ["string", "null"] }, "subdomain_policy": { "type": ["string", "null"] }, "pct": { "type": ["integer", "null"] }, "rua": { "type": ["string", "null"] }, "ruf": { "type": ["string", "null"] } } }
+                      }
+                    },
+                    "propagation": {
+                      "type": "object",
+                      "properties": {
+                        "resolvers": { "type": "array", "items": { "type": "object", "properties": { "resolver": { "type": "string" }, "ip": { "type": "string" }, "A": { "type": "array", "items": { "type": "string" } } } } },
+                        "consistent": { "type": "boolean" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/ssl/analyze": {
+      "get": {
+        "summary": "SSL/TLS certificate analysis",
+        "description": "Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3), detects weak keys and expiry issues, and returns an overall security grade (A/B/C/F).",
+        "operationId": "sslAnalyze",
+        "tags": ["SSL/TLS"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain to analyze (e.g. example.com)", "schema": { "type": "string" } },
+          { "name": "port", "in": "query", "required": false, "description": "Port to connect to (default: 443)", "schema": { "type": "integer", "default": 443 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSL analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "host": { "type": "string" },
+                    "port": { "type": "integer" },
+                    "certificate": {
+                      "type": "object",
+                      "properties": {
+                        "subject": { "type": "object", "properties": { "common_name": { "type": ["string", "null"] }, "organization": { "type": ["string", "null"] }, "organizational_unit": { "type": ["string", "null"] }, "country": { "type": ["string", "null"] } } },
+                        "issuer": { "type": "object", "properties": { "common_name": { "type": ["string", "null"] }, "organization": { "type": ["string", "null"] }, "country": { "type": ["string", "null"] } } },
+                        "serial_number": { "type": ["string", "null"] },
+                        "san": { "type": "array", "items": { "type": "string" } },
+                        "key_info": { "type": "object", "properties": { "algorithm": { "type": ["string", "null"] }, "size": { "type": ["integer", "null"] } } },
+                        "not_before": { "type": ["string", "null"] },
+                        "not_after": { "type": ["string", "null"] },
+                        "signature_algorithm": { "type": ["string", "null"] },
+                        "version": { "type": ["integer", "null"] }
+                      }
+                    },
+                    "chain": { "type": "array", "items": { "type": "object", "properties": { "subject": { "type": ["string", "null"] }, "issuer": { "type": ["string", "null"] }, "not_before": { "type": ["string", "null"] }, "not_after": { "type": ["string", "null"] } } } },
+                    "chain_valid": { "type": "boolean" },
+                    "connection": {
+                      "type": "object",
+                      "properties": {
+                        "protocol": { "type": ["string", "null"] },
+                        "cipher": { "type": ["string", "null"] },
+                        "supported_protocols": { "type": "array", "items": { "type": "string" } }
+                      }
+                    },
+                    "warnings": { "type": "array", "items": { "type": "string" } },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/subnet/calc": {
+      "get": {
+        "summary": "Subnet calculator",
+        "description": "Calculates IPv4/IPv6 subnet details from CIDR notation including network/broadcast addresses, netmask, usable host range, supernet, and possible subnets; for multiple CIDRs, detects overlaps and classifies relationships.",
+        "operationId": "subnetCalc",
+        "tags": ["Network"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "cidr", "in": "query", "required": true, "description": "CIDR notation, single (10.0.1.0/24) or comma-separated for overlap detection", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subnet calculation complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cidr": { "type": "string" },
+                    "ip_version": { "type": "integer", "enum": [4, 6] },
+                    "network": { "type": "string" },
+                    "broadcast": { "type": ["string", "null"] },
+                    "netmask": { "type": "string" },
+                    "wildcard": { "type": ["string", "null"] },
+                    "binary_mask": { "type": "string" },
+                    "hex_mask": { "type": "string" },
+                    "prefix_length": { "type": "integer" },
+                    "total_hosts": { "type": "integer" },
+                    "usable_hosts": { "type": "integer" },
+                    "first_usable": { "type": ["string", "null"] },
+                    "last_usable": { "type": ["string", "null"] },
+                    "is_private": { "type": "boolean" },
+                    "supernet": { "type": ["string", "null"] },
+                    "subnets": { "type": "array", "items": { "type": "object", "properties": { "prefix": { "type": "string" }, "count": { "type": "integer" } } } },
+                    "rfc_classification": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/redirect/trace": {
+      "get": {
+        "summary": "Redirect chain tracer",
+        "description": "Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing, headers, TLS status, and protocol downgrades per hop, then returns an overall redirect health grade (A–F).",
+        "operationId": "redirectTrace",
+        "tags": ["Web"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "URL to trace redirects for (e.g. http://google.com)", "schema": { "type": "string" } },
+          { "name": "max_hops", "in": "query", "required": false, "description": "Maximum redirect hops to follow (default: 10, max: 20)", "schema": { "type": "integer", "default": 10, "maximum": 20 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Redirect trace complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chain": { "type": "array", "items": { "type": "object", "properties": { "hop": { "type": "integer" }, "url": { "type": "string" }, "status_code": { "type": "integer" }, "location": { "type": ["string", "null"] }, "headers": { "type": "object", "additionalProperties": { "type": "string" } }, "tls": { "type": "boolean" }, "timing_ms": { "type": "number" } } } },
+                    "final_url": { "type": "string" },
+                    "final_status_code": { "type": "integer" },
+                    "total_hops": { "type": "integer" },
+                    "total_timing_ms": { "type": "number" },
+                    "protocol_downgrade": { "type": "boolean" },
+                    "loop_detected": { "type": "boolean" },
+                    "flags": { "type": "array", "items": { "type": "string" } },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "score": { "type": "integer" },
+                    "deductions": { "type": "array", "items": { "type": "object", "properties": { "reason": { "type": "string" }, "points": { "type": "integer" } } } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/security-headers/analyze": {
+      "get": {
+        "summary": "Security headers audit",
+        "description": "Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, X-XSS-Protection, CORP, COEP, COOP), detects anti-patterns, and returns an overall security grade (A–F).",
+        "operationId": "securityHeadersAnalyze",
+        "tags": ["Security"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "target", "in": "query", "required": true, "description": "URL or domain to audit security headers for", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Security headers analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": { "type": "string" },
+                    "target": { "type": "string" },
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "score": { "type": "integer" },
+                    "deductions": { "type": "array", "items": { "type": "object", "properties": { "reason": { "type": "string" }, "points": { "type": "integer" } } } },
+                    "results": {
+                      "type": "object",
+                      "properties": {
+                        "final_url": { "type": "string" },
+                        "status_code": { "type": "integer" },
+                        "content_type": { "type": "string" },
+                        "summary": { "type": "object", "properties": { "pass": { "type": "integer" }, "warn": { "type": "integer" }, "fail": { "type": "integer" }, "info": { "type": "integer" } } },
+                        "headers": { "type": "object", "additionalProperties": { "type": "object", "properties": { "present": { "type": "boolean" }, "raw_value": { "type": ["string", "null"] }, "status": { "type": "string", "enum": ["pass", "warn", "fail", "info"] }, "reason": { "type": "string" } } } },
+                        "anti_patterns": { "type": "array", "items": { "type": "object", "properties": { "header": { "type": "string" }, "raw_value": { "type": "string" }, "severity": { "type": "string" }, "reason": { "type": "string" } } } }
+                      }
+                    },
+                    "warnings": { "type": "array", "items": { "type": "string" } },
+                    "errors": { "type": "array", "items": { "type": "string" } },
+                    "meta": { "type": "object", "properties": { "duration_ms": { "type": "number" } } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "503": { "description": "Connection to target failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/email-auth": {
+      "post": {
+        "summary": "Email authentication validator",
+        "description": "Validates SPF, DKIM, and DMARC records for a domain, probes multiple DKIM selectors concurrently, detects misconfigurations, and returns an overall email security grade (A–F) with transparent deductions.",
+        "operationId": "emailAuth",
+        "tags": ["Email"],
+        "x-x402-price": "$0.004",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain"],
+                "properties": {
+                  "domain": { "type": "string", "description": "Domain to validate email authentication for" },
+                  "dkim_selectors": { "type": "array", "items": { "type": "string" }, "description": "Optional list of DKIM selectors to probe (defaults to common selectors)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email authentication analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "score": { "type": "integer" },
+                    "spf": {
+                      "type": "object",
+                      "properties": {
+                        "found": { "type": "boolean" },
+                        "record": { "type": ["string", "null"] },
+                        "mechanisms": { "type": "array", "items": { "type": "string" } },
+                        "all_qualifier": { "type": ["string", "null"] },
+                        "dns_lookup_count": { "type": "integer" },
+                        "issues": { "type": "array", "items": { "$ref": "#/components/schemas/Issue" } }
+                      }
+                    },
+                    "dkim": {
+                      "type": "object",
+                      "properties": {
+                        "found": { "type": "boolean" },
+                        "selectors_checked": { "type": "array", "items": { "type": "string" } },
+                        "records": { "type": "array", "items": { "type": "object", "properties": { "selector": { "type": "string" }, "record": { "type": "string" }, "key_type": { "type": "string" }, "key_length_bits": { "type": ["integer", "null"] }, "issues": { "type": "array", "items": { "$ref": "#/components/schemas/Issue" } } } } },
+                        "issues": { "type": "array", "items": { "$ref": "#/components/schemas/Issue" } }
+                      }
+                    },
+                    "dmarc": {
+                      "type": "object",
+                      "properties": {
+                        "found": { "type": "boolean" },
+                        "record": { "type": ["string", "null"] },
+                        "policy": { "type": ["string", "null"] },
+                        "subdomain_policy": { "type": ["string", "null"] },
+                        "pct": { "type": ["integer", "null"] },
+                        "rua": { "type": "array", "items": { "type": "string" } },
+                        "ruf": { "type": "array", "items": { "type": "string" } },
+                        "issues": { "type": "array", "items": { "$ref": "#/components/schemas/Issue" } }
+                      }
+                    },
+                    "deductions": { "type": "array", "items": { "$ref": "#/components/schemas/Deduction" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/cloud-fingerprint/analyze": {
+      "get": {
+        "summary": "Cloud infrastructure fingerprint",
+        "description": "Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups to detect CDN, WAF, hosting, DNS provider, and email provider with confidence scores and an infrastructure security grade (A–F).",
+        "operationId": "cloudFingerprintAnalyze",
+        "tags": ["Infrastructure"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain to fingerprint (e.g. example.com)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cloud fingerprint analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "resolved_ips": { "type": "array", "items": { "type": "string" } },
+                    "cname_chain": { "type": "array", "items": { "type": "string" } },
+                    "hosting": { "$ref": "#/components/schemas/ProviderDetection" },
+                    "cdn": { "$ref": "#/components/schemas/ProviderDetection" },
+                    "waf": { "type": "array", "items": { "$ref": "#/components/schemas/ProviderDetection" } },
+                    "dns_provider": { "$ref": "#/components/schemas/ProviderDetection" },
+                    "email_provider": { "$ref": "#/components/schemas/ProviderDetection" },
+                    "http_fingerprint": {
+                      "type": "object",
+                      "properties": {
+                        "https_enforced": { "type": ["boolean", "null"] },
+                        "server_header": { "type": ["string", "null"] },
+                        "server_version_exposed": { "type": "boolean" },
+                        "x_powered_by": { "type": ["string", "null"] },
+                        "notable_headers": { "type": "array", "items": { "type": "string" } }
+                      }
+                    },
+                    "tls": { "type": "object", "properties": { "issuer": { "type": ["string", "null"] }, "wildcard": { "type": ["boolean", "null"] }, "san_count": { "type": ["integer", "null"] } } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/LabeledFinding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/schema-parse/extract": {
+      "post": {
+        "summary": "LLM-powered schema extraction",
+        "description": "Accepts unstructured text and a JSON Schema, then uses an LLM to extract structured data matching the schema. Supports any user-defined schema shape — contact info, invoices, product specs, medical records, legal clauses, etc. Returns the extracted object plus token usage. Fields that cannot be found are omitted or null.",
+        "operationId": "schemaParseExtract",
+        "tags": ["AI"],
+        "x-x402-price": "$0.005",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["raw_text", "target_schema"],
+                "properties": {
+                  "raw_text": { "type": "string", "description": "Unstructured text to extract data from" },
+                  "target_schema": { "type": "object", "description": "JSON Schema defining the shape of the extracted output" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extraction successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "extracted": { "type": "object", "description": "Structured data conforming to the caller's target_schema" },
+                    "tokens_used": { "type": "object", "properties": { "input": { "type": "integer", "description": "Prompt tokens consumed" }, "output": { "type": "integer", "description": "Completion tokens consumed" } } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "422": { "description": "Model could not extract data matching the provided schema", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "502": { "description": "Extraction service unavailable", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/asn-lookup/analyze": {
+      "get": {
+        "summary": "ASN lookup",
+        "description": "Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and hosting/cloud classification — agents get structured network ownership context plus a trust score to assess infrastructure risk.",
+        "operationId": "asnLookupAnalyze",
+        "tags": ["Network"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "target", "in": "query", "required": true, "description": "IP address (v4 or v6) or domain name to look up", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "ASN lookup complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "target": { "type": "string" },
+                    "ip": { "type": "string" },
+                    "ip_version": { "type": "integer", "enum": [4, 6] },
+                    "hostname": { "type": ["string", "null"] },
+                    "asn": { "type": ["string", "null"] },
+                    "asn_number": { "type": ["integer", "null"] },
+                    "organization": { "type": ["string", "null"] },
+                    "network": { "type": ["string", "null"] },
+                    "country": { "type": ["string", "null"] },
+                    "region": { "type": ["string", "null"] },
+                    "city": { "type": ["string", "null"] },
+                    "is_hosting": { "type": "boolean" },
+                    "is_cloud": { "type": "boolean" },
+                    "is_vpn": { "type": "boolean" },
+                    "classification": { "type": "string", "enum": ["vpn", "cloud", "hosting", "residential", "unknown"] },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/whois-rdap/lookup": {
+      "get": {
+        "summary": "WHOIS/RDAP domain lookup",
+        "description": "Look up domain registration metadata via RDAP — returns registrar, creation/expiry dates, nameservers, status flags, and an actionability score so agents can assess domain trustworthiness or availability risk.",
+        "operationId": "whoisRdapLookup",
+        "tags": ["Domain"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name to look up (e.g. example.com)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "RDAP lookup complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "tld": { "type": "string" },
+                    "rdap_url": { "type": "string" },
+                    "registrar": { "type": ["string", "null"] },
+                    "registrar_iana_id": { "type": ["string", "null"] },
+                    "created_at": { "type": ["string", "null"] },
+                    "updated_at": { "type": ["string", "null"] },
+                    "expires_at": { "type": ["string", "null"] },
+                    "days_until_expiry": { "type": ["integer", "null"] },
+                    "name_servers": { "type": "array", "items": { "type": "string" } },
+                    "status": { "type": "array", "items": { "type": "string" } },
+                    "status_has_abuse_flags": { "type": "boolean" },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } },
+                    "raw_rdap_url": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "404": { "description": "No RDAP server found for TLD", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/cert-transparency/lookup": {
+      "get": {
+        "summary": "Certificate transparency log search",
+        "description": "Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever issued for a domain — returns subdomains discovered, certificate issuers, validity periods, and a risk score flagging wildcard certs, expiring certs, and suspicious issuance patterns.",
+        "operationId": "certTransparencyLookup",
+        "tags": ["SSL/TLS"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name to query certificate transparency logs for", "schema": { "type": "string" } },
+          { "name": "include_subdomains", "in": "query", "required": false, "description": "Include subdomain certificates (default: true)", "schema": { "type": "boolean", "default": true } },
+          { "name": "limit", "in": "query", "required": false, "description": "Maximum number of certificates to return (default: 100, max: 500)", "schema": { "type": "integer", "default": 100, "maximum": 500 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Certificate transparency lookup complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "total_certs_found": { "type": "integer" },
+                    "unique_subdomains": { "type": "array", "items": { "type": "string" } },
+                    "unique_subdomain_count": { "type": "integer" },
+                    "issuers": { "type": "array", "items": { "type": "string" } },
+                    "wildcard_certs": { "type": "array", "items": { "type": "string" } },
+                    "expiring_within_30_days": { "type": "array", "items": { "type": "string" } },
+                    "recently_issued": { "type": "array", "items": { "type": "string" } },
+                    "certs": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "integer" }, "common_name": { "type": "string" }, "issuer": { "type": "string" }, "not_before": { "type": "string" }, "not_after": { "type": "string" }, "sans": { "type": "array", "items": { "type": "string" } }, "is_wildcard": { "type": "boolean" }, "is_expired": { "type": "boolean" }, "days_until_expiry": { "type": "integer" } } } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "502": { "description": "Certificate transparency lookup failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "504": { "description": "Lookup timed out", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/dns-propagation/check": {
+      "get": {
+        "summary": "DNS propagation checker",
+        "description": "Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously — returns what each resolver sees, whether results are consistent, propagation percentage, and a readiness score so agents can confirm DNS changes have fully propagated globally.",
+        "operationId": "dnsPropagationCheck",
+        "tags": ["DNS"],
+        "x-x402-price": "$0.003",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name to check propagation for", "schema": { "type": "string" } },
+          { "name": "record_type", "in": "query", "required": false, "description": "DNS record type: A, AAAA, MX, TXT, CNAME, NS (default: A)", "schema": { "type": "string", "default": "A", "enum": ["A", "AAAA", "MX", "TXT", "CNAME", "NS"] } }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNS propagation check complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "record_type": { "type": "string" },
+                    "propagation_percentage": { "type": "number" },
+                    "consistent": { "type": "boolean" },
+                    "majority_value": { "type": "array", "items": { "type": "string" } },
+                    "resolvers": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "ip": { "type": "string" }, "status": { "type": "string", "enum": ["success", "timeout"] }, "records": { "type": "array", "items": { "type": "string" } }, "matches_majority": { "type": "boolean" }, "response_time_ms": { "type": ["number", "null"] } } } },
+                    "divergent_resolvers": { "type": "array", "items": { "type": "string" } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/dnssec/validate": {
+      "get": {
+        "summary": "DNSSEC validation",
+        "description": "Validate a domain's DNSSEC configuration by checking for DS records at the parent zone, DNSKEY records at the domain, RRSIG signatures, and NSEC/NSEC3 records — returns a full chain-of-trust assessment and readiness score so agents can verify DNS integrity before trusting resolution results.",
+        "operationId": "dnssecValidate",
+        "tags": ["DNS"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name to validate DNSSEC for", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNSSEC validation complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "dnssec_enabled": { "type": "boolean" },
+                    "chain_of_trust": { "type": "string", "enum": ["complete", "partial", "none", "broken"] },
+                    "components": {
+                      "type": "object",
+                      "properties": {
+                        "ds_record": { "type": "object", "properties": { "present": { "type": "boolean" }, "count": { "type": "integer" }, "algorithms": { "type": "array", "items": { "type": "string" } } } },
+                        "dnskey_record": { "type": "object", "properties": { "present": { "type": "boolean" }, "count": { "type": "integer" }, "key_types": { "type": "array", "items": { "type": "string" } } } },
+                        "rrsig_record": { "type": "object", "properties": { "present": { "type": "boolean" }, "signatures_found": { "type": "integer" } } },
+                        "nsec_or_nsec3": { "type": "object", "properties": { "present": { "type": "boolean" }, "type": { "type": ["string", "null"], "enum": ["NSEC", "NSEC3", null] } } }
+                      }
+                    },
+                    "tld_ds_present": { "type": "boolean" },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/ip-blacklist/check": {
+      "get": {
+        "summary": "IP blacklist check",
+        "description": "Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.) simultaneously — returns which lists it appears on, a reputation score, and a threat classification so agents can make block/allow decisions instantly.",
+        "operationId": "ipBlacklistCheck",
+        "tags": ["Security"],
+        "x-x402-price": "$0.003",
+        "parameters": [
+          { "name": "ip", "in": "query", "required": true, "description": "IPv4 address to check (e.g. 1.2.3.4)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blacklist check complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ip": { "type": "string" },
+                    "reversed_ip": { "type": "string" },
+                    "listed_count": { "type": "integer" },
+                    "total_checked": { "type": "integer" },
+                    "threat_level": { "type": "string", "enum": ["clean", "suspicious", "malicious"] },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } },
+                    "blacklists": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "listed": { "type": "boolean" }, "description": { "type": "string" } } } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/tech-fingerprint/analyze": {
+      "get": {
+        "summary": "Technology stack fingerprint",
+        "description": "Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags, cookies, and script patterns — returns CMS, framework, CDN, server, analytics, and security tool detections so agents can profile any web target without a browser.",
+        "operationId": "techFingerprintAnalyze",
+        "tags": ["Web"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "URL to fingerprint (e.g. https://example.com)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Technology fingerprint complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string" },
+                    "status_code": { "type": "integer" },
+                    "response_time_ms": { "type": "number" },
+                    "detections": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "category": { "type": "string" }, "confidence": { "type": "string", "enum": ["high", "medium", "low"] } } } },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "server": { "type": ["string", "null"] },
+                        "cdn": { "type": ["string", "null"] },
+                        "cms": { "type": ["string", "null"] },
+                        "waf": { "type": ["string", "null"] },
+                        "javascript_frameworks": { "type": "array", "items": { "type": "string" } },
+                        "analytics": { "type": "array", "items": { "type": "string" } }
+                      }
+                    },
+                    "security_headers_present": { "type": "array", "items": { "type": "string" } },
+                    "security_headers_missing": { "type": "array", "items": { "type": "string" } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/breach-check/password": {
+      "get": {
+        "summary": "Password breach check",
+        "description": "Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords API with k-anonymity — the full password is never transmitted, only a 5-character SHA-1 hash prefix — returns breach count and a risk classification so agents can enforce password policies without storing or exposing credentials.",
+        "operationId": "breachCheckPassword",
+        "tags": ["Security"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "password", "in": "query", "required": true, "description": "Password to check against known data breaches", "schema": { "type": "string", "minLength": 1, "maxLength": 500 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Breach check complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "breached": { "type": "boolean" },
+                    "breach_count": { "type": "integer" },
+                    "risk_level": { "type": "string", "enum": ["safe", "low", "medium", "high", "critical"] },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "502": { "description": "HIBP API unavailable", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/domain-availability/check": {
+      "get": {
+        "summary": "Domain availability check",
+        "description": "Check if a domain name is available for registration by querying RDAP and DNS — returns registration status, whether it's taken or free, expiry date if registered, and availability of the same name across 10 popular TLDs simultaneously so agents can find the best domain for a brand or project.",
+        "operationId": "domainAvailabilityCheck",
+        "tags": ["Domain"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name with or without TLD (e.g. mybrand or mybrand.com)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Availability check complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "results": { "type": "array", "items": { "type": "object", "properties": { "domain": { "type": "string" }, "available": { "type": "boolean" }, "status": { "type": "string", "enum": ["available", "registered"] }, "registrar": { "type": ["string", "null"] }, "expires_at": { "type": ["string", "null"] }, "days_until_expiry": { "type": ["integer", "null"] }, "expiring_soon": { "type": "boolean" } } } },
+                    "available_tlds": { "type": "array", "items": { "type": "string" } },
+                    "taken_tlds": { "type": "array", "items": { "type": "string" } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/email-intel/analyze": {
+      "get": {
+        "summary": "Email intelligence",
+        "description": "Validate an email address for deliverability, detect disposable/temporary domains, identify role-based addresses, verify MX records exist, and return a trust score — so agents can qualify leads, clean lists, and gate signups without sending a single email.",
+        "operationId": "emailIntelAnalyze",
+        "tags": ["Email"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "email", "in": "query", "required": true, "description": "Email address to validate (e.g. john@example.com)", "schema": { "type": "string", "format": "email" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": { "type": "string" },
+                    "domain": { "type": "string" },
+                    "local_part": { "type": "string" },
+                    "format_valid": { "type": "boolean" },
+                    "mx_records_found": { "type": "boolean" },
+                    "mx_records": { "type": "array", "items": { "type": "string" } },
+                    "is_disposable": { "type": "boolean" },
+                    "is_role_based": { "type": "boolean" },
+                    "is_free_provider": { "type": "boolean" },
+                    "is_business_email": { "type": "boolean" },
+                    "deliverability": { "type": "string", "enum": ["invalid", "undeliverable", "risky", "deliverable"] },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/og-scraper/extract": {
+      "get": {
+        "summary": "Open Graph metadata scraper",
+        "description": "Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags, canonical URL, title, description, favicon, article author/date, JSON-LD structured data, and content type — so agents can preview, classify, and enrich links without building their own scraper.",
+        "operationId": "ogScraperExtract",
+        "tags": ["Web"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "Public URL to extract metadata from", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata extraction complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string" },
+                    "final_url": { "type": "string" },
+                    "status_code": { "type": "integer" },
+                    "title": { "type": ["string", "null"] },
+                    "description": { "type": ["string", "null"] },
+                    "image": { "type": ["string", "null"] },
+                    "favicon": { "type": ["string", "null"] },
+                    "site_name": { "type": ["string", "null"] },
+                    "canonical_url": { "type": ["string", "null"] },
+                    "content_type": { "type": "string" },
+                    "author": { "type": ["string", "null"] },
+                    "published_at": { "type": ["string", "null"] },
+                    "modified_at": { "type": ["string", "null"] },
+                    "twitter_card": { "type": ["string", "null"] },
+                    "json_ld": {},
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/page-extract/read": {
+      "get": {
+        "summary": "Page content extractor",
+        "description": "Fetch any article or web page and extract clean readable text stripped of navigation, ads, and boilerplate — returns the main content body, word count, estimated reading time, detected language, and key sentences so agents can read the web without a browser or third-party scraping service.",
+        "operationId": "pageExtractRead",
+        "tags": ["Web"],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "Public URL to extract content from", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Content extraction complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string" },
+                    "final_url": { "type": "string" },
+                    "title": { "type": ["string", "null"] },
+                    "content": { "type": "string" },
+                    "preview": { "type": "array", "items": { "type": "string" } },
+                    "word_count": { "type": "integer" },
+                    "reading_time_minutes": { "type": "integer" },
+                    "language": { "type": "string" },
+                    "content_length_chars": { "type": "integer" },
+                    "status_code": { "type": "integer" },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/phone-intel/analyze": {
+      "get": {
+        "summary": "Phone number intelligence",
+        "description": "Parse and validate any phone number in any format, identify its country, line type (mobile/landline/VOIP/toll-free/premium), carrier region, and return all standard format variants — so agents can validate contacts, normalize phone data, and classify line types without a paid telecom API.",
+        "operationId": "phoneIntelAnalyze",
+        "tags": ["OSINT"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "phone", "in": "query", "required": true, "description": "Phone number in any format (e.g. +1 555 867-5309)", "schema": { "type": "string" } },
+          { "name": "country_hint", "in": "query", "required": false, "description": "ISO 3166-1 alpha-2 country code hint when no dial code present (e.g. US)", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Phone analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "input": { "type": "string" },
+                    "is_valid": { "type": "boolean" },
+                    "e164": { "type": ["string", "null"] },
+                    "international": { "type": ["string", "null"] },
+                    "national": { "type": ["string", "null"] },
+                    "country_code": { "type": ["string", "null"] },
+                    "country": { "type": ["string", "null"] },
+                    "country_name": { "type": ["string", "null"] },
+                    "line_type": { "type": ["string", "null"] },
+                    "digit_count": { "type": "integer" },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/robots-txt/analyze": {
+      "get": {
+        "summary": "Robots.txt analyzer",
+        "description": "Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs, crawl delay settings, and checks whether a specific path is allowed or blocked for any bot — so agents can respect crawl policies and locate sitemaps before scraping.",
+        "operationId": "robotsTxtAnalyze",
+        "tags": ["Web"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "domain", "in": "query", "required": true, "description": "Domain name to fetch robots.txt from", "schema": { "type": "string" } },
+          { "name": "path", "in": "query", "required": false, "description": "URL path to check permission for (e.g. /api/data)", "schema": { "type": "string" } },
+          { "name": "user_agent", "in": "query", "required": false, "description": "Bot name to check rules for (default: *)", "schema": { "type": "string", "default": "*" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Robots.txt analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": { "type": "string" },
+                    "robots_url": { "type": "string" },
+                    "found": { "type": "boolean" },
+                    "status_code": { "type": "integer" },
+                    "raw_content_preview": { "type": ["string", "null"] },
+                    "sitemaps": { "type": "array", "items": { "type": "string" } },
+                    "rules": { "type": "array", "items": { "type": "object", "properties": { "user_agent": { "type": "string" }, "allow": { "type": "array", "items": { "type": "string" } }, "disallow": { "type": "array", "items": { "type": "string" } }, "crawl_delay": { "type": ["number", "null"] } } } },
+                    "path_check": { "type": ["object", "null"], "properties": { "path": { "type": "string" }, "user_agent": { "type": "string" }, "allowed": { "type": "boolean" }, "matched_rule": { "type": ["string", "null"] }, "rule_type": { "type": ["string", "null"] } } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/LabeledFinding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/rss-parser/fetch": {
+      "get": {
+        "summary": "RSS/Atom feed parser",
+        "description": "Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link, description, author, publish date, and categories — so agents can monitor content sources, build news pipelines, and process any feed without building their own XML parser.",
+        "operationId": "rssParserFetch",
+        "tags": ["Web"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "Feed URL to fetch and parse", "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "required": false, "description": "Maximum number of items to return (1-50, default 10)", "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 50 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feed parsed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string" },
+                    "feed_type": { "type": "string", "enum": ["rss2", "atom", "unknown"] },
+                    "feed": { "type": "object", "properties": { "title": { "type": ["string", "null"] }, "description": { "type": ["string", "null"] }, "site_url": { "type": ["string", "null"] }, "last_updated": { "type": ["string", "null"] } } },
+                    "total_items_in_feed": { "type": "integer" },
+                    "items_returned": { "type": "integer" },
+                    "items": { "type": "array", "items": { "type": "object", "properties": { "title": { "type": ["string", "null"] }, "url": { "type": ["string", "null"] }, "description": { "type": ["string", "null"] }, "author": { "type": ["string", "null"] }, "published_at": { "type": ["string", "null"] }, "categories": { "type": "array", "items": { "type": "string" } }, "has_full_content": { "type": "boolean" } } } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/LabeledFinding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/username-check/lookup": {
+      "get": {
+        "summary": "Username availability check",
+        "description": "Check username availability across 20+ social platforms and developer sites simultaneously — returns which platforms have a profile registered under that handle so agents can find people, verify identities, scout brand handles, or check name availability before registration.",
+        "operationId": "usernameCheckLookup",
+        "tags": ["OSINT"],
+        "x-x402-price": "$0.003",
+        "parameters": [
+          { "name": "username", "in": "query", "required": true, "description": "Username/handle to check (1-50 chars, alphanumeric + hyphens/underscores/dots)", "schema": { "type": "string", "minLength": 1, "maxLength": 50 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Username check complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": { "type": "string" },
+                    "taken_count": { "type": "integer" },
+                    "available_count": { "type": "integer" },
+                    "unknown_count": { "type": "integer" },
+                    "results": { "type": "array", "items": { "type": "object", "properties": { "platform": { "type": "string" }, "url": { "type": "string" }, "status": { "type": "string", "enum": ["taken", "available", "unknown"] } } } },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string" },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/wayback/lookup": {
+      "get": {
+        "summary": "Wayback Machine lookup",
+        "description": "Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the closest snapshot to a given date, retrieve the most recent capture, and return archival history stats — so agents can access historical web content, verify past content claims, and recover deleted pages.",
+        "operationId": "waybackLookup",
+        "tags": ["OSINT"],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          { "name": "url", "in": "query", "required": true, "description": "URL to check in the Wayback Machine", "schema": { "type": "string" } },
+          { "name": "timestamp", "in": "query", "required": false, "description": "Optional target date in YYYYMMDD or YYYYMMDDHHmmss format to find the closest snapshot", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wayback lookup complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": { "type": "string" },
+                    "is_archived": { "type": "boolean" },
+                    "snapshot": { "type": ["object", "null"], "properties": { "url": { "type": "string" }, "timestamp": { "type": "string" }, "formatted_date": { "type": "string" }, "status_code": { "type": "string" } } },
+                    "first_capture": { "type": ["string", "null"] },
+                    "last_capture": { "type": ["string", "null"] },
+                    "capture_count_estimate": { "type": "integer" },
+                    "timestamp_requested": { "type": ["string", "null"] },
+                    "score": { "type": "integer" },
+                    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
+                    "findings": { "type": "array", "items": { "$ref": "#/components/schemas/Finding" } }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "402": { "$ref": "#/components/responses/PaymentRequired" },
+          "502": { "description": "Wayback Machine lookup failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      },
+      "Finding": {
+        "type": "object",
+        "properties": {
+          "rule": { "type": "string" },
+          "deduction": { "type": "integer" },
+          "detail": { "type": "string" }
+        }
+      },
+      "LabeledFinding": {
+        "type": "object",
+        "properties": {
+          "rule": { "type": "string" },
+          "label": { "type": "string" },
+          "impact": { "type": "integer" },
+          "detail": { "type": "string" }
+        }
+      },
+      "Issue": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["warn", "fail", "info"] },
+          "message": { "type": "string" },
+          "deduction": { "type": "integer" }
+        }
+      },
+      "Deduction": {
+        "type": "object",
+        "properties": {
+          "rule": { "type": "string" },
+          "points": { "type": "integer" },
+          "detail": { "type": "string" }
+        }
+      },
+      "ProviderDetection": {
+        "type": "object",
+        "properties": {
+          "provider": { "type": ["string", "null"] },
+          "confidence": { "type": ["string", "null"] },
+          "signals": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid or missing parameters",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "PaymentRequired": {
+        "description": "x402 payment required. Send a valid Payment-Signature or X-Payment header with USDC payment on Base mainnet.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "x402Version": { "type": "integer" },
+                "accepts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scheme": { "type": "string" },
+                      "price": { "type": "string" },
+                      "network": { "type": "string" },
+                      "payTo": { "type": "string" }
+                    }
+                  }
+                },
+                "error": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "System", "description": "Health and status endpoints" },
+    { "name": "DNS", "description": "DNS resolution, propagation, and DNSSEC" },
+    { "name": "SSL/TLS", "description": "Certificate analysis and transparency logs" },
+    { "name": "Network", "description": "Subnet calculation and ASN lookup" },
+    { "name": "Domain", "description": "WHOIS/RDAP and domain availability" },
+    { "name": "Email", "description": "Email authentication and intelligence" },
+    { "name": "Security", "description": "Security headers, IP blacklists, and breach checks" },
+    { "name": "Web", "description": "Redirect tracing, tech fingerprinting, OG scraping, page extraction, robots.txt, RSS parsing" },
+    { "name": "Infrastructure", "description": "Cloud and CDN fingerprinting" },
+    { "name": "AI", "description": "LLM-powered extraction" },
+    { "name": "OSINT", "description": "Phone intel, username checks, Wayback Machine" }
+  ]
+}
