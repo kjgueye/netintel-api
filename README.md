@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 25 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 26 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -31,6 +31,7 @@ Network intelligence API with 25 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/rss-parser/fetch` | GET | $0.001 | Parse RSS 2.0 and Atom feeds into structured items |
 | `/username-check/lookup` | GET | $0.003 | Check username across 20+ platforms simultaneously |
 | `/wayback/lookup` | GET | $0.001 | Query Wayback Machine for snapshots and archival history |
+| `/ip-reputation/analyze` | GET | $0.01 | Check IP against AbuseIPDB + AlienVault OTX — composite risk score, threat categories, malware families |
 
 ## Usage
 
@@ -61,7 +62,7 @@ All endpoints require USDC micropayment on **Base mainnet** via the [x402 protoc
 | Scheme | `exact` |
 | Facilitator | `https://api.cdp.coinbase.com/platform/v2/x402` |
 | Payee wallet | `0xdaDc335482AD545296Fd7b28518A251fFCbEb9Df` |
-| Price range | $0.001 – $0.005 per call |
+| Price range | $0.001 – $0.01 per call |
 
 Send a valid `X-Payment` header with each request. Without it, endpoints return HTTP 402 with payment requirements in the `PAYMENT-REQUIRED` response header.
 
