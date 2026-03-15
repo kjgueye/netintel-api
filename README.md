@@ -75,6 +75,6 @@ Send a valid `X-Payment` header with each request. Without it, endpoints return 
 
 ## Links
 
-- **Production:** https://netintel-production-440c.up.railway.app
-- **OpenAPI spec:** https://netintel-production-440c.up.railway.app/openapi.json
-- **x402 manifest:** https://netintel-production-440c.up.railway.app/.well-known/x402
+- **API Manifest:** https://netintel-production-440c.up.railway.app/.well-known/x402
+- **OpenAPI Spec:** https://netintel-production-440c.up.railway.app/openapi.json
+- **Bazaar Listing:** https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources
