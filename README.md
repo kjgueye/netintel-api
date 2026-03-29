@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 26 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 36 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -32,6 +32,16 @@ Network intelligence API with 26 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/username-check/lookup` | GET | $0.003 | Check username across 20+ platforms simultaneously |
 | `/wayback/lookup` | GET | $0.001 | Query Wayback Machine for snapshots and archival history |
 | `/ip-reputation/analyze` | GET | $0.01 | Check IP against AbuseIPDB + AlienVault OTX — composite risk score, threat categories, malware families |
+| `/cron-parser/explain` | GET | $0.001 | Parse cron expressions, explain schedule, compute next runs |
+| `/currency-exchange/convert` | GET | $0.001 | Convert between 32 currencies with real-time or historical rates |
+| `/github-intel/analyze` | GET | $0.001 | GitHub repo metrics — stars, activity, license, maintenance score |
+| `/holidays/check` | GET | $0.001 | Public holidays by country, business day and weekend checks |
+| `/ip-geo/locate` | GET | $0.001 | IP geolocation — country, city, coordinates, ISP, ASN |
+| `/jwt-inspector/decode` | GET | $0.001 | Decode JWT header/payload, check expiry, flag security issues |
+| `/lang-detect/analyze` | POST | $0.001 | Detect language from text with confidence scoring |
+| `/npm-intel/analyze` | GET | $0.001 | npm package analysis — versions, downloads, maintainers, quality score |
+| `/sitemap-parser/fetch` | GET | $0.001 | Parse XML sitemaps, auto-discover from domain, extract URL metadata |
+| `/url-safety/check` | GET | $0.002 | Check URL against URLhaus + heuristic analysis for threats |
 
 ## Usage
 

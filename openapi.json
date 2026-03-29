@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "NetIntel API",
-    "description": "Network intelligence API \u2014 DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, OSINT, and more. 26 endpoints, all pay-per-call via x402 micropayments on Base mainnet (USDC). No API keys, no subscriptions, no rate limits.\n\n## Payment\n\nAll endpoints (except /health) require x402 micropayment in USDC on Base mainnet (chain ID eip155:8453). Send a valid `Payment-Signature` or `X-Payment` header with each request. Payment is verified by the CDP facilitator at `https://api.cdp.coinbase.com/platform/v2/x402`. Without a valid payment header, endpoints return HTTP 402 with payment requirements in the `PAYMENT-REQUIRED` response header.\n\nPayee wallet: `0xdaDc335482AD545296Fd7b28518A251fFCbEb9Df`",
+    "description": "Network intelligence API \u2014 DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, OSINT, and more. 36 endpoints, all pay-per-call via x402 micropayments on Base mainnet (USDC). No API keys, no subscriptions, no rate limits.\n\n## Payment\n\nAll endpoints (except /health) require x402 micropayment in USDC on Base mainnet (chain ID eip155:8453). Send a valid `Payment-Signature` or `X-Payment` header with each request. Payment is verified by the CDP facilitator at `https://api.cdp.coinbase.com/platform/v2/x402`. Without a valid payment header, endpoints return HTTP 402 with payment requirements in the `PAYMENT-REQUIRED` response header.\n\nPayee wallet: `0xdaDc335482AD545296Fd7b28518A251fFCbEb9Df`",
     "version": "1.0.0",
     "contact": {
       "name": "NetIntel",
@@ -3948,6 +3948,1637 @@
           }
         }
       }
+    },
+    "/cron-parser/explain": {
+      "get": {
+        "summary": "Cron expression parser",
+        "description": "Parses and validates cron expressions (standard 5-field or 6-field with seconds), generates human-readable explanations, detects common patterns (hourly, daily, weekdays, etc.), and computes the next N scheduled run times.",
+        "operationId": "cronParserExplain",
+        "tags": [
+          "Utilities"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "expression",
+            "in": "query",
+            "required": true,
+            "description": "Cron expression (5 or 6 fields)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "required": false,
+            "description": "IANA timezone name (default: UTC)",
+            "schema": {
+              "type": "string",
+              "default": "UTC"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "description": "Number of next runs to compute (1\u201320, default: 5)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cron expression parsed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "expression": {
+                      "type": "string"
+                    },
+                    "is_valid": {
+                      "type": "boolean"
+                    },
+                    "fields": {
+                      "type": "object",
+                      "properties": {
+                        "second": {
+                          "type": "string"
+                        },
+                        "minute": {
+                          "type": "string"
+                        },
+                        "hour": {
+                          "type": "string"
+                        },
+                        "day_of_month": {
+                          "type": "string"
+                        },
+                        "month": {
+                          "type": "string"
+                        },
+                        "day_of_week": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "explanation": {
+                      "type": "string"
+                    },
+                    "pattern_name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "next_runs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LabeledFinding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "expression": "*/15 * * * *",
+                  "is_valid": true,
+                  "fields": {
+                    "minute": "*/15",
+                    "hour": "*",
+                    "day_of_month": "*",
+                    "month": "*",
+                    "day_of_week": "*"
+                  },
+                  "explanation": "Every 15 minutes",
+                  "pattern_name": "every_15_minutes",
+                  "next_runs": [
+                    "2025-01-15T12:00:00Z",
+                    "2025-01-15T12:15:00Z",
+                    "2025-01-15T12:30:00Z",
+                    "2025-01-15T12:45:00Z",
+                    "2025-01-15T13:00:00Z"
+                  ],
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/currency-exchange/convert": {
+      "get": {
+        "summary": "Currency exchange conversion",
+        "description": "Real-time or historical currency exchange rate conversion. Converts amounts between 32 supported currencies using the Frankfurter API (ECB rates). Supports historical lookups by date.",
+        "operationId": "currencyExchangeConvert",
+        "tags": [
+          "Utilities"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Source 3-letter currency code (e.g. USD, EUR)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "Target 3-letter currency code",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "description": "Amount to convert (default: 1, max: 999999999)",
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Historical date in YYYY-MM-DD format (omit for latest rates)",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currency conversion successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string"
+                    },
+                    "to": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "converted_amount": {
+                      "type": "number"
+                    },
+                    "exchange_rate": {
+                      "type": "number"
+                    },
+                    "inverse_rate": {
+                      "type": "number"
+                    },
+                    "rate_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "is_historical": {
+                      "type": "boolean"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "from": "USD",
+                  "to": "EUR",
+                  "amount": 100,
+                  "converted_amount": 92.15,
+                  "exchange_rate": 0.9215,
+                  "inverse_rate": 1.0852,
+                  "rate_date": "2025-01-15",
+                  "is_historical": false,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/github-intel/analyze": {
+      "get": {
+        "summary": "GitHub repository intelligence",
+        "description": "Analyzes GitHub repositories using the GitHub API. Returns metadata, languages, release info, contributor count, and a maintenance/quality score based on staleness, license, issues, fork status, and description completeness.",
+        "operationId": "githubIntelAnalyze",
+        "tags": [
+          "OSINT"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "query",
+            "required": true,
+            "description": "Repository in owner/repo format or full GitHub URL",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Repository analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "repo": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "homepage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "stars": {
+                      "type": "integer"
+                    },
+                    "forks": {
+                      "type": "integer"
+                    },
+                    "open_issues": {
+                      "type": "integer"
+                    },
+                    "watchers": {
+                      "type": "integer"
+                    },
+                    "primary_language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "languages": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "integer"
+                      }
+                    },
+                    "license": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "license_spdx": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "topics": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "last_pushed_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "days_since_last_push": {
+                      "type": "integer"
+                    },
+                    "is_archived": {
+                      "type": "boolean"
+                    },
+                    "is_fork": {
+                      "type": "boolean"
+                    },
+                    "parent_repo": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "contributor_count": {
+                      "type": "integer"
+                    },
+                    "latest_release": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latest_release_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "default_branch": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "repo": "expressjs/express",
+                  "url": "https://github.com/expressjs/express",
+                  "description": "Fast, unopinionated, minimalist web framework for node.",
+                  "homepage": "https://expressjs.com",
+                  "stars": 65000,
+                  "forks": 15000,
+                  "open_issues": 180,
+                  "watchers": 65000,
+                  "primary_language": "JavaScript",
+                  "languages": {
+                    "JavaScript": 250000
+                  },
+                  "license": "MIT License",
+                  "license_spdx": "MIT",
+                  "topics": [
+                    "nodejs",
+                    "javascript",
+                    "web",
+                    "framework"
+                  ],
+                  "created_at": "2010-05-27T00:00:00Z",
+                  "last_pushed_at": "2025-01-10T00:00:00Z",
+                  "days_since_last_push": 5,
+                  "is_archived": false,
+                  "is_fork": false,
+                  "parent_repo": null,
+                  "contributor_count": 30,
+                  "latest_release": "v4.21.2",
+                  "latest_release_date": "2025-01-08T00:00:00Z",
+                  "default_branch": "master",
+                  "score": 92,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/holidays/check": {
+      "get": {
+        "summary": "Public holidays lookup",
+        "description": "Retrieves public holidays for any country and year from the Nager.Date API. Optionally checks if a specific date is a holiday or weekend and finds the next business day.",
+        "operationId": "holidaysCheck",
+        "tags": [
+          "Utilities"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": true,
+            "description": "2-letter ISO country code (e.g. US, DE, GB)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "description": "Year to query (2000\u20132099, default: current year)",
+            "schema": {
+              "type": "integer",
+              "minimum": 2000,
+              "maximum": 2099
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Specific date to check in YYYY-MM-DD format",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Holidays retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "country_code": {
+                      "type": "string"
+                    },
+                    "year": {
+                      "type": "integer"
+                    },
+                    "total_holidays": {
+                      "type": "integer"
+                    },
+                    "holidays": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "format": "date"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "local_name": {
+                            "type": "string"
+                          },
+                          "is_global": {
+                            "type": "boolean"
+                          },
+                          "types": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "date_check": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "is_holiday": {
+                          "type": "boolean"
+                        },
+                        "is_weekend": {
+                          "type": "boolean"
+                        },
+                        "is_business_day": {
+                          "type": "boolean"
+                        },
+                        "holiday_name": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "next_business_day": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LabeledFinding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "country_code": "US",
+                  "year": 2025,
+                  "total_holidays": 11,
+                  "holidays": [
+                    {
+                      "date": "2025-01-01",
+                      "name": "New Year's Day",
+                      "local_name": "New Year's Day",
+                      "is_global": true,
+                      "types": [
+                        "Public"
+                      ]
+                    }
+                  ],
+                  "date_check": null,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/ip-geo/locate": {
+      "get": {
+        "summary": "IP geolocation",
+        "description": "Geolocates public IP addresses using ipapi.co. Returns country, region, city, coordinates, timezone, ISP, and ASN information. Rejects private/reserved IP ranges.",
+        "operationId": "ipGeoLocate",
+        "tags": [
+          "Network"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "ip",
+            "in": "query",
+            "required": true,
+            "description": "Public IPv4 or IPv6 address to geolocate",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "IP geolocation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ip": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "country_code": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "region": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "region_name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "city": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "zip": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latitude": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "longitude": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "timezone": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "isp": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "organization": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "asn": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "is_mobile": {
+                      "type": "boolean"
+                    },
+                    "is_proxy": {
+                      "type": "boolean"
+                    },
+                    "is_hosting": {
+                      "type": "boolean"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "ip": "8.8.8.8",
+                  "country": "United States",
+                  "country_code": "US",
+                  "region": "VA",
+                  "region_name": "Virginia",
+                  "city": "Ashburn",
+                  "zip": "20149",
+                  "latitude": 39.03,
+                  "longitude": -77.5,
+                  "timezone": "America/New_York",
+                  "isp": "Google LLC",
+                  "organization": "Google LLC",
+                  "asn": "AS15169",
+                  "is_mobile": false,
+                  "is_proxy": false,
+                  "is_hosting": true,
+                  "score": 95,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/jwt-inspector/decode": {
+      "get": {
+        "summary": "JWT token decoder",
+        "description": "Decodes and analyzes JWT tokens without verification. Extracts header, payload, and signature. Flags security issues including missing expiry, weak algorithms (none, HS256), overly long expiries, and expired tokens.",
+        "operationId": "jwtInspectorDecode",
+        "tags": [
+          "Security"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "description": "Complete JWT token (three dot-separated segments)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JWT decoded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid_structure": {
+                      "type": "boolean"
+                    },
+                    "header": {
+                      "type": "object",
+                      "properties": {
+                        "algorithm": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "token_type": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "key_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "issuer": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "subject": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "audience": {},
+                        "expires_at": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        },
+                        "expires_at_unix": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "issued_at": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        },
+                        "issued_at_unix": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "not_before": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        },
+                        "jwt_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "custom_claims": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    },
+                    "is_expired": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "seconds_until_expiry": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "human_expiry": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "signature_hex": {
+                      "type": "string"
+                    },
+                    "signature_present": {
+                      "type": "boolean"
+                    },
+                    "security_flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LabeledFinding"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/lang-detect/analyze": {
+      "post": {
+        "summary": "Language detection",
+        "description": "Detects the language of input text using script detection (non-Latin scripts) and word frequency scoring (Latin scripts). Returns the primary language, confidence level, alternative suggestions, and multilingual detection.",
+        "operationId": "langDetectAnalyze",
+        "tags": [
+          "AI"
+        ],
+        "x-x402-price": "$0.001",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000,
+                    "description": "Text to analyze for language detection"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Language detected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detected_language": {
+                      "type": "string"
+                    },
+                    "language_code": {
+                      "type": "string"
+                    },
+                    "confidence": {
+                      "type": "string",
+                      "enum": [
+                        "high",
+                        "medium",
+                        "low"
+                      ]
+                    },
+                    "script": {
+                      "type": "string"
+                    },
+                    "is_multilingual": {
+                      "type": "boolean"
+                    },
+                    "alternatives": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "language": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          },
+                          "score": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "text_length": {
+                      "type": "integer"
+                    },
+                    "word_count": {
+                      "type": "integer"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LabeledFinding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "detected_language": "English",
+                  "language_code": "en",
+                  "confidence": "high",
+                  "script": "Latin",
+                  "is_multilingual": false,
+                  "alternatives": [],
+                  "text_length": 45,
+                  "word_count": 8,
+                  "score": 95,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/npm-intel/analyze": {
+      "get": {
+        "summary": "npm package intelligence",
+        "description": "Analyzes npm packages using the npm registry API. Returns metadata, version history, dependencies, maintainers, weekly downloads, deprecation status, and a quality score based on maintenance activity, licensing, and popularity.",
+        "operationId": "npmIntelAnalyze",
+        "tags": [
+          "OSINT"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "package",
+            "in": "query",
+            "required": true,
+            "description": "npm package name (supports scoped packages like @babel/core)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Package analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "package": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latest_version": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "total_versions": {
+                      "type": "integer"
+                    },
+                    "weekly_downloads": {
+                      "type": "integer"
+                    },
+                    "license": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "repository": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "homepage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "keywords": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "maintainers": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "maintainer_count": {
+                      "type": "integer"
+                    },
+                    "dependency_count": {
+                      "type": "integer"
+                    },
+                    "dev_dependency_count": {
+                      "type": "integer"
+                    },
+                    "created_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "latest_published_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "days_since_last_publish": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "is_deprecated": {
+                      "type": "boolean"
+                    },
+                    "deprecation_message": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "package": "express",
+                  "description": "Fast, unopinionated, minimalist web framework",
+                  "latest_version": "4.21.2",
+                  "total_versions": 280,
+                  "weekly_downloads": 32000000,
+                  "license": "MIT",
+                  "repository": "https://github.com/expressjs/express",
+                  "homepage": "https://expressjs.com",
+                  "keywords": [
+                    "express",
+                    "framework",
+                    "web"
+                  ],
+                  "maintainers": [
+                    "dougwilson"
+                  ],
+                  "maintainer_count": 1,
+                  "dependency_count": 31,
+                  "dev_dependency_count": 25,
+                  "created_at": "2010-12-29T00:00:00Z",
+                  "latest_published_at": "2025-01-10T00:00:00Z",
+                  "days_since_last_publish": 5,
+                  "is_deprecated": false,
+                  "deprecation_message": null,
+                  "score": 90,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/sitemap-parser/fetch": {
+      "get": {
+        "summary": "Sitemap parser",
+        "description": "Fetches and parses XML sitemaps or sitemap indexes. Accepts a direct sitemap URL or a domain (auto-discovers via robots.txt and common paths). Handles sitemap indexes by fetching up to 3 child sitemaps. Extracts URL metadata (lastmod, changefreq, priority).",
+        "operationId": "sitemapParserFetch",
+        "tags": [
+          "Web"
+        ],
+        "x-x402-price": "$0.001",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Sitemap URL or domain for auto-discovery",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum URLs to return (1\u20131000, default: 100)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sitemap parsed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "sitemap_type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "urlset",
+                        "sitemapindex",
+                        null
+                      ]
+                    },
+                    "total_urls": {
+                      "type": "integer"
+                    },
+                    "urls_returned": {
+                      "type": "integer"
+                    },
+                    "child_sitemaps_fetched": {
+                      "type": "integer"
+                    },
+                    "urls": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "last_modified": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "change_frequency": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "priority": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "newest_url_date": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "oldest_url_date": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "avg_priority": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "has_lastmod": {
+                          "type": "boolean"
+                        },
+                        "has_priority": {
+                          "type": "boolean"
+                        },
+                        "has_changefreq": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LabeledFinding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "source_url": "https://example.com/sitemap.xml",
+                  "sitemap_type": "urlset",
+                  "total_urls": 42,
+                  "urls_returned": 42,
+                  "child_sitemaps_fetched": 0,
+                  "urls": [
+                    {
+                      "url": "https://example.com/",
+                      "last_modified": "2025-01-10",
+                      "change_frequency": "weekly",
+                      "priority": 1.0
+                    }
+                  ],
+                  "stats": {
+                    "newest_url_date": "2025-01-10",
+                    "oldest_url_date": "2024-06-01",
+                    "avg_priority": 0.65,
+                    "has_lastmod": true,
+                    "has_priority": true,
+                    "has_changefreq": true
+                  },
+                  "score": 90,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/url-safety/check": {
+      "get": {
+        "summary": "URL safety check",
+        "description": "Analyzes URLs for malicious or suspicious characteristics. Queries URLhaus for known malware database matches, checks Google Safe Browsing and SURBL blacklists, and performs heuristic analysis on URL structure including brand impersonation, suspicious TLDs, IP hosts, excessive encoding, and homograph risks.",
+        "operationId": "urlSafetyCheck",
+        "tags": [
+          "Security"
+        ],
+        "x-x402-price": "$0.002",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Full URL to analyze for safety",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URL safety analysis complete",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "in_urlhaus": {
+                      "type": "boolean"
+                    },
+                    "urlhaus_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "online",
+                        "offline",
+                        "inactive",
+                        null
+                      ]
+                    },
+                    "threat_type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "malware_families": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "blacklisted_gsb": {
+                      "type": "boolean"
+                    },
+                    "blacklisted_surbl": {
+                      "type": "boolean"
+                    },
+                    "urlhaus_reference": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "heuristic_flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "brand_impersonation",
+                          "suspicious_tld",
+                          "ip_host",
+                          "excessive_encoding",
+                          "deep_subdomains",
+                          "long_url",
+                          "homograph_risk"
+                        ]
+                      }
+                    },
+                    "threat_classification": {
+                      "type": "string",
+                      "enum": [
+                        "clean",
+                        "suspicious",
+                        "malicious"
+                      ]
+                    },
+                    "confidence": {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "low",
+                        "medium",
+                        "high"
+                      ]
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "url": "https://example.com",
+                  "in_urlhaus": false,
+                  "urlhaus_status": null,
+                  "threat_type": null,
+                  "malware_families": [],
+                  "blacklisted_gsb": false,
+                  "blacklisted_surbl": false,
+                  "urlhaus_reference": null,
+                  "heuristic_flags": [],
+                  "threat_classification": "clean",
+                  "confidence": "high",
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "402": {
+            "$ref": "#/components/responses/PaymentRequired"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4152,7 +5783,11 @@
     },
     {
       "name": "OSINT",
-      "description": "Phone intel, username checks, Wayback Machine"
+      "description": "Phone intel, username checks, Wayback Machine, GitHub repos, npm packages"
+    },
+    {
+      "name": "Utilities",
+      "description": "Cron parsing, currency exchange, holidays"
     },
     {
       "name": "Threat Intelligence",
