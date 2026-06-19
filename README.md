@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 56 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 61 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -16,6 +16,11 @@ Network intelligence API with 56 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/classify` | POST | $0.030 | Classify text into caller-supplied categories using Claude Haiku — zero-shot classification where… |
 | `/content-moderate` | POST | $0.05 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
 | `/entity-extract` | POST | $0.050 | Extract named entities from text using Claude Haiku — people, organizations, locations, dates… |
+| `/extract/address` | POST | $0.03 | Parse and normalize a freeform address string using Claude Haiku — splits it into street, city… |
+| `/extract/contact` | POST | $0.05 | Extract structured contact details from text, an email signature, or webpage text using Claude… |
+| `/extract/invoice` | POST | $0.10 | Extract structured data from invoice or receipt text using Claude Haiku — returns vendor, invoice… |
+| `/extract/resume` | POST | $0.08 | Extract structured data from resume/CV text using Claude Haiku — returns name, contact info… |
+| `/extract/table` | POST | $0.05 | Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in… |
 | `/sentiment/analyze` | POST | $0.030 | Analyze the sentiment of text using Claude Haiku — returns overall polarity… |
 | `/text-summarize` | POST | $0.05 | Summarize any text or web page into a concise summary plus key bullet points using Claude Haiku —… |
 | `/translate/long` | POST | $0.08 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
