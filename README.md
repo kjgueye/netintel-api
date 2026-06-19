@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 44 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 56 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -13,6 +13,13 @@ Network intelligence API with 44 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/email-auth` | POST | $0.030 | Validates SPF, DKIM, and DMARC records for a domain, probes multiple DKIM selectors concurrently… |
 | `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
 | `/schema-parse/extract` | POST | $0.100 | Accepts unstructured text and a JSON Schema, then uses an LLM to extract structured data matching… |
+| `/classify` | POST | $0.030 | Classify text into caller-supplied categories using Claude Haiku — zero-shot classification where… |
+| `/content-moderate` | POST | $0.05 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
+| `/entity-extract` | POST | $0.050 | Extract named entities from text using Claude Haiku — people, organizations, locations, dates… |
+| `/sentiment/analyze` | POST | $0.030 | Analyze the sentiment of text using Claude Haiku — returns overall polarity… |
+| `/text-summarize` | POST | $0.05 | Summarize any text or web page into a concise summary plus key bullet points using Claude Haiku —… |
+| `/translate/long` | POST | $0.08 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
+| `/translate/short` | POST | $0.03 | Translate up to 500 words between languages using Claude Haiku — auto-detects source language… |
 | `/asn-lookup/analyze` | GET | $0.030 | Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and… |
 | `/whois-rdap/lookup` | GET | $0.010 | Look up domain registration metadata via RDAP — returns registrar, creation/expiry dates… |
 | `/cert-transparency/lookup` | GET | $0.010 | Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever… |
@@ -50,6 +57,11 @@ Network intelligence API with 44 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/name-gen/suggest` | GET | $0.050 | Generate brandable startup/product names from a keyword using prefixes, suffixes, blends, and… |
 | `/tld-price/compare` | GET | $0.010 | Compare registration, renewal, and transfer prices for a TLD across major registrars, or for a… |
 | `/typosquat/scan` | GET | $0.050 | Generate common typo and look-alike variations of a domain and check which are already registered —… |
+| `/domain-due-diligence` | GET | $0.20 | One call combines domain availability, heuristic value appraisal, and TLD pricing into a single… |
+| `/domain-report/full` | GET | $0.25 | One premium call returns a complete six-part domain profile — DNS records, SSL certificate, WHOIS… |
+| `/email-report/full` | GET | $0.15 | One call combines domain email authentication (SPF/DKIM/DMARC), email-address intelligence… |
+| `/ip-report/full` | GET | $0.20 | One premium call returns a complete five-part IP profile — geolocation, ASN/network ownership… |
+| `/url-safety/full` | GET | $0.15 | One call vets a URL end to end — traces its full redirect chain, checks it against malware/phishing… |
 
 ## Usage
 
