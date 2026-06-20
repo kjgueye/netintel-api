@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 61 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
-    "x-guidance": "NetIntel provides 61 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 64 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
+    "x-guidance": "NetIntel provides 64 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -1996,6 +1996,353 @@
                     "row_count": 2
                   },
                   "column_count": 3,
+                  "cached": false,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/markdown/clean": {
+      "post": {
+        "operationId": "postMarkdownClean",
+        "summary": "Convert messy HTML or text into clean, well-structured Markdown using Claude Haiku — strips…",
+        "tags": [
+          "markdown"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The messy HTML or text to convert into clean Markdown. Max 10000 words or 50KB."
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.030000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "markdown": {
+                      "type": "string",
+                      "description": "The cleaned, well-structured GitHub-flavored Markdown."
+                    },
+                    "input_chars": {
+                      "type": "number",
+                      "description": "Character count of the input."
+                    },
+                    "output_chars": {
+                      "type": "number",
+                      "description": "Character count of the cleaned markdown."
+                    },
+                    "reduction_ratio": {
+                      "type": "number",
+                      "description": "1 - (output_chars / input_chars), rounded to 2dp — how much boilerplate was stripped (informational)."
+                    },
+                    "cached": {
+                      "type": "boolean",
+                      "description": "True if served from the in-memory cache."
+                    },
+                    "score": {
+                      "type": "number",
+                      "description": "Quality score 0-100"
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "Letter grade A-F"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Informational findings (e.g. empty_output)."
+                    }
+                  }
+                },
+                "example": {
+                  "markdown": "# Welcome\n\nHello [world](https://example.com).\n",
+                  "input_chars": 108,
+                  "output_chars": 39,
+                  "reduction_ratio": 0.64,
+                  "cached": false,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/normalize/json": {
+      "post": {
+        "operationId": "postNormalizeJson",
+        "summary": "Conform messy or inconsistent JSON to a target schema using Claude Haiku — renames keys, coerces…",
+        "tags": [
+          "normalize"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": [
+                      "string",
+                      "object"
+                    ],
+                    "description": "The messy JSON to normalize — a JSON string or an already-parsed object. Max 10000 words or 50KB."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "A map of field name → type token. Supported tokens: string, number, boolean, date, string[], number[], object. Max 50 fields. Output keys are forced to exactly these field names."
+                  }
+                },
+                "required": [
+                  "data",
+                  "schema"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "normalized": {
+                      "type": "object",
+                      "description": "The input conformed to the target schema: keys are exactly the schema field names, values coerced to the declared types, missing fields null."
+                    },
+                    "fields_in_schema": {
+                      "type": "number",
+                      "description": "Number of fields in the target schema."
+                    },
+                    "fields_populated": {
+                      "type": "number",
+                      "description": "Number of non-null fields in the output."
+                    },
+                    "fields_nulled": {
+                      "type": "number",
+                      "description": "Number of null fields in the output."
+                    },
+                    "schema_match": {
+                      "type": "boolean",
+                      "description": "True when the model's output keys were exactly the schema field names. False when code had to force-conform (strip extra / add missing) keys."
+                    },
+                    "cached": {
+                      "type": "boolean",
+                      "description": "True if served from the in-memory cache."
+                    },
+                    "score": {
+                      "type": "number",
+                      "description": "Quality score 0-100."
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "Letter grade A-F."
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Informational findings (e.g. schema_mismatch_corrected, mostly_nulled)."
+                    }
+                  }
+                },
+                "example": {
+                  "normalized": {
+                    "full_name": "Jane Doe",
+                    "age": 42,
+                    "is_active": true,
+                    "tags": [
+                      "vip",
+                      "beta"
+                    ],
+                    "signup_date": "2024-03-01"
+                  },
+                  "fields_in_schema": 5,
+                  "fields_populated": 5,
+                  "fields_nulled": 0,
+                  "schema_match": true,
+                  "cached": false,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/text-to-json": {
+      "post": {
+        "operationId": "postTextToJson",
+        "summary": "Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku —…",
+        "tags": [
+          "text-to-json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The unstructured prose to extract structured data from. Max 10000 words or 50KB."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "A map of field name → type token. Supported tokens: string, number, boolean, date, string[], number[], object. Max 50 fields. Each field is extracted from the text as the declared type; output keys are forced to exactly these field names."
+                  }
+                },
+                "required": [
+                  "text",
+                  "schema"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "description": "The extracted data: keys are exactly the schema field names, values pulled from the text and cast to the declared types, unfindable fields null."
+                    },
+                    "fields_in_schema": {
+                      "type": "number",
+                      "description": "Number of fields in the schema."
+                    },
+                    "fields_populated": {
+                      "type": "number",
+                      "description": "Number of non-null fields in the output."
+                    },
+                    "fields_nulled": {
+                      "type": "number",
+                      "description": "Number of null fields in the output."
+                    },
+                    "schema_match": {
+                      "type": "boolean",
+                      "description": "True when the model's output keys were exactly the schema field names. False when code had to force-conform (strip extra / add missing) keys."
+                    },
+                    "cached": {
+                      "type": "boolean",
+                      "description": "True if served from the in-memory cache."
+                    },
+                    "score": {
+                      "type": "number",
+                      "description": "Quality score 0-100."
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "Letter grade A-F."
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Informational findings (e.g. schema_mismatch_corrected, mostly_nulled)."
+                    }
+                  }
+                },
+                "example": {
+                  "result": {
+                    "company": "Acme Corp",
+                    "founded_year": 2010,
+                    "employees": 250,
+                    "is_public": false,
+                    "locations": [
+                      "San Francisco",
+                      "London"
+                    ]
+                  },
+                  "fields_in_schema": 5,
+                  "fields_populated": 5,
+                  "fields_nulled": 0,
+                  "schema_match": true,
                   "cached": false,
                   "score": 100,
                   "grade": "A",
