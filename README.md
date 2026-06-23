@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 66 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 69 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -39,6 +39,9 @@ Network intelligence API with 66 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 33 fiat currencies (live European Central Bank rates) AND major… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
+| `/calendar/ics` | POST | $0.005 | Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events… |
+| `/event-classify` | POST | $0.02 | Cheap, fast "is this a dateable event?" filter for social and web text — one tiny Haiku call… |
+| `/event-extract` | POST | $0.100 | Extract a normalized calendar event from any caption, announcement, or page text using Claude Haiku… |
 | `/tech-fingerprint/analyze` | GET | $0.050 | Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags… |
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
 | `/domain-availability/check` | GET | $0.050 | Check if a domain name is available for registration by querying RDAP and DNS — returns… |

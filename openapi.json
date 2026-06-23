@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 66 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
-    "x-guidance": "NetIntel provides 66 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 69 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
+    "x-guidance": "NetIntel provides 69 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -4161,6 +4161,322 @@
                       "detail": "Currency symbol/word maps to multiple ISO 4217 codes; resolution is best-effort"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/calendar/ics": {
+      "post": {
+        "operationId": "postCalendarIcs",
+        "summary": "Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events,…",
+        "tags": [
+          "calendar"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Event summary (e.g. \"Team Offsite\"). Required."
+                  },
+                  "starts_at": {
+                    "type": "string",
+                    "description": "ISO-8601 start. Use an offset/timestamp for timed events (e.g. 2026-06-27T09:00:00+02:00) or a bare date (YYYY-MM-DD) for all-day. Required."
+                  },
+                  "ends_at": {
+                    "type": "string",
+                    "description": "Optional ISO-8601 end. Defaults: timed → start + 1 hour; all-day → start + 1 day (exclusive). For multi-day all-day events pass the inclusive last day."
+                  },
+                  "all_day": {
+                    "type": "boolean",
+                    "description": "Optional. Inferred when omitted: a bare-date starts_at is all-day, a timestamp is timed."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Optional IANA timezone (e.g. Europe/Paris). Timed events are converted to UTC and emitted with a Z suffix (no VTIMEZONE block)."
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Optional venue/address → LOCATION."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional → DESCRIPTION."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "Optional → URL."
+                  },
+                  "organizer": {
+                    "type": "string",
+                    "description": "Optional organizer name and/or email → ORGANIZER (CN=...)."
+                  }
+                },
+                "required": [
+                  "title",
+                  "starts_at"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "ics": "BEGIN:VCALENDAR\r\nVERSION:2.0\r\n...END:VCALENDAR\r\n",
+                    "uid": "a1b2c3...@netintel.dev",
+                    "all_day": false
+                  },
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/event-classify": {
+      "post": {
+        "operationId": "postEventClassify",
+        "summary": "Cheap, fast \"is this a dateable event?\" filter for social and web text — one tiny Haiku call…",
+        "tags": [
+          "event-classify"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Caption/post/snippet to classify. Required. Max 10000 words or 50KB."
+                  },
+                  "posted_at": {
+                    "type": "string",
+                    "description": "Optional ISO-8601 timestamp the content was posted — lets the classifier reject past-event recaps (an event whose only date is in the past relative to posted_at is not dateable)."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Optional IANA timezone (e.g. America/Los_Angeles) for date context."
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "Minimal verdict: is_event (boolean), confidence (0-1), reason (one short line)."
+                    },
+                    "meta": {
+                      "type": "object"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "is_event": true,
+                    "confidence": 0.93,
+                    "reason": "specific dated event"
+                  },
+                  "meta": {
+                    "model": "haiku-4.5"
+                  },
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/event-extract": {
+      "post": {
+        "operationId": "postEventExtract",
+        "summary": "Extract a normalized calendar event from any caption, announcement, or page text using Claude Haiku…",
+        "tags": [
+          "event-extract"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Caption/announcement/page text to extract an event from. Required. Max 10000 words or 50KB."
+                  },
+                  "posted_at": {
+                    "type": "string",
+                    "description": "Optional ISO-8601 timestamp the content was posted — the anchor for resolving relative dates (\"this Saturday\", \"tonight\"). Strongly recommended."
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "Optional IANA timezone (e.g. America/Los_Angeles) to resolve times against. Inferred from city when absent."
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "Optional city — helps timezone inference and venue/address disambiguation."
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.100000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "Normalized event (is_event, confidence, title, starts_at, ends_at, all_day, timezone, venue, address, city, price, url, organizer). For a non-event, is_event=false + reason and all event fields null."
+                    },
+                    "meta": {
+                      "type": "object"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "is_event": true,
+                    "confidence": 0.9,
+                    "title": "Live Jazz Night",
+                    "starts_at": "2026-06-27T19:00:00-07:00",
+                    "ends_at": null,
+                    "all_day": false,
+                    "timezone": "America/Los_Angeles",
+                    "venue": "The Echo",
+                    "address": "1822 Sunset Blvd",
+                    "city": "Los Angeles",
+                    "price": "Free",
+                    "url": null,
+                    "organizer": null
+                  },
+                  "meta": {
+                    "model": "haiku-4.5",
+                    "date_resolved_from": "posted_at",
+                    "date_before_posted": false
+                  },
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
                 }
               }
             }
