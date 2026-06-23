@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 64 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 66 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -38,12 +38,14 @@ Network intelligence API with 64 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/ip-reputation/analyze` | GET | $0.050 | Check an IP address against AbuseIPDB and AlienVault OTX threat feeds. Returns a composite risk… |
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 33 currencies using live European Central Bank exchange rates — returns… |
+| `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
 | `/tech-fingerprint/analyze` | GET | $0.050 | Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags… |
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
 | `/domain-availability/check` | GET | $0.050 | Check if a domain name is available for registration by querying RDAP and DNS — returns… |
 | `/email-intel/analyze` | GET | $0.050 | Validate an email address for deliverability, detect disposable/temporary domains, identify… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
+| `/web/extract` | GET | $0.02 | Fetch any web page or PDF and convert it to clean, structured Markdown — strips scripts, nav, ads… |
 | `/phone-intel/analyze` | GET | $0.050 | Parse and validate any phone number in any format, identify its country, line type… |
 | `/robots-txt/analyze` | GET | $0.010 | Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs… |
 | `/rss-parser/fetch` | GET | $0.010 | Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link… |

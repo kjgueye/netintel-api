@@ -3,19 +3,19 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 64 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
-    "x-guidance": "NetIntel provides 64 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 66 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
+    "x-guidance": "NetIntel provides 66 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
     "x-logo": {
-      "url": "https://netintel-production-440c.up.railway.app/favicon.png",
+      "url": "https://netintel.dev/favicon.png",
       "altText": "NetIntel API"
     }
   },
   "servers": [
     {
-      "url": "https://netintel-production-440c.up.railway.app"
+      "url": "https://netintel.dev"
     }
   ],
   "paths": {
@@ -2625,11 +2625,11 @@
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages supported."
+                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages supported. Required. Aliases also accepted: target_language, to, lang. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
-                    "description": "Optional source language (ISO 639-1 code or English name). When omitted, the source language is auto-detected."
+                    "description": "Optional source language (ISO 639-1 code or English name). When omitted, the source language is auto-detected. Aliases also accepted: source_language, from."
                   }
                 },
                 "required": [
@@ -2741,11 +2741,11 @@
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages supported."
+                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages supported. Required. Aliases also accepted: target_language, to, lang. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
-                    "description": "Optional source language (ISO 639-1 code or English name). When omitted, the source language is auto-detected."
+                    "description": "Optional source language (ISO 639-1 code or English name). When omitted, the source language is auto-detected. Aliases also accepted: source_language, from."
                   }
                 },
                 "required": [
@@ -3790,6 +3790,7 @@
                     ]
                   },
                   "otx": {
+                    "available": true,
                     "pulse_count": 38,
                     "malware_families": [
                       "Mirai"
@@ -4040,6 +4041,116 @@
                   "score": 100,
                   "grade": "A",
                   "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/money/parse": {
+      "post": {
+        "operationId": "postMoneyParse",
+        "summary": "Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles…",
+        "tags": [
+          "money"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The money string to parse (e.g. \"$1,234.56\", \"€1.234,56\", \"USD 1.2M\"). Max 1000 characters."
+                  },
+                  "locale_hint": {
+                    "type": "string",
+                    "description": "Optional BCP-47/ISO locale (e.g. \"de-DE\", \"en-US\") to disambiguate decimal vs grouping separators."
+                  },
+                  "default_currency": {
+                    "type": "string",
+                    "description": "Optional ISO 4217 code to assume when no currency marker is present. If absent and none is detected, currency is null (never guessed)."
+                  },
+                  "allow_llm": {
+                    "type": "boolean",
+                    "description": "Default true. When false, skip the natural-language LLM fallback (deterministic-only)."
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    },
+                    "meta": {
+                      "type": "object"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "data": {
+                    "parsed": true,
+                    "amount": 1234.56,
+                    "currency": "USD",
+                    "raw": "$1,234.56",
+                    "reason": null
+                  },
+                  "meta": {
+                    "method": "deterministic",
+                    "currency_ambiguous": true,
+                    "separator_assumed": "us",
+                    "magnitude_applied": null,
+                    "sign_convention": "none",
+                    "confidence": 0.5,
+                    "used_llm": false
+                  },
+                  "score": 90,
+                  "grade": "A",
+                  "findings": [
+                    {
+                      "rule": "currency_ambiguous",
+                      "detail": "Currency symbol/word maps to multiple ISO 4217 codes; resolution is best-effort"
+                    }
+                  ]
                 }
               }
             }
@@ -4703,6 +4814,109 @@
                   "reading_time_minutes": 6,
                   "language": "en",
                   "content_length_chars": 7500,
+                  "status_code": 200,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/web/extract": {
+      "get": {
+        "operationId": "getWebExtract",
+        "summary": "Fetch any web page or PDF and convert it to clean, structured Markdown — strips scripts, nav, ads,…",
+        "tags": [
+          "web"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Public URL of an HTML page or PDF to extract (e.g. https://example.com/article)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "final_url": {
+                      "type": "string"
+                    },
+                    "content_type": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "markdown": {
+                      "type": "string"
+                    },
+                    "word_count": {
+                      "type": "number"
+                    },
+                    "char_count": {
+                      "type": "number"
+                    },
+                    "output_bytes": {
+                      "type": "number"
+                    },
+                    "truncated": {
+                      "type": "boolean"
+                    },
+                    "status_code": {
+                      "type": "number"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "url": "https://example.com/article",
+                  "final_url": "https://www.example.com/article",
+                  "content_type": "article",
+                  "title": "The Article Title",
+                  "markdown": "# The Article Title\n\nFirst paragraph of the article rendered as Markdown...",
+                  "word_count": 1250,
+                  "char_count": 7500,
+                  "output_bytes": 7500,
+                  "truncated": false,
                   "status_code": 200,
                   "score": 100,
                   "grade": "A",
