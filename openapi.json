@@ -3932,7 +3932,7 @@
     "/currency-exchange/convert": {
       "get": {
         "operationId": "getCurrencyExchangeConvert",
-        "summary": "Convert any amount between 33 currencies using live European Central Bank exchange rates — returns…",
+        "summary": "Convert any amount between 33 fiat currencies (live European Central Bank rates) AND major…",
         "tags": [
           "currency-exchange"
         ],
@@ -3950,7 +3950,7 @@
             "name": "to",
             "in": "query",
             "required": true,
-            "description": "ISO 4217 target currency code (e.g. EUR)",
+            "description": "Target currency — ISO 4217 fiat code (e.g. EUR) or a crypto ticker (e.g. BTC, ETH, ICP)",
             "schema": {
               "type": "string"
             }
@@ -3968,7 +3968,7 @@
             "name": "date",
             "in": "query",
             "required": false,
-            "description": "YYYY-MM-DD for historical rate (default: latest)",
+            "description": "YYYY-MM-DD for a historical rate (fiat pairs only; ignored for crypto). Default: latest",
             "schema": {
               "type": "string"
             }
@@ -4018,6 +4018,10 @@
                     "is_historical": {
                       "type": "boolean"
                     },
+                    "source": {
+                      "type": "string",
+                      "description": "Rate source: ecb (fiat), coinbase (crypto), or same"
+                    },
                     "score": {
                       "type": "number"
                     },
@@ -4031,16 +4035,22 @@
                 },
                 "example": {
                   "from": "USD",
-                  "to": "EUR",
+                  "to": "BTC",
                   "amount": 100,
-                  "converted_amount": 92.34,
-                  "exchange_rate": 0.9234,
-                  "inverse_rate": 1.0828,
-                  "rate_date": "2024-03-10",
+                  "converted_amount": 0.00094932,
+                  "exchange_rate": 0.0000094932,
+                  "inverse_rate": 105340,
+                  "rate_date": "2026-06-23",
                   "is_historical": false,
+                  "source": "coinbase",
                   "score": 100,
                   "grade": "A",
-                  "findings": []
+                  "findings": [
+                    {
+                      "rule": "crypto_spot",
+                      "detail": "Crypto pair priced at the latest Coinbase spot rate; fiat pairs use ECB reference rates"
+                    }
+                  ]
                 }
               }
             }
