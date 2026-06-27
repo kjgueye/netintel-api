@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 69 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 70 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -13,6 +13,8 @@ Network intelligence API with 69 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/email-auth` | POST | $0.030 | Validates SPF, DKIM, and DMARC records for a domain, probes multiple DKIM selectors concurrently… |
 | `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
 | `/schema-parse/extract` | POST | $0.100 | Accepts unstructured text and a JSON Schema, then uses an LLM to extract structured data matching… |
+| `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
+| `/ai-image/generate` | POST | $0.25 | Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with… |
 | `/classify` | POST | $0.030 | Classify text into caller-supplied categories using Claude Haiku — zero-shot classification where… |
 | `/content-moderate` | POST | $0.05 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
 | `/entity-extract` | POST | $0.050 | Extract named entities from text using Claude Haiku — people, organizations, locations, dates… |
@@ -55,7 +57,6 @@ Network intelligence API with 69 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/username-check/lookup` | GET | $0.030 | Check username availability across 20+ social platforms and developer sites simultaneously —… |
 | `/wayback/lookup` | GET | $0.010 | Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the… |
 | `/domain-age/check` | GET | $0.030 | Determine a domain's age from registration data and archival history — returns creation date, age… |
-| `/github-intel/analyze` | GET | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/holidays/check` | GET | $0.005 | Look up public holidays for any country and year, check whether a specific date is a holiday, and… |
 | `/ip-geo/locate` | GET | $0.030 | Geolocate any IPv4 or IPv6 address to city, region, country, latitude/longitude, timezone, and… |
 | `/jwt-inspector/decode` | GET | $0.005 | Decode and inspect any JWT token — extracts header algorithm, payload claims, expiry status… |

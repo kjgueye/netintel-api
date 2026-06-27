@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 69 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).",
-    "x-guidance": "NetIntel provides 69 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 70 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 70 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -1020,6 +1020,237 @@
                     "input": 312,
                     "output": 48
                   }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/messages": {
+      "post": {
+        "operationId": "postMessages",
+        "summary": "OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array…",
+        "tags": [
+          "messages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Model to use. Supported: claude-sonnet-4-6 (aliases: balanced, sonnet). Optional — defaults to claude-sonnet-4-6."
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "Chat messages in OpenAI format. Each item is {role: 'system'|'user'|'assistant', content: string}. System messages are applied as the system prompt.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Maximum output tokens. Optional — defaults to 1024, capped at 1024."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature (0–1). Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling (0–1). Optional; ignored if temperature is set."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.060000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "One choice with the assistant message and a finish_reason (stop/length/content_filter/tool_calls)."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "claude-sonnet-4-6",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "The capital of France is Paris."
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 14,
+                    "completion_tokens": 8,
+                    "total_tokens": 22
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/ai-image/generate": {
+      "post": {
+        "operationId": "postAiImageGenerate",
+        "summary": "Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with…",
+        "tags": [
+          "ai-image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "description": "What to create (3-2000 chars)."
+                  },
+                  "use_case": {
+                    "type": "string",
+                    "description": "e.g. app_icon, logo, banner. Default web_image."
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "description": "1:1, 16:9, or 9:16."
+                  },
+                  "style": {
+                    "type": "string",
+                    "description": "Optional art direction."
+                  },
+                  "brand_colors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Optional palette."
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.250000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "image_url": {
+                      "type": "string"
+                    },
+                    "revised_prompt": {
+                      "type": "string"
+                    },
+                    "alt_text": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "image_url": "data:image/png;base64,...",
+                  "revised_prompt": "A clean app icon...",
+                  "alt_text": "App icon.",
+                  "score": 92,
+                  "grade": "A"
                 }
               }
             }
@@ -5946,140 +6177,6 @@
                   "score": 100,
                   "grade": "A",
                   "findings": []
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment Required"
-          }
-        }
-      }
-    },
-    "/github-intel/analyze": {
-      "get": {
-        "operationId": "getGithubIntelAnalyze",
-        "summary": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown,…",
-        "tags": [
-          "github-intel"
-        ],
-        "parameters": [
-          {
-            "name": "repo",
-            "in": "query",
-            "required": true,
-            "description": "GitHub repository in owner/repo format or full GitHub URL",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-payment-info": {
-          "price": {
-            "mode": "fixed",
-            "currency": "USD",
-            "amount": "0.030000"
-          },
-          "protocols": [
-            {
-              "x402": {}
-            }
-          ]
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "repo": {
-                      "type": "string"
-                    },
-                    "url": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "stars": {
-                      "type": "number"
-                    },
-                    "forks": {
-                      "type": "number"
-                    },
-                    "open_issues": {
-                      "type": "number"
-                    },
-                    "primary_language": {
-                      "type": "string"
-                    },
-                    "license": {
-                      "type": "string"
-                    },
-                    "license_spdx": {
-                      "type": "string"
-                    },
-                    "topics": {
-                      "type": "array"
-                    },
-                    "last_pushed_at": {
-                      "type": "string"
-                    },
-                    "days_since_last_push": {
-                      "type": "number"
-                    },
-                    "is_archived": {
-                      "type": "boolean"
-                    },
-                    "contributor_count": {
-                      "type": "number"
-                    },
-                    "latest_release": {
-                      "type": "string"
-                    },
-                    "score": {
-                      "type": "number"
-                    },
-                    "grade": {
-                      "type": "string"
-                    },
-                    "findings": {
-                      "type": "array"
-                    }
-                  }
-                },
-                "example": {
-                  "repo": "expressjs/express",
-                  "url": "https://github.com/expressjs/express",
-                  "description": "Fast, unopinionated, minimalist web framework for node.",
-                  "stars": 65000,
-                  "forks": 15000,
-                  "open_issues": 200,
-                  "primary_language": "JavaScript",
-                  "license": "MIT License",
-                  "license_spdx": "MIT",
-                  "topics": [
-                    "nodejs",
-                    "javascript",
-                    "web",
-                    "framework"
-                  ],
-                  "last_pushed_at": "2024-03-10T08:00:00Z",
-                  "days_since_last_push": 12,
-                  "is_archived": false,
-                  "contributor_count": 100,
-                  "latest_release": "v4.18.3",
-                  "score": 100,
-                  "grade": "A",
-                  "findings": [
-                    {
-                      "rule": "active_development",
-                      "deduction": 0,
-                      "detail": "Pushed within last 180 days"
-                    }
-                  ]
                 }
               }
             }
