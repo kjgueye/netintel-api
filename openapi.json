@@ -52,7 +52,7 @@
     "/dns/lookup": {
       "get": {
         "operationId": "getDnsLookup",
-        "summary": "Resolves all DNS record types for a domain, parses SPF/DKIM/DMARC from TXT records, and compares A…",
+        "summary": "DNS lookup / nslookup / dig API — resolve all DNS record types (A, AAAA, MX, TXT, NS, CNAME, SOA,…",
         "tags": [
           "dns"
         ],
@@ -71,7 +71,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.002000"
           },
           "protocols": [
             {
@@ -660,7 +660,7 @@
     "/email-auth": {
       "post": {
         "operationId": "postEmailAuth",
-        "summary": "Validates SPF, DKIM, and DMARC records for a domain, probes multiple DKIM selectors concurrently,…",
+        "summary": "Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC,…",
         "tags": [
           "email-auth"
         ],
@@ -694,7 +694,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.002000"
           },
           "protocols": [
             {
@@ -1264,7 +1264,7 @@
     "/classify": {
       "post": {
         "operationId": "postClassify",
-        "summary": "Classify text into caller-supplied categories using Claude Haiku — zero-shot classification where…",
+        "summary": "Text classification API — zero-shot text classifier / categorization: caller supplies 2–25 labels…",
         "tags": [
           "classify"
         ],
@@ -1303,7 +1303,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -2591,7 +2591,7 @@
     "/sentiment/analyze": {
       "post": {
         "operationId": "postSentimentAnalyze",
-        "summary": "Analyze the sentiment of text using Claude Haiku — returns overall polarity…",
+        "summary": "Sentiment analysis API — emotion & aspect-based sentiment classifier via Claude Haiku: returns…",
         "tags": [
           "sentiment"
         ],
@@ -2625,7 +2625,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.002000"
           },
           "protocols": [
             {
@@ -2719,7 +2719,7 @@
     "/text-summarize": {
       "post": {
         "operationId": "postTextSummarize",
-        "summary": "Summarize any text or web page into a concise summary plus key bullet points using Claude Haiku —…",
+        "summary": "Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key…",
         "tags": [
           "text-summarize"
         ],
@@ -2751,7 +2751,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -2856,7 +2856,7 @@
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages supported. Required. Aliases also accepted: target_language, to, lang. (The response returns this as target_language.)"
+                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages supported. Required. Aliases also accepted: target_lang, target_language, to, lang. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
@@ -2972,7 +2972,7 @@
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages supported. Required. Aliases also accepted: target_language, to, lang. (The response returns this as target_language.)"
+                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages supported. Required. Aliases also accepted: target_lang, target_language, to, lang. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
@@ -3205,7 +3205,7 @@
     "/whois-rdap/lookup": {
       "get": {
         "operationId": "getWhoisRdapLookup",
-        "summary": "Look up domain registration metadata via RDAP — returns registrar, creation/expiry dates,…",
+        "summary": "WHOIS domain lookup via RDAP — registrar, creation/expiry/updated dates, nameservers, and status…",
         "tags": [
           "whois-rdap"
         ],
@@ -3224,7 +3224,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.010000"
+            "amount": "0.003000"
           },
           "protocols": [
             {
@@ -5040,7 +5040,7 @@
     "/email-intel/analyze": {
       "get": {
         "operationId": "getEmailIntelAnalyze",
-        "summary": "Validate an email address for deliverability, detect disposable/temporary domains, identify…",
+        "summary": "Email verification & deliverability check (email validator / verifier) — validate an address,…",
         "tags": [
           "email-intel"
         ],
@@ -5059,7 +5059,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -5388,7 +5388,7 @@
     "/web/extract": {
       "get": {
         "operationId": "getWebExtract",
-        "summary": "Fetch any web page or PDF and convert it to clean, structured Markdown — strips scripts, nav, ads,…",
+        "summary": "Extract article / main content from any URL or PDF to clean, LLM-ready Markdown (web scraper /…",
         "tags": [
           "web"
         ],
@@ -5407,7 +5407,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.020000"
+            "amount": "0.003000"
           },
           "protocols": [
             {
@@ -6301,7 +6301,7 @@
     "/ip-geo/locate": {
       "get": {
         "operationId": "getIpGeoLocate",
-        "summary": "Geolocate any IPv4 or IPv6 address to city, region, country, latitude/longitude, timezone, and…",
+        "summary": "IP geolocation lookup (geoip / IP location API) — geolocate any IPv4 or IPv6 address to city,…",
         "tags": [
           "ip-geo"
         ],
@@ -6320,7 +6320,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.002000"
           },
           "protocols": [
             {
