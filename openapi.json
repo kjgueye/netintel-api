@@ -940,7 +940,7 @@
     "/schema-parse/extract": {
       "post": {
         "operationId": "postSchemaParseExtract",
-        "summary": "Accepts unstructured text and a JSON Schema, then uses an LLM to extract structured data matching…",
+        "summary": "Extract structured data from any unstructured text into your own JSON Schema — structured-data /…",
         "tags": [
           "schema-parse"
         ],
@@ -4611,7 +4611,7 @@
     "/event-extract": {
       "post": {
         "operationId": "postEventExtract",
-        "summary": "Extract a normalized calendar event from any caption, announcement, or page text using Claude Haiku…",
+        "summary": "Event extraction / event parsing — turn any caption, announcement, listing, or page text into a…",
         "tags": [
           "event-extract"
         ],

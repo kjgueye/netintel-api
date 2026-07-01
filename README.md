@@ -12,7 +12,7 @@ Network intelligence API with 70 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
 | `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
-| `/schema-parse/extract` | POST | $0.100 | Accepts unstructured text and a JSON Schema, then uses an LLM to extract structured data matching… |
+| `/schema-parse/extract` | POST | $0.100 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
 | `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
 | `/ai-image/generate` | POST | $0.25 | Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with… |
 | `/classify` | POST | $0.005 | Text classification API — zero-shot text classifier / categorization: caller supplies 2–25 labels… |
@@ -43,7 +43,7 @@ Network intelligence API with 70 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
 | `/calendar/ics` | POST | $0.005 | Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events… |
 | `/event-classify` | POST | $0.02 | Cheap, fast "is this a dateable event?" filter for social and web text — one tiny Haiku call… |
-| `/event-extract` | POST | $0.100 | Extract a normalized calendar event from any caption, announcement, or page text using Claude Haiku… |
+| `/event-extract` | POST | $0.100 | Event extraction / event parsing — turn any caption, announcement, listing, or page text into a… |
 | `/tech-fingerprint/analyze` | GET | $0.050 | Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags… |
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
 | `/domain-availability/check` | GET | $0.050 | Check if a domain name is available for registration by querying RDAP and DNS — returns… |
