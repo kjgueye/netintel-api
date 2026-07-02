@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 70 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 71 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -40,6 +40,7 @@ Network intelligence API with 70 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/ip-reputation/analyze` | GET | $0.050 | Check an IP address against AbuseIPDB and AlienVault OTX threat feeds. Returns a composite risk… |
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 33 fiat currencies (live European Central Bank rates) AND major… |
+| `/convert` | GET | $0.01 | Convert any physical measurement to another — length, mass, volume, temperature, area, speed… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
 | `/calendar/ics` | POST | $0.005 | Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events… |
 | `/event-classify` | POST | $0.02 | Cheap, fast "is this a dateable event?" filter for social and web text — one tiny Haiku call… |
