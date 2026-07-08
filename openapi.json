@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 71 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 71 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 72 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 72 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -52,7 +52,7 @@
     "/dns/lookup": {
       "get": {
         "operationId": "getDnsLookup",
-        "summary": "DNS lookup / nslookup / dig API — resolve all DNS record types (A, AAAA, MX, TXT, NS, CNAME, SOA,…",
+        "summary": "DNS lookup / nslookup / dig API — resolve the common DNS record types (A, AAAA, MX, TXT, NS, CNAME,…",
         "tags": [
           "dns"
         ],
@@ -713,6 +713,10 @@
                     "domain": {
                       "type": "string"
                     },
+                    "resolves": {
+                      "type": "boolean",
+                      "description": "Whether the domain has mail infrastructure (MX/A) — false adds a -100 no-mail-infrastructure deduction"
+                    },
                     "grade": {
                       "type": "string"
                     },
@@ -735,6 +739,7 @@
                 },
                 "example": {
                   "domain": "example.com",
+                  "resolves": true,
                   "grade": "A",
                   "score": 100,
                   "spf": {
@@ -972,7 +977,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.100000"
+            "amount": "0.050000"
           },
           "protocols": [
             {
@@ -1183,11 +1188,11 @@
                   },
                   "use_case": {
                     "type": "string",
-                    "description": "e.g. app_icon, logo, banner. Default web_image."
+                    "description": "One of: app_icon, logo, banner, avatar, social_graphic, og_image, blog_thumbnail, product_mockup, illustration, web_image (default). Unknown values fall back to web_image with a warning."
                   },
                   "aspect_ratio": {
                     "type": "string",
-                    "description": "1:1, 16:9, or 9:16."
+                    "description": "1:1, 16:9, or 9:16 (aliases like square/wide/tall accepted)."
                   },
                   "style": {
                     "type": "string",
@@ -1199,6 +1204,14 @@
                       "type": "string"
                     },
                     "description": "Optional palette."
+                  },
+                  "provider": {
+                    "type": "string",
+                    "description": "Optional image backend override; unknown values 400."
+                  },
+                  "n": {
+                    "type": "number",
+                    "description": "Image count — currently clamped to 1."
                   }
                 },
                 "required": [
@@ -1264,7 +1277,7 @@
     "/classify": {
       "post": {
         "operationId": "postClassify",
-        "summary": "Text classification API — zero-shot text classifier / categorization: caller supplies 2–25 labels…",
+        "summary": "Text classification API — zero-shot text classifier / categorization: caller supplies 2–20 labels…",
         "tags": [
           "classify"
         ],
@@ -1876,7 +1889,7 @@
     "/extract/invoice": {
       "post": {
         "operationId": "postExtractInvoice",
-        "summary": "Extract structured data from invoice or receipt text using Claude Haiku — returns vendor, invoice…",
+        "summary": "Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML,…",
         "tags": [
           "extract"
         ],
@@ -1889,12 +1902,13 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "description": "The invoice or receipt text to extract structured data from. Max 10000 words or 50KB."
+                    "description": "The invoice or receipt content ITSELF (email body, OCR dump, pasted PDF text) — not an instruction or question about an invoice. Have only a link? Pass url instead. Text with no extractable invoice data returns an uncharged 400 (NO_INVOICE_CONTENT). Max 10000 words or 50KB."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "Publicly reachable invoice URL — PDF, HTML, or plain text; fetched and parsed server-side (e.g. https://vendor.example/invoice-42.pdf). Provide exactly one of text or url."
                   }
-                },
-                "required": [
-                  "text"
-                ]
+                }
               }
             }
           }
@@ -1952,6 +1966,27 @@
                         "type": "string"
                       },
                       "description": "Informational findings (e.g. no_total_found, totals_mismatch)."
+                    },
+                    "source": {
+                      "type": "object",
+                      "description": "Where the invoice content came from. type is \"text\" or \"url\"; url and content_type (pdf | html | text) are null in text mode.",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "content_type": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
                     }
                   }
                 },
@@ -1985,7 +2020,12 @@
                   "cached": false,
                   "score": 100,
                   "grade": "A",
-                  "findings": []
+                  "findings": [],
+                  "source": {
+                    "type": "text",
+                    "url": null,
+                    "content_type": null
+                  }
                 }
               }
             }
@@ -2146,7 +2186,7 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "description": "The messy text or HTML containing tabular data to extract. Max 10000 words or 50KB."
+                    "description": "The messy text or HTML containing tabular data to extract. Max 10000 words or 50KB. Aliases also accepted: content, html, csv, table, markdown, data."
                   }
                 },
                 "required": [
@@ -2257,7 +2297,7 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "description": "The messy HTML or text to convert into clean Markdown. Max 10000 words or 50KB."
+                    "description": "The messy HTML or text to convert into clean Markdown. Max 10000 words or 50KB. Aliases also accepted: html, content, markdown, input."
                   }
                 },
                 "required": [
@@ -2591,7 +2631,7 @@
     "/sentiment/analyze": {
       "post": {
         "operationId": "postSentimentAnalyze",
-        "summary": "Sentiment analysis API — emotion & aspect-based sentiment classifier via Claude Haiku: returns…",
+        "summary": "Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call:…",
         "tags": [
           "sentiment"
         ],
@@ -2674,10 +2714,7 @@
                     },
                     "findings": {
                       "type": "array",
-                      "items": {
-                        "type": "object"
-                      },
-                      "description": "Informational findings (e.g. analysis errors)"
+                      "description": "Reserved — currently always [] on success (analysis errors surface as 502s, never findings)"
                     }
                   }
                 },
@@ -2736,7 +2773,7 @@
                   },
                   "url": {
                     "type": "string",
-                    "description": "URL to fetch, extract readable text from, and summarize. Provide exactly one of text or url."
+                    "description": "URL to fetch, extract readable text from, and summarize. Provide exactly one of text or url. The page must yield ≥50 words of extractable paragraph text (fetch capped at 500KB/10s) — thin or JS-rendered pages 400 without charging."
                   },
                   "max_points": {
                     "type": "number",
@@ -2804,10 +2841,7 @@
                     },
                     "findings": {
                       "type": "array",
-                      "items": {
-                        "type": "object"
-                      },
-                      "description": "Informational findings (e.g. errors)"
+                      "description": "Reserved — currently always [] on success"
                     }
                   }
                 },
@@ -2852,11 +2886,11 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "description": "The text to translate. Max 2000 words (and 50KB). For shorter snippets use the cheaper /translate/short."
+                    "description": "The text to translate. Max 2000 words (and 50KB). For shorter snippets use the cheaper /translate/short. Aliases also accepted: q, input, content, message."
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages supported. Required. Aliases also accepted: target_lang, target_language, to, lang. (The response returns this as target_language.)"
+                    "description": "Target language as an ISO 639-1 code (e.g. \"de\") or English name (e.g. \"German\"). 30+ languages mapped directly; other values (endonyms, qualified names like \"Brazilian Portuguese\") are interpreted by the model with a targetHint finding. Required. Aliases also accepted: target_lang, target_language, to, lang, targetLanguage. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
@@ -2925,10 +2959,7 @@
                     },
                     "findings": {
                       "type": "array",
-                      "items": {
-                        "type": "object"
-                      },
-                      "description": "Informational findings (e.g. errors)"
+                      "description": "Plain-string hints — e.g. a targetHint string when the target language was model-interpreted"
                     }
                   }
                 },
@@ -2955,7 +2986,7 @@
     "/translate/short": {
       "post": {
         "operationId": "postTranslateShort",
-        "summary": "Translate up to 500 words between languages using Claude Haiku — auto-detects source language,…",
+        "summary": "Translate text between languages — text translation API for short content: translate a sentence,…",
         "tags": [
           "translate"
         ],
@@ -2968,11 +2999,11 @@
                 "properties": {
                   "text": {
                     "type": "string",
-                    "description": "The text to translate. Max 500 words (and 50KB). For longer documents use /translate/long."
+                    "description": "The text to translate. Max 500 words (and 50KB). For longer documents use /translate/long. Aliases also accepted: q, input, content, message."
                   },
                   "target": {
                     "type": "string",
-                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages supported. Required. Aliases also accepted: target_lang, target_language, to, lang. (The response returns this as target_language.)"
+                    "description": "Target language as an ISO 639-1 code (e.g. \"fr\") or English name (e.g. \"French\"). 30+ languages mapped directly; other values (endonyms, qualified names) are interpreted by the model with a targetHint finding. Required. Aliases also accepted: target_lang, target_language, to, lang, targetLanguage. (The response returns this as target_language.)"
                   },
                   "source": {
                     "type": "string",
@@ -3041,10 +3072,7 @@
                     },
                     "findings": {
                       "type": "array",
-                      "items": {
-                        "type": "object"
-                      },
-                      "description": "Informational findings (e.g. errors)"
+                      "description": "Plain-string hints — e.g. a targetHint string when the target language was model-interpreted"
                     }
                   }
                 },
@@ -3080,7 +3108,7 @@
             "name": "target",
             "in": "query",
             "required": true,
-            "description": "IP address (v4 or v6) or domain name to look up",
+            "description": "IP address (v4 or v6) or domain name to look up (aliases accepted: ip, address, host, hostname, query — query param or JSON body)",
             "schema": {
               "type": "string"
             }
@@ -3116,28 +3144,52 @@
                       "type": "number"
                     },
                     "hostname": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "asn": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "asn_number": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "organization": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "network": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "country": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "region": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "city": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "is_hosting": {
                       "type": "boolean"
@@ -3170,7 +3222,7 @@
                   "asn": "AS15169",
                   "asn_number": 15169,
                   "organization": "Google LLC",
-                  "network": "8.8.8.0/24",
+                  "network": null,
                   "country": "US",
                   "region": "California",
                   "city": "Mountain View",
@@ -3178,18 +3230,13 @@
                   "is_cloud": true,
                   "is_vpn": false,
                   "classification": "cloud",
-                  "score": 72,
-                  "grade": "C",
+                  "score": 80,
+                  "grade": "B",
                   "findings": [
                     {
                       "rule": "cloud_infrastructure",
                       "deduction": -20,
                       "detail": "IP belongs to known cloud provider (Google LLC)"
-                    },
-                    {
-                      "rule": "hosting_provider",
-                      "deduction": -10,
-                      "detail": "IP is classified as hosting infrastructure"
                     }
                   ]
                 }
@@ -3294,15 +3341,15 @@
                   "domain": "example.com",
                   "tld": "com",
                   "rdap_url": "https://rdap.verisign.com/com/v1/domain/example.com",
-                  "registrar": "MarkMonitor Inc.",
-                  "registrar_iana_id": "292",
+                  "registrar": "RESERVED-Internet Assigned Numbers Authority",
+                  "registrar_iana_id": "376",
                   "created_at": "1995-08-14T04:00:00Z",
-                  "updated_at": "2023-08-14T07:01:31Z",
-                  "expires_at": "2024-08-13T04:00:00Z",
-                  "days_until_expiry": 180,
+                  "updated_at": "2026-01-16T18:26:50Z",
+                  "expires_at": "2026-08-13T04:00:00Z",
+                  "days_until_expiry": 37,
                   "name_servers": [
-                    "a.iana-servers.net",
-                    "b.iana-servers.net"
+                    "elliott.ns.cloudflare.com",
+                    "hera.ns.cloudflare.com"
                   ],
                   "status": [
                     "client delete prohibited",
@@ -3315,7 +3362,7 @@
                     {
                       "rule": "expires_within_90_days",
                       "deduction": -15,
-                      "detail": "Domain expires in 180 days"
+                      "detail": "Domain expires in 37 days"
                     }
                   ],
                   "raw_rdap_url": "https://rdap.verisign.com/com/v1/domain/example.com"
@@ -3469,7 +3516,7 @@
     "/subnet/calc": {
       "get": {
         "operationId": "getSubnetCalc",
-        "summary": "Calculates IPv4/IPv6 subnet details from CIDR notation including network/broadcast addresses,…",
+        "summary": "Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard…",
         "tags": [
           "subnet"
         ],
@@ -3478,7 +3525,7 @@
             "name": "cidr",
             "in": "query",
             "required": true,
-            "description": "CIDR notation, single (10.0.1.0/24) or comma-separated for overlap detection (10.0.1.0/24,10.0.1.128/25)",
+            "description": "CIDR block, e.g. 10.0.1.0/24 or 2001:db8::/48 (IPv6). Comma-separate multiple CIDRs for overlap/containment analysis, e.g. 10.0.0.0/16,10.0.1.0/24",
             "schema": {
               "type": "string"
             }
@@ -3685,9 +3732,10 @@
                   "domain": "example.com",
                   "record_type": "A",
                   "propagation_percentage": 90,
-                  "consistent": false,
+                  "consistent": true,
                   "majority_value": [
-                    "93.184.216.34"
+                    "104.20.23.154",
+                    "172.66.147.243"
                   ],
                   "resolvers": [
                     {
@@ -3695,7 +3743,8 @@
                       "ip": "8.8.8.8",
                       "status": "success",
                       "records": [
-                        "93.184.216.34"
+                        "104.20.23.154",
+                        "172.66.147.243"
                       ],
                       "matches_majority": true,
                       "response_time_ms": 24
@@ -3712,14 +3761,9 @@
                   "divergent_resolvers": [
                     "Comodo Secure"
                   ],
-                  "score": 82,
-                  "grade": "B",
+                  "score": 92,
+                  "grade": "A",
                   "findings": [
-                    {
-                      "rule": "partial_propagation",
-                      "deduction": -10,
-                      "detail": "1 resolver returned different or no result"
-                    },
                     {
                       "rule": "resolver_timeout",
                       "deduction": -8,
@@ -4055,16 +4099,7 @@
             "name": "expression",
             "in": "query",
             "required": true,
-            "description": "Cron expression (5 or 6 space-separated fields)",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "timezone",
-            "in": "query",
-            "required": false,
-            "description": "IANA timezone string (default: UTC)",
+            "description": "Cron expression, 5 or 6 space-separated fields; month/day names accepted (e.g. 0 9 * * MON-FRI)",
             "schema": {
               "type": "string"
             }
@@ -4163,7 +4198,7 @@
     "/currency-exchange/convert": {
       "get": {
         "operationId": "getCurrencyExchangeConvert",
-        "summary": "Convert any amount between 33 fiat currencies (live European Central Bank rates) AND major…",
+        "summary": "Convert any amount between 32 fiat currencies (live European Central Bank rates) AND major…",
         "tags": [
           "currency-exchange"
         ],
@@ -4251,7 +4286,7 @@
                     },
                     "source": {
                       "type": "string",
-                      "description": "Rate source: ecb (fiat), coinbase (crypto), or same"
+                      "description": "Rate source: ecb (fiat), coinbase (crypto), coingecko (long-tail crypto fallback), or same"
                     },
                     "score": {
                       "type": "number"
@@ -4295,7 +4330,7 @@
     "/convert": {
       "get": {
         "operationId": "getConvert",
-        "summary": "Convert any physical measurement to another — length, mass, volume, temperature, area, speed,…",
+        "summary": "Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure,…",
         "tags": [
           "convert"
         ],
@@ -4303,7 +4338,7 @@
           {
             "name": "value",
             "in": "query",
-            "required": true,
+            "required": false,
             "description": "Quantity to convert",
             "schema": {
               "type": "number"
@@ -4312,7 +4347,7 @@
           {
             "name": "from",
             "in": "query",
-            "required": true,
+            "required": false,
             "description": "Source unit, e.g. \"cups\", \"kg\", \"C\", \"miles\" — common aliases accepted (kilograms, °C, fl oz, …)",
             "schema": {
               "type": "string"
@@ -4321,8 +4356,17 @@
           {
             "name": "to",
             "in": "query",
-            "required": true,
+            "required": false,
             "description": "Destination unit, e.g. \"fl_oz\", \"lb\", \"F\", \"km\" — must be in the same category as from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "Alternative to value/from/to: one natural-language string, e.g. \"convert 73 liters to gallons\"",
             "schema": {
               "type": "string"
             }
@@ -4331,7 +4375,7 @@
             "name": "system",
             "in": "query",
             "required": false,
-            "description": "\"us\" or \"imperial\" for ambiguous volume units (cup, fl_oz, pint, quart, gallon). Default: us",
+            "description": "\"us\" or \"imperial\" — disambiguates volume units (cup, fl_oz, pint, quart, gallon), bare \"ton\" (us_ton vs imperial_ton), and bare \"mpg\". Default: us",
             "schema": {
               "type": "string"
             }
@@ -4341,6 +4385,24 @@
             "in": "query",
             "required": false,
             "description": "\"decimal\" (1000) or \"binary\" (1024) for digital storage units. Default: decimal",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "density",
+            "in": "query",
+            "required": false,
+            "description": "For volume↔mass: density in kg per liter (= g/mL), e.g. 0.92",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "substance",
+            "in": "query",
+            "required": false,
+            "description": "For volume↔mass: substance whose nominal density to use (water, milk, gasoline, diesel, ethanol, olive_oil, honey, butter, flour, sugar, seawater)",
             "schema": {
               "type": "string"
             }
@@ -4406,8 +4468,7 @@
                   "result": 16,
                   "category": "volume",
                   "assumptions": {
-                    "system": "us",
-                    "oz_interpreted_as": "fluid"
+                    "system": "us"
                   },
                   "precision_note": "rounded to 6 significant figures",
                   "score": 100,
@@ -4447,7 +4508,7 @@
                   },
                   "default_currency": {
                     "type": "string",
-                    "description": "Optional ISO 4217 code to assume when no currency marker is present. If absent and none is detected, currency is null (never guessed)."
+                    "description": "Optional ISO 4217 code to assume when no currency marker is present. Honored for ~50 common codes; unrecognized codes are ignored (currency stays null — never guessed)."
                   },
                   "allow_llm": {
                     "type": "boolean",
@@ -4565,7 +4626,7 @@
                   },
                   "timezone": {
                     "type": "string",
-                    "description": "Optional IANA timezone (e.g. Europe/Paris). Timed events are converted to UTC and emitted with a Z suffix (no VTIMEZONE block)."
+                    "description": "Optional IANA timezone (e.g. Europe/Paris). Timed events are converted to UTC and emitted with a Z suffix (no VTIMEZONE block). Unrecognized values are ignored (falls back to UTC)."
                   },
                   "location": {
                     "type": "string",
@@ -4781,7 +4842,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.100000"
+            "amount": "0.050000"
           },
           "protocols": [
             {
@@ -4861,7 +4922,7 @@
             "name": "url",
             "in": "query",
             "required": true,
-            "description": "URL to fingerprint (e.g. https://example.com)",
+            "description": "URL to fingerprint (e.g. https://example.com); bare domains are accepted and get https:// prepended. Aliases also accepted: target, domain, host, site (query param or JSON body).",
             "schema": {
               "type": "string"
             }
@@ -4987,7 +5048,7 @@
             "name": "password",
             "in": "query",
             "required": true,
-            "description": "Password to check against known data breaches",
+            "description": "Password to check against known data breaches (1-500 characters; sent as a query param but only a k-anonymity SHA-1 prefix leaves the server)",
             "schema": {
               "type": "string"
             }
@@ -5059,7 +5120,7 @@
     "/domain-availability/check": {
       "get": {
         "operationId": "getDomainAvailabilityCheck",
-        "summary": "Check if a domain name is available for registration by querying RDAP and DNS — returns…",
+        "summary": "Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name…",
         "tags": [
           "domain-availability"
         ],
@@ -5180,7 +5241,7 @@
             "name": "email",
             "in": "query",
             "required": true,
-            "description": "Email address to validate (e.g. john@example.com)",
+            "description": "Email address to validate (e.g. john@gmail.com)",
             "schema": {
               "type": "string"
             }
@@ -5257,22 +5318,25 @@
                   }
                 },
                 "example": {
-                  "email": "john@example.com",
-                  "domain": "example.com",
+                  "email": "john@gmail.com",
+                  "domain": "gmail.com",
                   "local_part": "john",
                   "format_valid": true,
                   "mx_records_found": true,
                   "mx_records": [
-                    "mail.example.com"
+                    "gmail-smtp-in.l.google.com",
+                    "alt1.gmail-smtp-in.l.google.com"
                   ],
                   "is_disposable": false,
                   "is_role_based": false,
-                  "is_free_provider": false,
-                  "is_business_email": true,
-                  "deliverability": "deliverable",
-                  "score": 100,
+                  "is_free_provider": true,
+                  "is_business_email": false,
+                  "deliverability": "risky",
+                  "score": 90,
                   "grade": "A",
-                  "findings": []
+                  "findings": [
+                    "is_free_provider"
+                  ]
                 }
               }
             }
@@ -5295,7 +5359,7 @@
             "name": "url",
             "in": "query",
             "required": true,
-            "description": "Public URL to extract metadata from (e.g. https://example.com/article)",
+            "description": "Public URL to extract metadata from (e.g. https://github.com/coinbase/x402)",
             "schema": {
               "type": "string"
             }
@@ -5334,37 +5398,67 @@
                       "type": "string"
                     },
                     "description": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "image": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "favicon": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "site_name": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "canonical_url": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "content_type": {
                       "type": "string"
                     },
                     "author": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "published_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "modified_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "twitter_card": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "json_ld": {
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
                     "score": {
                       "type": "number"
@@ -5378,27 +5472,30 @@
                   }
                 },
                 "example": {
-                  "url": "https://example.com/article",
-                  "final_url": "https://www.example.com/article",
+                  "url": "https://github.com/coinbase/x402",
+                  "final_url": "https://github.com/coinbase/x402",
                   "status_code": 200,
-                  "title": "Article Title Here",
-                  "description": "A short description of the content",
-                  "image": "https://example.com/og-image.jpg",
-                  "favicon": "https://example.com/favicon.ico",
-                  "site_name": "Example Site",
-                  "canonical_url": "https://www.example.com/article",
-                  "content_type": "article",
-                  "author": "Jane Doe",
-                  "published_at": "2024-01-15T10:00:00Z",
-                  "modified_at": "2024-01-16T08:00:00Z",
+                  "title": "GitHub - coinbase/x402: A payments protocol for the internet. Built on HTTP.",
+                  "description": "A payments protocol for the internet. Built on HTTP. - coinbase/x402",
+                  "image": "https://opengraph.githubassets.com/d86e2f3ce6d1051d325e229bc56ef07c81a8e75e7455c3d5b52de8a1031e6a51/coinbase/x402",
+                  "favicon": "https://github.githubassets.com/favicons/favicon",
+                  "site_name": "GitHub",
+                  "canonical_url": "https://github.com/coinbase/x402",
+                  "content_type": "object",
+                  "author": null,
+                  "published_at": null,
+                  "modified_at": null,
                   "twitter_card": "summary_large_image",
-                  "json_ld": {
-                    "@type": "Article",
-                    "headline": "Article Title Here"
-                  },
-                  "score": 100,
+                  "json_ld": null,
+                  "score": 90,
                   "grade": "A",
-                  "findings": []
+                  "findings": [
+                    {
+                      "rule": "no_canonical",
+                      "deduction": -10,
+                      "detail": "No canonical URL found"
+                    }
+                  ]
                 }
               }
             }
@@ -5421,7 +5518,7 @@
             "name": "url",
             "in": "query",
             "required": true,
-            "description": "Public URL to extract content from (e.g. https://example.com/article)",
+            "description": "Public URL to extract content from (e.g. https://www.sitemaps.org/protocol.html)",
             "schema": {
               "type": "string"
             }
@@ -5489,19 +5586,19 @@
                   }
                 },
                 "example": {
-                  "url": "https://example.com/article",
-                  "final_url": "https://www.example.com/article",
-                  "title": "The Article Title",
-                  "content": "Full cleaned article text goes here. Multiple paragraphs separated by newlines...",
+                  "url": "https://www.sitemaps.org/protocol.html",
+                  "final_url": "https://www.sitemaps.org/protocol.html",
+                  "title": "sitemaps.org - Protocol",
+                  "content": "This document describes the XML schema for the Sitemap protocol.\n\nThe Sitemap protocol format consists of XML tags...",
                   "preview": [
-                    "First meaningful sentence of the article.",
-                    "Second sentence providing more context.",
-                    "Third sentence completing the introduction."
+                    "This document describes the XML schema for the Sitemap protocol.",
+                    "The Sitemap protocol format consists of XML tags.",
+                    "All data values in a Sitemap must be entity-escaped."
                   ],
-                  "word_count": 1250,
-                  "reading_time_minutes": 6,
+                  "word_count": 2456,
+                  "reading_time_minutes": 11,
                   "language": "en",
-                  "content_length_chars": 7500,
+                  "content_length_chars": 18894,
                   "status_code": 200,
                   "score": 100,
                   "grade": "A",
@@ -5528,7 +5625,7 @@
             "name": "url",
             "in": "query",
             "required": true,
-            "description": "Public URL of an HTML page or PDF to extract (e.g. https://example.com/article)",
+            "description": "Public URL of an HTML page or PDF to extract (e.g. https://www.sitemaps.org/protocol.html)",
             "schema": {
               "type": "string"
             }
@@ -5561,7 +5658,8 @@
                       "type": "string"
                     },
                     "content_type": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "article | pdf | other (non-HTML/PDF falls back to best-effort plain text)"
                     },
                     "title": {
                       "type": "string"
@@ -5596,14 +5694,14 @@
                   }
                 },
                 "example": {
-                  "url": "https://example.com/article",
-                  "final_url": "https://www.example.com/article",
+                  "url": "https://www.sitemaps.org/protocol.html",
+                  "final_url": "https://www.sitemaps.org/protocol.html",
                   "content_type": "article",
-                  "title": "The Article Title",
-                  "markdown": "# The Article Title\n\nFirst paragraph of the article rendered as Markdown...",
-                  "word_count": 1250,
-                  "char_count": 7500,
-                  "output_bytes": 7500,
+                  "title": "sitemaps.org - Protocol",
+                  "markdown": "## Sitemaps XML format\n\nThis document describes the XML schema for the Sitemap protocol...",
+                  "word_count": 2707,
+                  "char_count": 21619,
+                  "output_bytes": 21619,
                   "truncated": false,
                   "status_code": 200,
                   "score": 100,
@@ -5622,7 +5720,7 @@
     "/phone-intel/analyze": {
       "get": {
         "operationId": "getPhoneIntelAnalyze",
-        "summary": "Parse and validate any phone number in any format, identify its country, line type…",
+        "summary": "Parse and validate any phone number in any format, identify its country and line type…",
         "tags": [
           "phone-intel"
         ],
@@ -5631,7 +5729,7 @@
             "name": "phone",
             "in": "query",
             "required": true,
-            "description": "Phone number in any format (e.g. +1 555 867-5309)",
+            "description": "Phone number in any format (e.g. +1 555 867-5309). In query strings URL-encode a leading + as %2B — an unencoded + decodes to a space (tolerated: leading space+digits is re-interpreted as +).",
             "schema": {
               "type": "string"
             }
@@ -6162,25 +6260,38 @@
                   "type": "object",
                   "properties": {
                     "url": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Echoed in normalized form (may gain a trailing slash)"
                     },
                     "is_archived": {
                       "type": "boolean"
                     },
                     "snapshot": {
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
                     "first_capture": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "last_capture": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "capture_count_estimate": {
                       "type": "number"
                     },
                     "timestamp_requested": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "score": {
                       "type": "number"
@@ -6222,7 +6333,7 @@
     "/domain-age/check": {
       "get": {
         "operationId": "getDomainAgeCheck",
-        "summary": "Determine a domain's age from registration data and archival history — returns creation date, age…",
+        "summary": "Determine a domain's age from registration data and archival history — tries RDAP, then port-43…",
         "tags": [
           "domain-age"
         ],
@@ -6261,25 +6372,47 @@
                       "type": "string"
                     },
                     "created_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "age_days": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "age_years": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "age_source": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "rdap | whois | wayback_estimate | null (undetermined)"
                     },
                     "first_archived_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "archive_snapshot_estimate": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "registration_to_archive_gap_days": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "maturity": {
                       "type": "string"
@@ -6348,7 +6481,7 @@
             "name": "date",
             "in": "query",
             "required": false,
-            "description": "YYYY-MM-DD specific date to check",
+            "description": "YYYY-MM-DD specific date to check — populates date_check with {date, is_holiday, is_weekend, is_business_day, holiday_name, next_business_day}; omitted → date_check is null",
             "schema": {
               "type": "string"
             }
@@ -6387,7 +6520,10 @@
                       "type": "array"
                     },
                     "date_check": {
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     },
                     "score": {
                       "type": "number"
@@ -6402,20 +6538,28 @@
                 },
                 "example": {
                   "country_code": "US",
-                  "year": 2024,
-                  "total_holidays": 11,
+                  "year": 2026,
+                  "total_holidays": 17,
                   "holidays": [
                     {
-                      "date": "2024-01-01",
+                      "date": "2026-01-01",
                       "name": "New Year's Day",
                       "local_name": "New Year's Day",
                       "is_global": true,
                       "types": [
-                        "Public"
+                        "Public",
+                        "Bank"
                       ]
                     }
                   ],
-                  "date_check": null,
+                  "date_check": {
+                    "date": "2026-07-03",
+                    "is_holiday": true,
+                    "is_weekend": false,
+                    "is_business_day": false,
+                    "holiday_name": "Independence Day",
+                    "next_business_day": "2026-07-06"
+                  },
                   "score": 100,
                   "grade": "A",
                   "findings": []
@@ -6471,40 +6615,76 @@
                       "type": "string"
                     },
                     "country": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "country_code": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "region": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "region_name": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "city": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "zip": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "latitude": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "longitude": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "timezone": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "isp": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "organization": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "asn": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "score": {
                       "type": "number"
@@ -6513,7 +6693,8 @@
                       "type": "string"
                     },
                     "findings": {
-                      "type": "array"
+                      "type": "array",
+                      "description": "Geo fields are null (score 40) when all upstream geo providers decline — retry later rather than treating as a hard failure"
                     }
                   }
                 },
@@ -6556,7 +6737,7 @@
             "name": "token",
             "in": "query",
             "required": true,
-            "description": "JWT token string (3 dot-separated segments)",
+            "description": "JWT token string (3 dot-separated segments); a 'Bearer ' prefix is stripped automatically",
             "schema": {
               "type": "string"
             }
@@ -6592,12 +6773,25 @@
                       "type": "object"
                     },
                     "is_expired": {
-                      "type": "boolean"
+                      "type": [
+                        "boolean",
+                        "null"
+                      ],
+                      "description": "null when the token has no exp claim"
                     },
                     "seconds_until_expiry": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "human_expiry": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "signature_hex": {
                       "type": "string"
                     },
                     "signature_present": {
@@ -6625,28 +6819,37 @@
                     "key_id": null
                   },
                   "payload": {
-                    "issuer": "https://auth.example.com",
-                    "subject": "user_abc123",
-                    "audience": "https://api.example.com",
-                    "expires_at": "2024-06-01T00:00:00.000Z",
-                    "expires_at_unix": 1717200000,
-                    "issued_at": "2024-03-01T00:00:00.000Z",
-                    "issued_at_unix": 1709251200,
+                    "issuer": null,
+                    "subject": "1234567890",
+                    "audience": null,
+                    "expires_at": null,
+                    "expires_at_unix": null,
+                    "issued_at": "2018-01-18T01:30:22.000Z",
+                    "issued_at_unix": 1516239022,
                     "not_before": null,
                     "jwt_id": null,
                     "custom_claims": {
-                      "email": "user@example.com",
-                      "role": "admin"
+                      "name": "John Doe"
                     }
                   },
-                  "is_expired": false,
-                  "seconds_until_expiry": 7890000,
-                  "human_expiry": "91 days from now",
+                  "is_expired": null,
+                  "seconds_until_expiry": null,
+                  "human_expiry": null,
+                  "signature_hex": "49f94ac7044948c78a285d904f87f0a4c7897f7e8f3a4eb2255fda750b2cc397",
                   "signature_present": true,
-                  "security_flags": [],
-                  "score": 95,
-                  "grade": "A",
-                  "findings": []
+                  "security_flags": [
+                    "no_expiry"
+                  ],
+                  "score": 80,
+                  "grade": "B",
+                  "findings": [
+                    {
+                      "rule": "no_expiry_claim",
+                      "label": "No expiry claim",
+                      "impact": -20,
+                      "detail": "JWT has no exp claim — token never expires"
+                    }
+                  ]
                 }
               }
             }
@@ -6660,7 +6863,7 @@
     "/lang-detect/analyze": {
       "post": {
         "operationId": "postLangDetectAnalyze",
-        "summary": "Detect the language of any text input using character frequency analysis and n-gram pattern…",
+        "summary": "Detect the language of any text input using stopword-set matching and Unicode script analysis —…",
         "tags": [
           "lang-detect"
         ],
@@ -6746,23 +6949,23 @@
                   "is_multilingual": false,
                   "alternatives": [
                     {
-                      "language": "Dutch",
-                      "code": "nl",
-                      "score": 0.04
+                      "language": "Polish",
+                      "code": "pl",
+                      "score": 0.05
                     },
                     {
-                      "language": "German",
-                      "code": "de",
-                      "score": 0.03
+                      "language": "Czech",
+                      "code": "cs",
+                      "score": 0.05
                     },
                     {
-                      "language": "French",
-                      "code": "fr",
+                      "language": "Portuguese",
+                      "code": "pt",
                       "score": 0.02
                     }
                   ],
-                  "text_length": 245,
-                  "word_count": 47,
+                  "text_length": 214,
+                  "word_count": 41,
                   "score": 100,
                   "grade": "A",
                   "findings": []
@@ -6779,7 +6982,7 @@
     "/npm-intel/analyze": {
       "get": {
         "operationId": "getNpmIntelAnalyze",
-        "summary": "Fetch metadata for any npm package — download counts, latest version, all versions list,…",
+        "summary": "Fetch metadata for any npm package — download counts, latest version, version count,…",
         "tags": [
           "npm-intel"
         ],
@@ -6818,10 +7021,16 @@
                       "type": "string"
                     },
                     "description": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "latest_version": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "total_versions": {
                       "type": "number"
@@ -6830,13 +7039,22 @@
                       "type": "number"
                     },
                     "license": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "repository": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "homepage": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "keywords": {
                       "type": "array"
@@ -6854,19 +7072,31 @@
                       "type": "number"
                     },
                     "created_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "latest_published_at": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "days_since_last_publish": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "is_deprecated": {
                       "type": "boolean"
                     },
                     "deprecation_message": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "score": {
                       "type": "number"
@@ -6927,7 +7157,7 @@
     "/sitemap-parser/fetch": {
       "get": {
         "operationId": "getSitemapParserFetch",
-        "summary": "Fetch and parse any XML sitemap or sitemap index file — returns all URLs with their priority,…",
+        "summary": "Fetch and parse any XML sitemap or sitemap index file — returns URLs with their priority, change…",
         "tags": [
           "sitemap-parser"
         ],
@@ -6972,10 +7202,17 @@
                   "type": "object",
                   "properties": {
                     "source_url": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "null when no sitemap was found/parseable (graceful 200 with grade F)"
                     },
                     "sitemap_type": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "total_urls": {
                       "type": "number"
@@ -7007,14 +7244,14 @@
                   }
                 },
                 "example": {
-                  "source_url": "https://example.com/sitemap.xml",
+                  "source_url": "https://www.sitemaps.org/sitemap.xml",
                   "sitemap_type": "urlset",
                   "total_urls": 847,
                   "urls_returned": 100,
                   "child_sitemaps_fetched": 0,
                   "urls": [
                     {
-                      "url": "https://example.com/page-1",
+                      "url": "https://www.sitemaps.org/protocol.html",
                       "last_modified": "2024-03-01T00:00:00Z",
                       "change_frequency": "weekly",
                       "priority": 0.8
@@ -7086,10 +7323,16 @@
                       "type": "boolean"
                     },
                     "urlhaus_status": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "threat_type": {
-                      "type": "string"
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     },
                     "malware_families": {
                       "type": "array",
@@ -7114,6 +7357,13 @@
                     },
                     "confidence": {
                       "type": "string"
+                    },
+                    "urlhaus_reference": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "URLhaus entry link when the URL is listed"
                     },
                     "score": {
                       "type": "number"
@@ -7481,8 +7731,8 @@
                 "example": {
                   "domain": "example.com",
                   "resolved_ip": "93.184.216.34",
-                  "overall_score": 78,
-                  "grade": "B",
+                  "overall_score": 100,
+                  "grade": "A",
                   "risk_level": "low",
                   "sections": {
                     "whois": {
@@ -7562,7 +7812,7 @@
             "name": "ip",
             "in": "query",
             "required": true,
-            "description": "IPv4 or IPv6 address to risk-score (private/reserved ranges are rejected)",
+            "description": "IPv4 or IPv6 address to risk-score (private/reserved ranges are rejected; DNSBL blacklist checks are IPv4-only and are skipped for IPv6 with a blacklist_skipped_ipv6 finding)",
             "schema": {
               "type": "string"
             }
@@ -7618,47 +7868,38 @@
                   }
                 },
                 "example": {
-                  "ip": "1.2.3.4",
-                  "risk_score": 28,
-                  "grade": "F",
-                  "recommendation": "block",
+                  "ip": "8.8.8.8",
+                  "risk_score": 80,
+                  "grade": "B",
+                  "recommendation": "allow",
                   "geo": {
                     "available": true,
                     "country": "United States",
                     "country_code": "US",
                     "city": "Ashburn",
                     "timezone": "America/New_York",
-                    "isp": "Example Hosting",
-                    "is_proxy": true,
+                    "isp": "Google LLC",
+                    "is_proxy": false,
                     "is_hosting": true,
                     "is_mobile": false
                   },
                   "network": {
                     "available": true,
-                    "asn": "AS12345",
-                    "organization": "Example Hosting LLC",
-                    "classification": "hosting"
+                    "asn": "AS15169",
+                    "organization": "Google LLC",
+                    "classification": "cloud"
                   },
                   "blacklist": {
                     "available": true,
-                    "listed_count": 3,
+                    "listed_count": 0,
                     "lists_checked": 8,
-                    "listed_on": [
-                      "zen.spamhaus.org",
-                      "bl.spamcop.net",
-                      "xbl.spamhaus.org"
-                    ]
+                    "listed_on": []
                   },
                   "findings": [
                     {
-                      "rule": "on_blacklists",
-                      "deduction": -45,
-                      "detail": "Listed on 3 of 8 DNSBLs"
-                    },
-                    {
-                      "rule": "is_proxy",
-                      "deduction": -40,
-                      "detail": "IP detected as proxy/VPN"
+                      "rule": "is_cloud",
+                      "deduction": -20,
+                      "detail": "IP belongs to known cloud provider (Google LLC)"
                     }
                   ]
                 }
@@ -7807,7 +8048,7 @@
     "/tld-price/compare": {
       "get": {
         "operationId": "getTldPriceCompare",
-        "summary": "Compare registration, renewal, and transfer prices for a TLD across major registrars, or for a…",
+        "summary": "Reference registration/renewal/transfer pricing from a curated table of ~21 common TLDs — Mode A:…",
         "tags": [
           "tld-price"
         ],
@@ -7861,10 +8102,17 @@
                       "type": "string"
                     },
                     "pricing": {
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "description": "null for TLDs outside the reference table (unknown_tld finding)"
                     },
                     "renewal_markup_pct": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "predatory_renewal": {
                       "type": "boolean"
@@ -8018,9 +8266,9 @@
                   "domain": "google.com",
                   "name": "google",
                   "tld": "com",
-                  "variations_checked": 30,
-                  "registered_count": 12,
-                  "available_count": 18,
+                  "variations_checked": 10,
+                  "registered_count": 10,
+                  "available_count": 0,
                   "registered_lookalikes": [
                     {
                       "domain": "g00gle.com",
@@ -8038,20 +8286,24 @@
                       "registered": true
                     }
                   ],
-                  "available_variations": [
-                    {
-                      "domain": "googgle.com",
-                      "technique": "duplication",
-                      "registered": false
-                    }
-                  ],
-                  "score": 45,
+                  "available_variations": [],
+                  "score": 35,
                   "grade": "D",
                   "findings": [
                     {
                       "rule": "high_typosquat_exposure",
                       "deduction": -40,
-                      "detail": "12 of 30 look-alike domains are registered"
+                      "detail": "10 of 10 look-alike domains are registered"
+                    },
+                    {
+                      "rule": "homoglyph_registered",
+                      "deduction": -15,
+                      "detail": "A homoglyph look-alike domain is registered (highest phishing risk)"
+                    },
+                    {
+                      "rule": "alt_tld_registered",
+                      "deduction": -10,
+                      "detail": "An alternate-TLD look-alike domain is registered"
                     }
                   ]
                 }
@@ -8124,7 +8376,8 @@
                       "type": "number"
                     },
                     "verdict": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "available_strong | available_weak | taken_premium | taken_low | unknown"
                     },
                     "score": {
                       "type": "number"
@@ -8173,9 +8426,15 @@
                   "sections_ok": 3,
                   "sections_failed": 0,
                   "verdict": "taken_premium",
-                  "score": 70,
-                  "grade": "C",
-                  "findings": []
+                  "score": 80,
+                  "grade": "B",
+                  "findings": [
+                    {
+                      "rule": "not_available",
+                      "deduction": -20,
+                      "detail": "acme.com is already registered"
+                    }
+                  ]
                 }
               }
             }
@@ -8300,21 +8559,153 @@
                       "waf": "Cloudflare WAF"
                     },
                     "security_headers": {
-                      "available": false,
-                      "error": "timeout"
+                      "available": true,
+                      "grade": "B",
+                      "hsts": true,
+                      "csp": false
                     }
                   },
-                  "sections_ok": 5,
-                  "sections_failed": 1,
-                  "score": 80,
-                  "grade": "B",
-                  "findings": [
-                    {
-                      "rule": "section_failed",
-                      "deduction": 0,
-                      "detail": "security_headers: timeout"
+                  "sections_ok": 6,
+                  "sections_failed": 0,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/domain/vendor-risk": {
+      "post": {
+        "operationId": "postDomainVendorRisk",
+        "summary": "Composite 0-100 trust/risk score for a domain in one call — blends domain age, SSL/TLS, DNS health,…",
+        "tags": [
+          "domain"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Bare domain, e.g. acme.com"
+                  }
+                },
+                "required": [
+                  "domain"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.100000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "risk_score": {
+                      "type": "number"
+                    },
+                    "risk_band": {
+                      "type": "string"
+                    },
+                    "signals": {
+                      "type": "object"
+                    },
+                    "flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "signals_unavailable": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "confidence": {
+                      "type": "string"
+                    },
+                    "run_id": {
+                      "type": "string"
+                    },
+                    "duration_ms": {
+                      "type": "number"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
                     }
-                  ]
+                  }
+                },
+                "example": {
+                  "domain": "example.com",
+                  "risk_score": 69,
+                  "risk_band": "medium",
+                  "signals": {
+                    "domain_age": {
+                      "score": 100,
+                      "detail": "Registered 1995-08, 29.9 yrs"
+                    },
+                    "ssl": {
+                      "score": 95,
+                      "detail": "Valid, TLSv1.3, expires in 210d"
+                    },
+                    "email_auth": {
+                      "score": 12,
+                      "detail": "SPF missing, DMARC missing"
+                    }
+                  },
+                  "flags": [
+                    "dmarc_missing",
+                    "spf_missing"
+                  ],
+                  "signals_unavailable": [
+                    "dns",
+                    "ip_reputation",
+                    "cert_transparency"
+                  ],
+                  "confidence": "partial",
+                  "run_id": "b3f1c2a4-9d8e-4c7a-9f21-6e2d5a1b0c3d",
+                  "duration_ms": 1420,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
                 }
               }
             }
@@ -8346,7 +8737,7 @@
             "name": "password",
             "in": "query",
             "required": false,
-            "description": "Optional password — if supplied, runs a HIBP breach check on it (e.g. validating a signup)",
+            "description": "Optional password — if supplied, the breach section returns {breached, breach_count, risk_level} from a k-anonymity HIBP check; omitted → breach reports error:\"not_requested\"",
             "schema": {
               "type": "string"
             }
@@ -8458,7 +8849,7 @@
             "name": "ip",
             "in": "query",
             "required": true,
-            "description": "IPv4 or IPv6 address to profile (private/reserved ranges are rejected)",
+            "description": "IPv4 or IPv6 address to profile (private/reserved ranges are rejected; the blacklist section is IPv4-only and reports error:\"ipv4_only\" for IPv6 input)",
             "schema": {
               "type": "string"
             }
@@ -8523,8 +8914,8 @@
                     "geo": {
                       "available": true,
                       "country": "United States",
-                      "city": "Ashburn",
-                      "timezone": "America/New_York",
+                      "city": "Mountain View",
+                      "timezone": "America/Los_Angeles",
                       "isp": "Google LLC"
                     },
                     "network": {
@@ -8555,7 +8946,13 @@
                   "overall_recommendation": "allow",
                   "score": 80,
                   "grade": "B",
-                  "findings": []
+                  "findings": [
+                    {
+                      "rule": "is_proxy_or_hosting",
+                      "deduction": -20,
+                      "detail": "Network classified as cloud infrastructure"
+                    }
+                  ]
                 }
               }
             }
@@ -8569,7 +8966,7 @@
     "/url-safety/full": {
       "get": {
         "operationId": "getUrlSafetyFull",
-        "summary": "One call vets a URL end to end — traces its full redirect chain, checks it against malware/phishing…",
+        "summary": "One call vets a URL end to end — traces its full redirect chain, checks it against the URLhaus…",
         "tags": [
           "url-safety"
         ],
@@ -8675,7 +9072,7 @@
                   "sections_failed": 0,
                   "final_url": "https://www.example.com/page",
                   "safety_verdict": "safe",
-                  "score": 90,
+                  "score": 100,
                   "grade": "A",
                   "findings": [
                     {
