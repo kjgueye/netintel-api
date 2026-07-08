@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 72 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 72 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 74 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 74 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -6441,6 +6441,392 @@
                   "score": 100,
                   "grade": "A",
                   "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/github-intel/analyze": {
+      "get": {
+        "operationId": "getGithubIntelAnalyze",
+        "summary": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown,…",
+        "tags": [
+          "github-intel"
+        ],
+        "parameters": [
+          {
+            "name": "repo",
+            "in": "query",
+            "required": true,
+            "description": "GitHub repository in owner/repo format or full GitHub URL",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.030000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "repo": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "homepage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "stars": {
+                      "type": "number"
+                    },
+                    "forks": {
+                      "type": "number"
+                    },
+                    "watchers": {
+                      "type": "number"
+                    },
+                    "open_issues": {
+                      "type": "number"
+                    },
+                    "primary_language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "languages": {
+                      "type": "object",
+                      "description": "Language → bytes breakdown"
+                    },
+                    "license": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "license_spdx": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "topics": {
+                      "type": "array"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "last_pushed_at": {
+                      "type": "string"
+                    },
+                    "days_since_last_push": {
+                      "type": "number"
+                    },
+                    "is_archived": {
+                      "type": "boolean"
+                    },
+                    "is_fork": {
+                      "type": "boolean"
+                    },
+                    "parent_repo": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "default_branch": {
+                      "type": "string"
+                    },
+                    "contributor_count": {
+                      "type": "number"
+                    },
+                    "latest_release": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latest_release_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "repo": "expressjs/express",
+                  "url": "https://github.com/expressjs/express",
+                  "description": "Fast, unopinionated, minimalist web framework for node.",
+                  "homepage": "https://expressjs.com",
+                  "stars": 65000,
+                  "forks": 15000,
+                  "watchers": 65000,
+                  "open_issues": 200,
+                  "primary_language": "JavaScript",
+                  "languages": {
+                    "JavaScript": 543210,
+                    "TypeScript": 12345
+                  },
+                  "license": "MIT License",
+                  "license_spdx": "MIT",
+                  "topics": [
+                    "nodejs",
+                    "javascript",
+                    "web",
+                    "framework"
+                  ],
+                  "created_at": "2009-06-26T18:56:01Z",
+                  "last_pushed_at": "2024-03-10T08:00:00Z",
+                  "days_since_last_push": 12,
+                  "is_archived": false,
+                  "is_fork": false,
+                  "parent_repo": null,
+                  "default_branch": "master",
+                  "contributor_count": 100,
+                  "latest_release": "v4.18.3",
+                  "latest_release_date": "2024-02-26T14:00:00Z",
+                  "score": 100,
+                  "grade": "A",
+                  "findings": [
+                    {
+                      "rule": "active_development",
+                      "deduction": 0,
+                      "detail": "Pushed within last 180 days"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postGithubIntelAnalyze",
+        "summary": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown,…",
+        "tags": [
+          "github-intel"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.030000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "repo": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "homepage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "stars": {
+                      "type": "number"
+                    },
+                    "forks": {
+                      "type": "number"
+                    },
+                    "watchers": {
+                      "type": "number"
+                    },
+                    "open_issues": {
+                      "type": "number"
+                    },
+                    "primary_language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "languages": {
+                      "type": "object",
+                      "description": "Language → bytes breakdown"
+                    },
+                    "license": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "license_spdx": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "topics": {
+                      "type": "array"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "last_pushed_at": {
+                      "type": "string"
+                    },
+                    "days_since_last_push": {
+                      "type": "number"
+                    },
+                    "is_archived": {
+                      "type": "boolean"
+                    },
+                    "is_fork": {
+                      "type": "boolean"
+                    },
+                    "parent_repo": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "default_branch": {
+                      "type": "string"
+                    },
+                    "contributor_count": {
+                      "type": "number"
+                    },
+                    "latest_release": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "latest_release_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "repo": "expressjs/express",
+                  "url": "https://github.com/expressjs/express",
+                  "description": "Fast, unopinionated, minimalist web framework for node.",
+                  "homepage": "https://expressjs.com",
+                  "stars": 65000,
+                  "forks": 15000,
+                  "watchers": 65000,
+                  "open_issues": 200,
+                  "primary_language": "JavaScript",
+                  "languages": {
+                    "JavaScript": 543210,
+                    "TypeScript": 12345
+                  },
+                  "license": "MIT License",
+                  "license_spdx": "MIT",
+                  "topics": [
+                    "nodejs",
+                    "javascript",
+                    "web",
+                    "framework"
+                  ],
+                  "created_at": "2009-06-26T18:56:01Z",
+                  "last_pushed_at": "2024-03-10T08:00:00Z",
+                  "days_since_last_push": 12,
+                  "is_archived": false,
+                  "is_fork": false,
+                  "parent_repo": null,
+                  "default_branch": "master",
+                  "contributor_count": 100,
+                  "latest_release": "v4.18.3",
+                  "latest_release_date": "2024-02-26T14:00:00Z",
+                  "score": 100,
+                  "grade": "A",
+                  "findings": [
+                    {
+                      "rule": "active_development",
+                      "deduction": 0,
+                      "detail": "Pushed within last 180 days"
+                    }
+                  ]
                 }
               }
             }

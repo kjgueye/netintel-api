@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 72 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 74 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -58,6 +58,8 @@ Network intelligence API with 72 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/username-check/lookup` | GET | $0.030 | Check username availability across 20+ social platforms and developer sites simultaneously —… |
 | `/wayback/lookup` | GET | $0.010 | Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the… |
 | `/domain-age/check` | GET | $0.030 | Determine a domain's age from registration data and archival history — tries RDAP, then port-43… |
+| `/github-intel/analyze` | GET | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
+| `/github-intel/analyze` | POST | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/holidays/check` | GET | $0.005 | Look up public holidays for any country and year, check whether a specific date is a holiday, and… |
 | `/ip-geo/locate` | GET | $0.002 | IP geolocation lookup (geoip / IP location API) — geolocate any IPv4 or IPv6 address to city… |
 | `/jwt-inspector/decode` | GET | $0.005 | Decode and inspect any JWT token — extracts header algorithm, payload claims, expiry status… |
