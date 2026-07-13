@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 74 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 74 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 79 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 79 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -977,7 +977,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.100000"
           },
           "protocols": [
             {
@@ -2983,6 +2983,345 @@
         }
       }
     },
+    "/translate/structured": {
+      "post": {
+        "operationId": "postTranslateStructured",
+        "summary": "Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking…",
+        "tags": [
+          "translate"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "object",
+                    "description": "The structured content to translate: a JSON object/array, or a string of HTML, Markdown, or template text. Max 32KB / 500 strings."
+                  },
+                  "content_type": {
+                    "type": "string",
+                    "description": "One of \"json\", \"html\", \"markdown\", \"template\", \"text\". Auto-detected when omitted; a non-string content is always treated as json."
+                  },
+                  "target": {
+                    "type": "string",
+                    "description": "Target language — ISO 639-1 code (\"fr\") or English name (\"French\"). Aliases also accepted: target_lang, target_language, to, lang."
+                  },
+                  "source": {
+                    "type": "string",
+                    "description": "Source language. Auto-detected when omitted."
+                  },
+                  "glossary": {
+                    "type": "object",
+                    "description": "Enforced term mappings: {\"dashboard\":\"tableau de bord\"}. Compliance is reported per term; a missed term costs 10 points."
+                  },
+                  "protected_values": {
+                    "type": "array",
+                    "description": "Strings that must pass through byte-for-byte — brand names, IDs, SKUs: [\"Acme\",\"SKU-1234\"]. Dropping one fails the call."
+                  },
+                  "formality": {
+                    "type": "string",
+                    "description": "\"formal\", \"informal\", or \"neutral\" (default)."
+                  },
+                  "tone": {
+                    "type": "string",
+                    "description": "Optional tone guidance, e.g. \"friendly and concise\"."
+                  },
+                  "locale": {
+                    "type": "string",
+                    "description": "Target locale for regional variants, e.g. \"fr-CA\"."
+                  }
+                },
+                "required": [
+                  "content",
+                  "target"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "translated": {
+                      "type": "object",
+                      "description": "The translated document, in the same shape and format as the input"
+                    },
+                    "detected_language": {
+                      "type": "string",
+                      "description": "ISO 639-1 code of the source language"
+                    },
+                    "target_language": {
+                      "type": "string",
+                      "description": "ISO 639-1 code translated into"
+                    },
+                    "content_type": {
+                      "type": "string",
+                      "description": "The content type used (given or auto-detected)"
+                    },
+                    "placeholder_validation": {
+                      "type": "object",
+                      "description": "Proof that every placeholder, tag, URL, email, code span, and protected value survived. A drop is a 502, never a 200."
+                    },
+                    "structure_validation": {
+                      "type": "object",
+                      "description": "Proof the document still parses: JSON keys intact, HTML tags balanced, markdown syntax preserved"
+                    },
+                    "glossary_compliance": {
+                      "type": "object",
+                      "description": "Which glossary terms were applied and which were missed"
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "description": "Non-fatal notes, e.g. a missed glossary term"
+                    },
+                    "score": {
+                      "type": "number",
+                      "description": "0-100; 100 on a clean, structure-valid translation"
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "Letter grade A-F derived from score"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "description": "Scored deductions, e.g. glossary_missed"
+                    }
+                  }
+                },
+                "example": {
+                  "translated": {
+                    "greeting": "Bonjour {{name}}",
+                    "cta": "Cliquez ici pour ouvrir le tableau de bord"
+                  },
+                  "detected_language": "en",
+                  "target_language": "fr",
+                  "content_type": "json",
+                  "placeholder_validation": {
+                    "passed": true,
+                    "expected": [
+                      "{{name}}"
+                    ],
+                    "found": [
+                      "{{name}}"
+                    ],
+                    "missing": []
+                  },
+                  "structure_validation": {
+                    "passed": true,
+                    "type": "json"
+                  },
+                  "glossary_compliance": {
+                    "applied": [
+                      "dashboard→tableau de bord"
+                    ],
+                    "missed": []
+                  },
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/translate/batch": {
+      "post": {
+        "operationId": "postTranslateBatch",
+        "summary": "Translate many independent strings in one request — each with a caller ID preserved in the response…",
+        "tags": [
+          "translate"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "description": "The strings to translate: [{\"id\":\"greeting\",\"text\":\"Hello {{name}}\",\"context\":\"button label\"}]. ids and order are preserved in the response. 1-200 items, 64KB total."
+                  },
+                  "target": {
+                    "type": "string",
+                    "description": "Target language — ISO 639-1 code (\"fr\") or English name (\"French\"). Aliases also accepted: target_lang, target_language, to, lang."
+                  },
+                  "source": {
+                    "type": "string",
+                    "description": "Source language, applied to every item. Auto-detected per item when omitted."
+                  },
+                  "glossary": {
+                    "type": "object",
+                    "description": "Enforced term mappings applied to all items: {\"dashboard\":\"tableau de bord\"}."
+                  },
+                  "protected_values": {
+                    "type": "array",
+                    "description": "Strings that must survive byte-for-byte in every item — brand names, IDs: [\"Acme\"]."
+                  },
+                  "tone": {
+                    "type": "string",
+                    "description": "Optional tone guidance, e.g. \"friendly and concise\"."
+                  },
+                  "formality": {
+                    "type": "string",
+                    "description": "\"formal\", \"informal\", or \"neutral\" (default)."
+                  }
+                },
+                "required": [
+                  "items",
+                  "target"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "target_language": {
+                      "type": "string",
+                      "description": "ISO 639-1 code translated into"
+                    },
+                    "item_count": {
+                      "type": "number",
+                      "description": "Items submitted"
+                    },
+                    "succeeded": {
+                      "type": "number",
+                      "description": "Items translated and structurally verified"
+                    },
+                    "failed": {
+                      "type": "number",
+                      "description": "Items that failed — the batch still returns 200"
+                    },
+                    "items": {
+                      "type": "array",
+                      "description": "One entry per input item, in input order, each carrying your id: {id, status (\"ok\"|\"failed\"), translated, detected_language, confidence, warnings, reason}. A failed item has translated=null and a reason (structure_broken, unparseable, truncated, llm_unavailable, timeout)."
+                    },
+                    "billed_items": {
+                      "type": "number",
+                      "description": "Item count used for pricing (base covers 25)"
+                    },
+                    "pricing": {
+                      "type": "object",
+                      "description": "Base price, included items, and per-item overage beyond the included count"
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "Model, model_calls, input_tokens, output_tokens"
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "description": "Batch-level notes, e.g. that some items failed"
+                    },
+                    "score": {
+                      "type": "number",
+                      "description": "0-100; 100 on a successful run, even with some items failed"
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "Letter grade A-F derived from score"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "description": "Scored deductions, e.g. all_items_failed"
+                    }
+                  }
+                },
+                "example": {
+                  "target_language": "fr",
+                  "item_count": 2,
+                  "succeeded": 2,
+                  "failed": 0,
+                  "items": [
+                    {
+                      "id": "greeting",
+                      "status": "ok",
+                      "translated": "Bonjour {{name}}",
+                      "detected_language": "en",
+                      "confidence": 0.98,
+                      "warnings": []
+                    },
+                    {
+                      "id": "cta",
+                      "status": "ok",
+                      "translated": "Ouvrir le tableau de bord",
+                      "detected_language": "en",
+                      "confidence": 0.98,
+                      "warnings": []
+                    }
+                  ],
+                  "billed_items": 2,
+                  "pricing": {
+                    "base_usd": "$0.05",
+                    "included_items": 25,
+                    "overage_items": 0,
+                    "overage_per_item_usd": 0.002,
+                    "overage_usd": 0
+                  },
+                  "usage": {
+                    "model": "claude-haiku-4-5-20251001",
+                    "model_calls": 2,
+                    "input_tokens": 480,
+                    "output_tokens": 64
+                  },
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
     "/translate/short": {
       "post": {
         "operationId": "postTranslateShort",
@@ -4198,7 +4537,7 @@
     "/currency-exchange/convert": {
       "get": {
         "operationId": "getCurrencyExchangeConvert",
-        "summary": "Convert any amount between 32 fiat currencies (live European Central Bank rates) AND major…",
+        "summary": "Convert any amount between 32 fiat currencies (live European Central Bank rates) and major…",
         "tags": [
           "currency-exchange"
         ],
@@ -4216,7 +4555,7 @@
             "name": "to",
             "in": "query",
             "required": true,
-            "description": "Target currency — ISO 4217 fiat code (e.g. EUR) or a crypto ticker (e.g. BTC, ETH, ICP)",
+            "description": "Target — ISO 4217 fiat code (EUR) or crypto ticker (BTC, ETH)",
             "schema": {
               "type": "string"
             }
@@ -4225,7 +4564,7 @@
             "name": "amount",
             "in": "query",
             "required": false,
-            "description": "Amount to convert (default: 1, max: 999999999)",
+            "description": "Amount to convert (default 1)",
             "schema": {
               "type": "number"
             }
@@ -4234,7 +4573,7 @@
             "name": "date",
             "in": "query",
             "required": false,
-            "description": "YYYY-MM-DD for a historical rate (fiat pairs only; ignored for crypto). Default: latest",
+            "description": "YYYY-MM-DD historical rate (fiat only). Default: latest",
             "schema": {
               "type": "string"
             }
@@ -4286,7 +4625,7 @@
                     },
                     "source": {
                       "type": "string",
-                      "description": "Rate source: ecb (fiat), coinbase (crypto), coingecko (long-tail crypto fallback), or same"
+                      "description": "ecb | coinbase | coingecko | same"
                     },
                     "score": {
                       "type": "number"
@@ -4314,7 +4653,7 @@
                   "findings": [
                     {
                       "rule": "crypto_spot",
-                      "detail": "Crypto pair priced at the latest Coinbase spot rate; fiat pairs use ECB reference rates"
+                      "detail": "Crypto pair priced at Coinbase spot"
                     }
                   ]
                 }
@@ -4584,6 +4923,436 @@
                       "detail": "Currency symbol/word maps to multiple ISO 4217 codes; resolution is best-effort"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/json/repair": {
+      "post": {
+        "operationId": "postJsonRepair",
+        "summary": "Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted…",
+        "tags": [
+          "json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "description": "The malformed JSON, as a string. May include markdown code fences or surrounding prose. Max 100KB."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "Optional. Validate the repaired JSON against this schema. Accepts a flat field→type map ({\"n\":\"number\"}) or a JSON-Schema-shaped object ({\"type\":\"object\",\"properties\":{...},\"required\":[...]}). Types: string, number, integer, boolean, object, array, null."
+                  },
+                  "allow_llm": {
+                    "type": "boolean",
+                    "description": "Default true. When false, deterministic-only: if the tokenizer cannot fix the input, repair_succeeded is false (still a 200)."
+                  },
+                  "coerce": {
+                    "type": "boolean",
+                    "description": "Default false. With a schema supplied, coerce values to the declared types where lossless (\"5\" → 5, \"yes\" → true)."
+                  }
+                },
+                "required": [
+                  "input"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "was_valid": {
+                      "type": "boolean"
+                    },
+                    "repair_succeeded": {
+                      "type": "boolean"
+                    },
+                    "repaired": {
+                      "type": [
+                        "object",
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "changes": {
+                      "type": "array"
+                    },
+                    "schema_valid": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "validation_errors": {
+                      "type": "array"
+                    },
+                    "confidence": {
+                      "type": "number"
+                    },
+                    "warnings": {
+                      "type": "array"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "was_valid": false,
+                  "repair_succeeded": true,
+                  "repaired": {
+                    "name": "acme",
+                    "ports": [
+                      80,
+                      443
+                    ]
+                  },
+                  "method": "deterministic",
+                  "changes": [
+                    "removed markdown code fences",
+                    "converted 3 single-quoted strings to double-quoted",
+                    "removed 2 trailing commas"
+                  ],
+                  "schema_valid": null,
+                  "validation_errors": [],
+                  "confidence": 1,
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/schema/validate": {
+      "post": {
+        "operationId": "postSchemaValidate",
+        "summary": "Validate data against a supplied schema — checks required fields, nested objects, arrays, enums,…",
+        "tags": [
+          "schema"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": [
+                      "object",
+                      "array",
+                      "string"
+                    ],
+                    "description": "The data to validate: an object, an array, or a JSON string (malformed strings are repaired first). Max 64KB."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "JSON Schema ({\"type\":\"object\",\"properties\":{...},\"required\":[...]}) or a simplified field→type map ({\"age\":\"number\",\"email\":\"email\",\"tags\":\"string[]\",\"bio\":\"string?\"}). In the map form a field is required unless suffixed with '?'. Formats: email, url, date, date-time, uuid, ipv4, ipv6, hostname."
+                  },
+                  "coerce": {
+                    "type": "boolean",
+                    "description": "Default false. Coerce values to the declared types where lossless (\"5\" → 5, \"yes\" → true)."
+                  },
+                  "repair": {
+                    "type": "boolean",
+                    "description": "Default false. When invalid, also return a repaired copy of the data plus is_repaired_valid. Deterministic first (coercion, declared defaults, enum casing, strict extra-key removal)."
+                  },
+                  "allow_llm": {
+                    "type": "boolean",
+                    "description": "Default true. Gates the LLM repair fallback only — validation itself is always deterministic."
+                  }
+                },
+                "required": [
+                  "data",
+                  "schema"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean"
+                    },
+                    "errors": {
+                      "type": "array"
+                    },
+                    "error_count": {
+                      "type": "number"
+                    },
+                    "repaired": {
+                      "type": [
+                        "object",
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "is_repaired_valid": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "coerced": {
+                      "type": "boolean"
+                    },
+                    "warnings": {
+                      "type": "array"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "valid": false,
+                  "errors": [
+                    {
+                      "path": "$.email",
+                      "message": "required field is missing",
+                      "expected": "required",
+                      "received": "undefined"
+                    },
+                    {
+                      "path": "$.age",
+                      "message": "expected number, received string",
+                      "expected": "number",
+                      "received": "string"
+                    }
+                  ],
+                  "error_count": 2,
+                  "repaired": null,
+                  "is_repaired_valid": null,
+                  "coerced": false,
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": [
+                    {
+                      "rule": "data_invalid",
+                      "deduction": 0,
+                      "detail": "Data does not satisfy the schema (2 errors)"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/schema/map": {
+      "post": {
+        "operationId": "postSchemaMap",
+        "summary": "Transform a source object into a target schema — matches fields by alias and structure…",
+        "tags": [
+          "schema"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "object",
+                    "description": "The object to transform. Nested objects are addressed by dot path. Max 64KB / 200 fields."
+                  },
+                  "target_schema": {
+                    "type": "object",
+                    "description": "Desired output shape. JSON Schema ({\"type\":\"object\",\"properties\":{...},\"required\":[...]}) or a field→type map ({\"full_name\":\"string\",\"price\":\"number\",\"bio\":\"string?\"}). In the map form a field is required unless suffixed with '?'."
+                  },
+                  "hints": {
+                    "type": "object",
+                    "description": "Optional explicit mapping, keyed by target field: {\"full_name\":\"name\"} or {\"full_name\":[\"name\",\"contact\"]}. Hints outrank every automatic match."
+                  },
+                  "transforms": {
+                    "type": "object",
+                    "description": "Optional per-target-field transform: {\"price\":\"toNumber\"}. One of: toNumber, toInteger, toString, toBoolean, toISO, toDate, trim, toLowerCase, toUpperCase, toArray."
+                  },
+                  "defaults": {
+                    "type": "object",
+                    "description": "Optional value per target field to use when the source has no match: {\"currency\":\"USD\"}."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "\"permissive\" (default): an unmapped target field is null + a warning. \"strict\": it is omitted from `mapped`. Either way an incomplete mapping is a 200 with missing_target listed, never an error."
+                  },
+                  "allow_llm": {
+                    "type": "boolean",
+                    "description": "Default true. Gates semantic mapping. When false, fields the rules cannot match land in missing_target and no model is called."
+                  }
+                },
+                "required": [
+                  "source",
+                  "target_schema"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.040000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mapped": {
+                      "type": "object"
+                    },
+                    "mapped_fields": {
+                      "type": "array"
+                    },
+                    "unmapped_source": {
+                      "type": "array"
+                    },
+                    "missing_target": {
+                      "type": "array"
+                    },
+                    "type_conversions": {
+                      "type": "array"
+                    },
+                    "schema_valid": {
+                      "type": "boolean"
+                    },
+                    "warnings": {
+                      "type": "array"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "mapped": {
+                    "full_name": "Jane Doe",
+                    "price": 19.99
+                  },
+                  "mapped_fields": [
+                    {
+                      "target": "full_name",
+                      "source": "name",
+                      "method": "alias",
+                      "confidence": 1
+                    },
+                    {
+                      "target": "price",
+                      "source": "cost",
+                      "method": "alias",
+                      "confidence": 1
+                    }
+                  ],
+                  "unmapped_source": [
+                    "internal_id"
+                  ],
+                  "missing_target": [],
+                  "type_conversions": [
+                    {
+                      "field": "price",
+                      "from": "string",
+                      "to": "number"
+                    }
+                  ],
+                  "schema_valid": true,
+                  "warnings": [],
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
                 }
               }
             }

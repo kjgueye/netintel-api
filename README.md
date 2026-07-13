@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 74 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 79 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -12,7 +12,7 @@ Network intelligence API with 74 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
 | `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
-| `/schema-parse/extract` | POST | $0.050 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
+| `/schema-parse/extract` | POST | $0.100 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
 | `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
 | `/ai-image/generate` | POST | $0.25 | Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with… |
 | `/classify` | POST | $0.005 | Text classification API — zero-shot text classifier / categorization: caller supplies 2–20 labels… |
@@ -29,6 +29,8 @@ Network intelligence API with 74 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/sentiment/analyze` | POST | $0.002 | Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call:… |
 | `/text-summarize` | POST | $0.005 | Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key… |
 | `/translate/long` | POST | $0.08 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
+| `/translate/structured` | POST | $0.05 | Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking… |
+| `/translate/batch` | POST | $0.05 | Translate many independent strings in one request — each with a caller ID preserved in the response… |
 | `/translate/short` | POST | $0.03 | Translate text between languages — text translation API for short content: translate a sentence… |
 | `/asn-lookup/analyze` | GET | $0.030 | Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and… |
 | `/whois-rdap/lookup` | GET | $0.003 | WHOIS domain lookup via RDAP — registrar, creation/expiry/updated dates, nameservers, and status… |
@@ -39,9 +41,12 @@ Network intelligence API with 74 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/ip-blacklist/check` | GET | $0.050 | Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.)… |
 | `/ip-reputation/analyze` | GET | $0.050 | Check an IP address against AbuseIPDB and AlienVault OTX threat feeds. Returns a composite risk… |
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
-| `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) AND major… |
+| `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
 | `/convert` | GET | $0.01 | Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
+| `/json/repair` | POST | $0.02 | Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted… |
+| `/schema/validate` | POST | $0.02 | Validate data against a supplied schema — checks required fields, nested objects, arrays, enums… |
+| `/schema/map` | POST | $0.04 | Transform a source object into a target schema — matches fields by alias and structure… |
 | `/calendar/ics` | POST | $0.005 | Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events… |
 | `/event-classify` | POST | $0.02 | Cheap, fast "is this a dateable event?" filter for social and web text — one tiny Haiku call… |
 | `/event-extract` | POST | $0.050 | Event extraction / event parsing — turn any caption, announcement, listing, or page text into a… |
