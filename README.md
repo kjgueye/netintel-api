@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 79 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 80 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -82,6 +82,7 @@ Network intelligence API with 79 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/domain-due-diligence` | GET | $0.20 | One call combines domain availability, heuristic value appraisal, and TLD pricing into a single… |
 | `/domain-report/full` | GET | $0.25 | One premium call returns a complete six-part domain profile — DNS records, SSL certificate, WHOIS… |
 | `/domain/vendor-risk` | POST | $0.10 | Composite 0-100 trust/risk score for a domain in one call — blends domain age, SSL/TLS, DNS health… |
+| `/domain/vet` | POST | $0.20 | Vet and pick a domain in one call — give candidate names, get back a ranked verdict on which to use… |
 | `/email-report/full` | GET | $0.15 | One call combines domain email authentication (SPF/DKIM/DMARC), email-address intelligence… |
 | `/ip-report/full` | GET | $0.20 | One premium call returns a complete five-part IP profile — geolocation, ASN/network ownership… |
 | `/url-safety/full` | GET | $0.15 | One call vets a URL end to end — traces its full redirect chain, checks it against the URLhaus… |

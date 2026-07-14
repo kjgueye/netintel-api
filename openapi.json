@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 79 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 79 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 80 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 80 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -9858,6 +9858,160 @@
                   "confidence": "partial",
                   "run_id": "b3f1c2a4-9d8e-4c7a-9f21-6e2d5a1b0c3d",
                   "duration_ms": 1420,
+                  "score": 100,
+                  "grade": "A",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/domain/vet": {
+      "post": {
+        "operationId": "postDomainVet",
+        "summary": "Vet and pick a domain in one call — give candidate names, get back a ranked verdict on which to use…",
+        "tags": [
+          "domain"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "candidates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tlds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "use_case": {
+                    "type": "string"
+                  },
+                  "deep_check_top_n": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "candidates"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.200000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "recommended": {
+                      "type": "string"
+                    },
+                    "candidates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "signals_unavailable": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "run_id": {
+                      "type": "string"
+                    },
+                    "duration_ms": {
+                      "type": "number"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "grade": {
+                      "type": "string"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "recommended": "satsdesk.com",
+                  "candidates": [
+                    {
+                      "name": "satsdesk",
+                      "preferred_domain": "satsdesk.com",
+                      "availability": {
+                        "all_tlds_available": true,
+                        "taken": [],
+                        "brand_protected_registrar": false,
+                        "score": 100,
+                        "source": "bulk-domain"
+                      },
+                      "appraisal": {
+                        "score": 87,
+                        "tier": "strong",
+                        "detail": "8 chars, pronounceable, no hyphens/numbers",
+                        "source": "domain-appraise"
+                      },
+                      "typosquat": {
+                        "registered_lookalikes": 3,
+                        "available_defensive": 27,
+                        "risk": "low",
+                        "source": "typosquat"
+                      },
+                      "brand_collision": {
+                        "available": true,
+                        "has_close_match": false,
+                        "similar_to": [],
+                        "confidence": "high",
+                        "note": "Factual name-similarity signal only. Not a trademark search or legal clearance.",
+                        "source": "domain-vet"
+                      },
+                      "verdict": "recommended"
+                    }
+                  ],
+                  "flags": [],
+                  "signals_unavailable": [],
+                  "run_id": "7c1e2f9a-4b6d-4a2e-9f83-1d5c7b0a2e64",
+                  "duration_ms": 3400,
                   "score": 100,
                   "grade": "A",
                   "findings": []
