@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 80 endpoints, all pay-per-call via x402 micropayments (USDC on Base mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 80 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 98 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 98 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -1157,6 +1157,2201 @@
                     "prompt_tokens": 14,
                     "completion_tokens": 8,
                     "total_tokens": 22
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-4o": {
+      "post": {
+        "operationId": "postOpenaiGpt4o",
+        "summary": "Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed,…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~48000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 2048, capped at 2048."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature. Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling. Optional."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.100000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-4o",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-4-1": {
+      "post": {
+        "operationId": "postOpenaiGpt41",
+        "summary": "Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~48000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 2048, capped at 2048."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature. Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling. Optional."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.090000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-4.1",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-4-1-mini": {
+      "post": {
+        "operationId": "postOpenaiGpt41Mini",
+        "summary": "Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~36000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 2048, capped at 2048."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature. Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling. Optional."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-4.1-mini",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/v1/embeddings": {
+      "post": {
+        "operationId": "postV1Embeddings",
+        "summary": "OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or…",
+        "tags": [
+          "v1"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "description": "Text to embed. Also accepts an array of up to 128 strings (64000 chars total)."
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "text-embedding-3-small (default) or text-embedding-3-large"
+                  },
+                  "dimensions": {
+                    "type": "number",
+                    "description": "Optional output vector size (truncation)."
+                  }
+                },
+                "required": [
+                  "input"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'list'"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "[{object:'embedding', index, embedding:[…]}]"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, total_tokens (input-only)"
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {
+                      "object": "embedding",
+                      "index": 0,
+                      "embedding": [
+                        0.0102,
+                        -0.0083,
+                        0.0264
+                      ]
+                    }
+                  ],
+                  "model": "text-embedding-3-small",
+                  "usage": {
+                    "prompt_tokens": 4,
+                    "total_tokens": 4
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/semantic/rank": {
+      "post": {
+        "operationId": "postSemanticRank",
+        "summary": "Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back…",
+        "tags": [
+          "semantic"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The text to rank candidates against."
+                  },
+                  "candidates": {
+                    "type": "array",
+                    "description": "1-100 candidate strings to rank (64000 chars total on the default model).",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "text-embedding-3-small (default) or text-embedding-3-large"
+                  },
+                  "top_k": {
+                    "type": "number",
+                    "description": "Return only the best N results. Optional."
+                  },
+                  "min_score": {
+                    "type": "number",
+                    "description": "Drop results scoring below this (-1 to 1). Optional."
+                  }
+                },
+                "required": [
+                  "query",
+                  "candidates"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "description": "Ranked best-first: [{index (original position), score, text}]"
+                    },
+                    "method": {
+                      "type": "string",
+                      "description": "Always 'embedding_similarity'"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "dimensions": {
+                      "type": "number"
+                    },
+                    "normalized": {
+                      "type": "boolean"
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens (input-only)"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "index": 0,
+                      "score": 0.5361,
+                      "text": "Use the Forgot Password link to recover your account."
+                    },
+                    {
+                      "index": 1,
+                      "score": 0.1399,
+                      "text": "Refunds are accepted within 30 days."
+                    }
+                  ],
+                  "method": "embedding_similarity",
+                  "provider": "openai",
+                  "model": "text-embedding-3-small",
+                  "dimensions": 1536,
+                  "normalized": true,
+                  "usage": {
+                    "prompt_tokens": 36
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "operationId": "postV1ChatCompletions",
+        "summary": "OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape,…",
+        "tags": [
+          "v1"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Model id, e.g. gpt-4o or gpt-4o-mini. Free catalog: GET /v1/models"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens (clamped to the model's cap)."
+                  }
+                },
+                "required": [
+                  "model",
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.100000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array"
+                    },
+                    "usage": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-9f2f28d90a3c4e0f8f1c2d3e",
+                  "object": "chat.completion",
+                  "model": "gpt-4o-mini",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 13,
+                    "completion_tokens": 2,
+                    "total_tokens": 15
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-4o-mini": {
+      "post": {
+        "operationId": "postOpenaiGpt4oMini",
+        "summary": "Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~24000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 1024, capped at 1024."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature. Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling. Optional."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-4o-mini",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-4-1-nano": {
+      "post": {
+        "operationId": "postOpenaiGpt41Nano",
+        "summary": "Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~24000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 1024, capped at 1024."
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "description": "Sampling temperature. Optional."
+                  },
+                  "top_p": {
+                    "type": "number",
+                    "description": "Nucleus sampling. Optional."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-4.1-nano",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-5": {
+      "post": {
+        "operationId": "postOpenaiGpt55",
+        "summary": "Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 8192, capped at 8192."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.650000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.5",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-4": {
+      "post": {
+        "operationId": "postOpenaiGpt54",
+        "summary": "Call OpenAI's gpt-5.4 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 4096, capped at 4096."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.250000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.4",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-4-mini": {
+      "post": {
+        "operationId": "postOpenaiGpt54Mini",
+        "summary": "Call OpenAI's gpt-5.4-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~36000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 2048, capped at 2048."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.040000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.4-mini",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-4-nano": {
+      "post": {
+        "operationId": "postOpenaiGpt54Nano",
+        "summary": "Call OpenAI's gpt-5.4-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~24000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 1024, capped at 1024."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.4-nano",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-1": {
+      "post": {
+        "operationId": "postOpenaiGpt51",
+        "summary": "Call OpenAI's gpt-5.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 4096, capped at 4096."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.150000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.1",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-nano": {
+      "post": {
+        "operationId": "postOpenaiGpt5Nano",
+        "summary": "Call OpenAI's gpt-5-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~24000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 1024, capped at 1024."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5-nano",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-2": {
+      "post": {
+        "operationId": "postOpenaiGpt52",
+        "summary": "Call OpenAI's gpt-5.2 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 4096, capped at 4096."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.200000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.2",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-6-sol": {
+      "post": {
+        "operationId": "postOpenaiGpt56Sol",
+        "summary": "Call OpenAI's gpt-5.6-sol via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 8192, capped at 8192."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.650000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.6-sol",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-6-terra": {
+      "post": {
+        "operationId": "postOpenaiGpt56Terra",
+        "summary": "Call OpenAI's gpt-5.6-terra via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~96000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 4096, capped at 4096."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.250000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.6-terra",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/openai/gpt-5-6-luna": {
+      "post": {
+        "operationId": "postOpenaiGpt56Luna",
+        "summary": "Call OpenAI's gpt-5.6-luna via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "tags": [
+          "openai"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~48000 chars total.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "description": "system, user, or assistant"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Message text"
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  },
+                  "max_completion_tokens": {
+                    "type": "number",
+                    "description": "Max output tokens. Optional — defaults to 2048, capped at 2048."
+                  }
+                },
+                "required": [
+                  "messages"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.060000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'chat.completion'"
+                    },
+                    "created": {
+                      "type": "number",
+                      "description": "Unix timestamp (seconds)"
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "choices": {
+                      "type": "array",
+                      "description": "Assistant message + finish_reason."
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, completion_tokens, total_tokens"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "chatcmpl-abc123",
+                  "object": "chat.completion",
+                  "created": 1735689600,
+                  "model": "gpt-5.6-luna",
+                  "choices": [
+                    {
+                      "index": 0,
+                      "message": {
+                        "role": "assistant",
+                        "content": "Hi!"
+                      },
+                      "finish_reason": "stop"
+                    }
+                  ],
+                  "usage": {
+                    "prompt_tokens": 11,
+                    "completion_tokens": 2,
+                    "total_tokens": 13
                   }
                 }
               }
@@ -7227,17 +9422,7 @@
         "tags": [
           "github-intel"
         ],
-        "parameters": [
-          {
-            "name": "repo",
-            "in": "query",
-            "required": true,
-            "description": "GitHub repository in owner/repo format or full GitHub URL",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -7256,154 +9441,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "repo": {
-                      "type": "string"
-                    },
-                    "url": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "homepage": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "stars": {
-                      "type": "number"
-                    },
-                    "forks": {
-                      "type": "number"
-                    },
-                    "watchers": {
-                      "type": "number"
-                    },
-                    "open_issues": {
-                      "type": "number"
-                    },
-                    "primary_language": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "languages": {
-                      "type": "object",
-                      "description": "Language → bytes breakdown"
-                    },
-                    "license": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "license_spdx": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "topics": {
-                      "type": "array"
-                    },
-                    "created_at": {
-                      "type": "string"
-                    },
-                    "last_pushed_at": {
-                      "type": "string"
-                    },
-                    "days_since_last_push": {
-                      "type": "number"
-                    },
-                    "is_archived": {
-                      "type": "boolean"
-                    },
-                    "is_fork": {
-                      "type": "boolean"
-                    },
-                    "parent_repo": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "default_branch": {
-                      "type": "string"
-                    },
-                    "contributor_count": {
-                      "type": "number"
-                    },
-                    "latest_release": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "latest_release_date": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "score": {
-                      "type": "number"
-                    },
-                    "grade": {
-                      "type": "string"
-                    },
-                    "findings": {
-                      "type": "array"
-                    }
-                  }
-                },
-                "example": {
-                  "repo": "expressjs/express",
-                  "url": "https://github.com/expressjs/express",
-                  "description": "Fast, unopinionated, minimalist web framework for node.",
-                  "homepage": "https://expressjs.com",
-                  "stars": 65000,
-                  "forks": 15000,
-                  "watchers": 65000,
-                  "open_issues": 200,
-                  "primary_language": "JavaScript",
-                  "languages": {
-                    "JavaScript": 543210,
-                    "TypeScript": 12345
-                  },
-                  "license": "MIT License",
-                  "license_spdx": "MIT",
-                  "topics": [
-                    "nodejs",
-                    "javascript",
-                    "web",
-                    "framework"
-                  ],
-                  "created_at": "2009-06-26T18:56:01Z",
-                  "last_pushed_at": "2024-03-10T08:00:00Z",
-                  "days_since_last_push": 12,
-                  "is_archived": false,
-                  "is_fork": false,
-                  "parent_repo": null,
-                  "default_branch": "master",
-                  "contributor_count": 100,
-                  "latest_release": "v4.18.3",
-                  "latest_release_date": "2024-02-26T14:00:00Z",
-                  "score": 100,
-                  "grade": "A",
-                  "findings": [
-                    {
-                      "rule": "active_development",
-                      "deduction": 0,
-                      "detail": "Pushed within last 180 days"
-                    }
-                  ]
+                  "type": "object"
                 }
               }
             }
@@ -7448,154 +9486,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "repo": {
-                      "type": "string"
-                    },
-                    "url": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "homepage": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "stars": {
-                      "type": "number"
-                    },
-                    "forks": {
-                      "type": "number"
-                    },
-                    "watchers": {
-                      "type": "number"
-                    },
-                    "open_issues": {
-                      "type": "number"
-                    },
-                    "primary_language": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "languages": {
-                      "type": "object",
-                      "description": "Language → bytes breakdown"
-                    },
-                    "license": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "license_spdx": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "topics": {
-                      "type": "array"
-                    },
-                    "created_at": {
-                      "type": "string"
-                    },
-                    "last_pushed_at": {
-                      "type": "string"
-                    },
-                    "days_since_last_push": {
-                      "type": "number"
-                    },
-                    "is_archived": {
-                      "type": "boolean"
-                    },
-                    "is_fork": {
-                      "type": "boolean"
-                    },
-                    "parent_repo": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "default_branch": {
-                      "type": "string"
-                    },
-                    "contributor_count": {
-                      "type": "number"
-                    },
-                    "latest_release": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "latest_release_date": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "score": {
-                      "type": "number"
-                    },
-                    "grade": {
-                      "type": "string"
-                    },
-                    "findings": {
-                      "type": "array"
-                    }
-                  }
-                },
-                "example": {
-                  "repo": "expressjs/express",
-                  "url": "https://github.com/expressjs/express",
-                  "description": "Fast, unopinionated, minimalist web framework for node.",
-                  "homepage": "https://expressjs.com",
-                  "stars": 65000,
-                  "forks": 15000,
-                  "watchers": 65000,
-                  "open_issues": 200,
-                  "primary_language": "JavaScript",
-                  "languages": {
-                    "JavaScript": 543210,
-                    "TypeScript": 12345
-                  },
-                  "license": "MIT License",
-                  "license_spdx": "MIT",
-                  "topics": [
-                    "nodejs",
-                    "javascript",
-                    "web",
-                    "framework"
-                  ],
-                  "created_at": "2009-06-26T18:56:01Z",
-                  "last_pushed_at": "2024-03-10T08:00:00Z",
-                  "days_since_last_push": 12,
-                  "is_archived": false,
-                  "is_fork": false,
-                  "parent_repo": null,
-                  "default_branch": "master",
-                  "contributor_count": 100,
-                  "latest_release": "v4.18.3",
-                  "latest_release_date": "2024-02-26T14:00:00Z",
-                  "score": 100,
-                  "grade": "A",
-                  "findings": [
-                    {
-                      "rule": "active_development",
-                      "deduction": 0,
-                      "detail": "Pushed within last 180 days"
-                    }
-                  ]
+                  "type": "object"
                 }
               }
             }
