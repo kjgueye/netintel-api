@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 98 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 98 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 99 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 99 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -6317,7 +6317,7 @@
     "/dnssec/validate": {
       "get": {
         "operationId": "getDnssecValidate",
-        "summary": "Validate a domain's DNSSEC configuration by checking for DS records at the parent zone, DNSKEY…",
+        "summary": "Validate a domain's DNSSEC configuration over DNS-over-HTTPS: DS records at the parent zone, DNSKEY…",
         "tags": [
           "dnssec"
         ],
@@ -6358,6 +6358,10 @@
                     "dnssec_enabled": {
                       "type": "boolean"
                     },
+                    "resolver_validated": {
+                      "type": "boolean",
+                      "description": "Validating resolver's AD bit — chain verified upstream"
+                    },
                     "chain_of_trust": {
                       "type": "string"
                     },
@@ -6381,6 +6385,7 @@
                 "example": {
                   "domain": "example.com",
                   "dnssec_enabled": true,
+                  "resolver_validated": true,
                   "chain_of_trust": "complete",
                   "components": {
                     "ds_record": {
@@ -6392,23 +6397,25 @@
                     },
                     "dnskey_record": {
                       "present": true,
-                      "count": 2,
+                      "count": 4,
                       "key_types": [
+                        "ZSK",
                         "KSK",
+                        "ZSK",
                         "ZSK"
                       ]
                     },
                     "rrsig_record": {
                       "present": true,
-                      "signatures_found": 3
+                      "signatures_found": 1
                     },
                     "nsec_or_nsec3": {
                       "present": true,
-                      "type": "NSEC3"
+                      "type": "NSEC"
                     }
                   },
                   "tld_ds_present": true,
-                  "score": 95,
+                  "score": 100,
                   "grade": "A",
                   "findings": []
                 }
@@ -6851,6 +6858,183 @@
                       "detail": "Crypto pair priced at Coinbase spot"
                     }
                   ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/crypto/market": {
+      "get": {
+        "operationId": "getCryptoMarket",
+        "summary": "Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h…",
+        "tags": [
+          "crypto"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Crypto ticker (BTC) or full name (\"bitcoin\"). Aliases: coin, ticker, asset",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vs",
+            "in": "query",
+            "required": false,
+            "description": "Quote currency: USD (default), EUR or GBP. Aliases: currency, fiat",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "symbol": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "vs": {
+                      "type": "string"
+                    },
+                    "price": {
+                      "type": "number"
+                    },
+                    "change_24h": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "change_24h_pct": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "high_24h": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "low_24h": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "open_24h": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "volume_24h": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "market_cap": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "market_cap_rank": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "supply": {
+                      "type": "object",
+                      "properties": {
+                        "circulating": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "total": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "last_updated": {
+                      "type": "string"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "coinbase+coingecko | coinbase | coingecko"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "symbol": "BTC",
+                  "name": "Bitcoin",
+                  "vs": "USD",
+                  "price": 64826.88,
+                  "change_24h": 101.88,
+                  "change_24h_pct": 0.16,
+                  "high_24h": 65050.87,
+                  "low_24h": 64238.08,
+                  "open_24h": 64725,
+                  "volume_24h": 206284430,
+                  "market_cap": 1299946852247,
+                  "market_cap_rank": 1,
+                  "supply": {
+                    "circulating": 20058731,
+                    "total": 20058734,
+                    "max": 21000000
+                  },
+                  "last_updated": "2026-07-20T01:34:52.830Z",
+                  "cache_age_seconds": 0,
+                  "source": "coinbase+coingecko",
+                  "findings": []
                 }
               }
             }
@@ -8774,7 +8958,7 @@
                 },
                 "example": {
                   "input": "+1 (555) 867-5309",
-                  "is_valid": true,
+                  "is_valid": false,
                   "e164": "+15558675309",
                   "international": "+1 555 867 5309",
                   "national": "(555) 867-5309",
@@ -8783,9 +8967,15 @@
                   "country_name": "United States",
                   "line_type": "mobile_or_landline",
                   "digit_count": 11,
-                  "score": 90,
-                  "grade": "A",
-                  "findings": []
+                  "score": 0,
+                  "grade": "F",
+                  "findings": [
+                    {
+                      "rule": "unassigned_area_code",
+                      "deduction": -100,
+                      "detail": "555 is not an assigned NANP area code — commonly used for fictional numbers"
+                    }
+                  ]
                 }
               }
             }

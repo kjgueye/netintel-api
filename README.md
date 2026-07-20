@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 98 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 99 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -55,11 +55,12 @@ Network intelligence API with 98 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/cert-transparency/lookup` | GET | $0.010 | Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever… |
 | `/subnet/calc` | GET | $0.005 | Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard… |
 | `/dns-propagation/check` | GET | $0.030 | Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously —… |
-| `/dnssec/validate` | GET | $0.030 | Validate a domain's DNSSEC configuration by checking for DS records at the parent zone, DNSKEY… |
+| `/dnssec/validate` | GET | $0.030 | Validate a domain's DNSSEC configuration over DNS-over-HTTPS: DS records at the parent zone, DNSKEY… |
 | `/ip-blacklist/check` | GET | $0.050 | Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.)… |
 | `/ip-reputation/analyze` | GET | $0.050 | Check an IP address against AbuseIPDB and AlienVault OTX threat feeds. Returns a composite risk… |
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
+| `/crypto/market` | GET | $0.005 | Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h… |
 | `/convert` | GET | $0.01 | Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
 | `/json/repair` | POST | $0.02 | Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted… |
