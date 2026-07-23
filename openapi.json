@@ -6879,8 +6879,8 @@
           {
             "name": "symbol",
             "in": "query",
-            "required": true,
-            "description": "Crypto ticker (BTC) or full name (\"bitcoin\"). Aliases: coin, ticker, asset",
+            "required": false,
+            "description": "Crypto ticker (BTC) or full name (\"bitcoin\"); defaults to BTC if omitted. Aliases: coin, ticker, asset",
             "schema": {
               "type": "string"
             }
