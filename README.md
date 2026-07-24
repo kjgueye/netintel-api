@@ -16,18 +16,18 @@ Network intelligence API with 99 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
 | `/openai/gpt-4o` | POST | $0.10 | Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed… |
 | `/openai/gpt-4-1` | POST | $0.09 | Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
-| `/openai/gpt-4-1-mini` | POST | $0.02 | Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
+| `/openai/gpt-4-1-mini` | POST | $0.005 | Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/v1/embeddings` | POST | $0.005 | OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or… |
 | `/semantic/rank` | POST | $0.02 | Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back… |
 | `/v1/chat/completions` | POST | $0.10 | OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape… |
-| `/openai/gpt-4o-mini` | POST | $0.01 | Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
-| `/openai/gpt-4-1-nano` | POST | $0.01 | Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
+| `/openai/gpt-4o-mini` | POST | $0.005 | Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
+| `/openai/gpt-4-1-nano` | POST | $0.005 | Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-5` | POST | $0.65 | Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-4` | POST | $0.25 | Call OpenAI's gpt-5.4 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-4-mini` | POST | $0.04 | Call OpenAI's gpt-5.4-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
-| `/openai/gpt-5-4-nano` | POST | $0.01 | Call OpenAI's gpt-5.4-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
+| `/openai/gpt-5-4-nano` | POST | $0.005 | Call OpenAI's gpt-5.4-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-1` | POST | $0.15 | Call OpenAI's gpt-5.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
-| `/openai/gpt-5-nano` | POST | $0.01 | Call OpenAI's gpt-5-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
+| `/openai/gpt-5-nano` | POST | $0.005 | Call OpenAI's gpt-5-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-2` | POST | $0.20 | Call OpenAI's gpt-5.2 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-6-sol` | POST | $0.65 | Call OpenAI's gpt-5.6-sol via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-6-terra` | POST | $0.25 | Call OpenAI's gpt-5.6-terra via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
