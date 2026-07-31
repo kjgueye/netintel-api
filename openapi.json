@@ -6563,7 +6563,8 @@
                       "type": "string"
                     },
                     "risk_score": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "0-100, higher = more malicious"
                     },
                     "risk_level": {
                       "type": "string"
@@ -8460,7 +8461,7 @@
                     "findings": {
                       "type": "array",
                       "items": {
-                        "type": "string"
+                        "type": "object"
                       }
                     }
                   }
@@ -8483,7 +8484,11 @@
                   "score": 90,
                   "grade": "A",
                   "findings": [
-                    "is_free_provider"
+                    {
+                      "rule": "is_free_provider",
+                      "deduction": -10,
+                      "detail": "Domain is a free consumer email provider"
+                    }
                   ]
                 }
               }
@@ -8635,15 +8640,9 @@
                   "modified_at": null,
                   "twitter_card": "summary_large_image",
                   "json_ld": null,
-                  "score": 90,
+                  "score": 100,
                   "grade": "A",
-                  "findings": [
-                    {
-                      "rule": "no_canonical",
-                      "deduction": -10,
-                      "detail": "No canonical URL found"
-                    }
-                  ]
+                  "findings": []
                 }
               }
             }
@@ -11077,8 +11076,13 @@
                     "ip": {
                       "type": "string"
                     },
+                    "trust_score": {
+                      "type": "number",
+                      "description": "0-100, higher = cleaner/safer"
+                    },
                     "risk_score": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "deprecated alias of trust_score"
                     },
                     "grade": {
                       "type": "string"
@@ -11105,6 +11109,7 @@
                 },
                 "example": {
                   "ip": "8.8.8.8",
+                  "trust_score": 80,
                   "risk_score": 80,
                   "grade": "B",
                   "recommendation": "allow",
@@ -12327,6 +12332,7 @@
                     },
                     "risk": {
                       "available": true,
+                      "trust_score": 80,
                       "risk_score": 80,
                       "recommendation": "allow"
                     }
