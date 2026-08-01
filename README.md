@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 99 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 110 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 ## Endpoints
 
@@ -61,6 +61,17 @@ Network intelligence API with 99 pay-per-call endpoints for DNS, SSL, WHOIS, ema
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
 | `/crypto/market` | GET | $0.005 | Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h… |
+| `/gas/price` | GET | $0.005 | Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for… |
+| `/crypto/price` | GET | $0.01 | Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken… |
+| `/crypto/ohlc` | GET | $0.02 | Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with… |
+| `/currency-exchange/batch` | GET | $0.02 | Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR… |
+| `/currency-exchange/history` | GET | $0.02 | Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto… |
+| `/token/info` | GET | $0.02 | Full profile for any ERC-20 token by contract address — name, symbol, decimals, supply from the… |
+| `/wallet/balance` | GET | $0.005 | Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD… |
+| `/wallet/intel` | GET | $0.05 | Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow… |
+| `/iban/validate` | GET | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
+| `/iban/validate` | POST | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
+| `/market/snapshot` | GET | $0.05 | One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR… |
 | `/convert` | GET | $0.01 | Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
 | `/json/repair` | POST | $0.02 | Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted… |

@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 99 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 99 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 110 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 110 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -7035,6 +7035,1829 @@
                   "last_updated": "2026-07-20T01:34:52.830Z",
                   "cache_age_seconds": 0,
                   "source": "coinbase+coingecko",
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/gas/price": {
+      "get": {
+        "operationId": "getGasPrice",
+        "summary": "Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for…",
+        "tags": [
+          "gas"
+        ],
+        "parameters": [
+          {
+            "name": "chains",
+            "in": "query",
+            "required": false,
+            "description": "Comma list from base, ethereum, arbitrum, optimism, polygon; omit for all 5. Aliases: chain, network, networks; eth/arb/op/matic/pol accepted",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chains": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "properties": {
+                          "gas_price_gwei": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "base_fee_gwei": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "priority_fee_gwei": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "usd_estimates": {
+                            "type": "object",
+                            "properties": {
+                              "transfer": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
+                              },
+                              "erc20_transfer": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
+                              },
+                              "swap": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
+                              }
+                            }
+                          },
+                          "native_token": {
+                            "type": "string"
+                          },
+                          "native_usd": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "source": {
+                            "type": "string"
+                          },
+                          "cache_age_seconds": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "chains": {
+                    "base": {
+                      "gas_price_gwei": 0.006,
+                      "base_fee_gwei": 0.005,
+                      "priority_fee_gwei": 0.001,
+                      "usd_estimates": {
+                        "transfer": 0.000230535,
+                        "erc20_transfer": 0.000713562,
+                        "swap": 0.00219557
+                      },
+                      "native_token": "ETH",
+                      "native_usd": 1829.645,
+                      "source": "https://mainnet.base.org",
+                      "cache_age_seconds": 0
+                    },
+                    "ethereum": {
+                      "gas_price_gwei": 0.119926866,
+                      "base_fee_gwei": 0.120496247,
+                      "priority_fee_gwei": 0.1,
+                      "usd_estimates": {
+                        "transfer": 0.0046079,
+                        "erc20_transfer": 0.0142625,
+                        "swap": 0.0438847
+                      },
+                      "native_token": "ETH",
+                      "native_usd": 1829.645,
+                      "source": "https://ethereum-rpc.publicnode.com",
+                      "cache_age_seconds": 0
+                    }
+                  },
+                  "stale": false,
+                  "findings": [
+                    {
+                      "rule": "l2_data_fee_excluded",
+                      "detail": "base estimates are execution-gas only and exclude the L1 data fee"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/crypto/price": {
+      "get": {
+        "operationId": "getCryptoPrice",
+        "summary": "Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken…",
+        "tags": [
+          "crypto"
+        ],
+        "parameters": [
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": false,
+            "description": "Comma list of 1–25 tickers or full names (\"BTC,ETH\" or \"bitcoin\"); a leading $ is fine. Aliases: symbol, coins, coin, tickers, ticker, assets",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vs",
+            "in": "query",
+            "required": false,
+            "description": "Quote currency: USD (default), EUR or GBP. Aliases: currency, fiat, vs_currency",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.010000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "vs": {
+                      "type": "string"
+                    },
+                    "prices": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "symbol": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "number"
+                          },
+                          "change_24h_pct": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "source": {
+                            "type": "string",
+                            "description": "coinbase | coingecko | kraken"
+                          },
+                          "cache_age_seconds": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "unresolved": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "vs": "USD",
+                  "prices": [
+                    {
+                      "symbol": "BTC",
+                      "name": "Bitcoin",
+                      "price": 62441.615,
+                      "change_24h_pct": null,
+                      "source": "coinbase",
+                      "cache_age_seconds": 0
+                    },
+                    {
+                      "symbol": "ETH",
+                      "name": "Ethereum",
+                      "price": 1829.645,
+                      "change_24h_pct": null,
+                      "source": "coinbase",
+                      "cache_age_seconds": 0
+                    }
+                  ],
+                  "unresolved": [],
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/crypto/ohlc": {
+      "get": {
+        "operationId": "getCryptoOhlc",
+        "summary": "Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with…",
+        "tags": [
+          "crypto"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "One ticker or full name (\"BTC\" or \"bitcoin\"); a leading $ is fine. Aliases: coin, ticker, asset",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "1h or 1d (default 1d). hour/hourly and day/daily accepted. Aliases: granularity, timeframe",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "description": "Lookback window, default 30. Max 300 for 1d, 12 for 1h (300 candles). Alias: period",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "YYYY-MM-DD price-at-date mode: that day's single daily candle + its close as price. Mutually exclusive with days",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vs",
+            "in": "query",
+            "required": false,
+            "description": "Quote currency: USD (default), EUR or GBP. Aliases: currency, fiat, vs_currency",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "symbol": {
+                      "type": "string"
+                    },
+                    "vs": {
+                      "type": "string"
+                    },
+                    "interval": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "string"
+                    },
+                    "end": {
+                      "type": "string"
+                    },
+                    "candles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "time": {
+                            "type": "string"
+                          },
+                          "open": {
+                            "type": "number"
+                          },
+                          "high": {
+                            "type": "number"
+                          },
+                          "low": {
+                            "type": "number"
+                          },
+                          "close": {
+                            "type": "number"
+                          },
+                          "volume": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "open": {
+                          "type": "number"
+                        },
+                        "close": {
+                          "type": "number"
+                        },
+                        "change_pct": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "period_high": {
+                          "type": "number"
+                        },
+                        "period_low": {
+                          "type": "number"
+                        },
+                        "avg_volume": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "price": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "candle_count": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "coinbase | kraken"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "symbol": "BTC",
+                  "vs": "USD",
+                  "interval": "1d",
+                  "start": "2026-07-26",
+                  "end": "2026-08-01",
+                  "candles": [
+                    {
+                      "time": "2026-07-26T00:00:00.000Z",
+                      "open": 64295.61,
+                      "high": 65511.36,
+                      "low": 64229.6,
+                      "close": 65341.07,
+                      "volume": 2390.56790196
+                    },
+                    {
+                      "time": "2026-07-27T00:00:00.000Z",
+                      "open": 65341.07,
+                      "high": 65705.08,
+                      "low": 63545,
+                      "close": 63694.43,
+                      "volume": 5069.45269918
+                    },
+                    {
+                      "time": "2026-07-28T00:00:00.000Z",
+                      "open": 63693.44,
+                      "high": 64041.02,
+                      "low": 62645.39,
+                      "close": 63847.12,
+                      "volume": 6232.18054403
+                    },
+                    {
+                      "time": "2026-07-29T00:00:00.000Z",
+                      "open": 63847.12,
+                      "high": 64665.3,
+                      "low": 63194.45,
+                      "close": 63896.14,
+                      "volume": 8092.70552294
+                    },
+                    {
+                      "time": "2026-07-30T00:00:00.000Z",
+                      "open": 63896.14,
+                      "high": 65118.08,
+                      "low": 63502.91,
+                      "close": 64721.9,
+                      "volume": 8025.87127027
+                    },
+                    {
+                      "time": "2026-07-31T00:00:00.000Z",
+                      "open": 64721.9,
+                      "high": 65360,
+                      "low": 62358.96,
+                      "close": 62825.9,
+                      "volume": 8260.37090197
+                    },
+                    {
+                      "time": "2026-08-01T00:00:00.000Z",
+                      "open": 62826.69,
+                      "high": 63093,
+                      "low": 62209.81,
+                      "close": 62445.14,
+                      "volume": 2472.01120363
+                    }
+                  ],
+                  "stats": {
+                    "open": 64295.61,
+                    "close": 62445.14,
+                    "change_pct": -2.88,
+                    "period_high": 65705.08,
+                    "period_low": 62209.81,
+                    "avg_volume": 5791.88
+                  },
+                  "candle_count": 7,
+                  "source": "coinbase",
+                  "cache_age_seconds": 0,
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/currency-exchange/batch": {
+      "get": {
+        "operationId": "getCurrencyExchangeBatch",
+        "summary": "Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl.",
+        "tags": [
+          "currency-exchange"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Base currency: ISO 4217 fiat code or crypto ticker, e.g. USD or BTC. Aliases: base, source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "Comma list of 1–30 target codes, e.g. EUR,SAR,BTC. Aliases: targets, symbols",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "in": "query",
+            "required": false,
+            "description": "Amount of the base currency to convert; default 1. Alias: value",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "rates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "to": {
+                            "type": "string"
+                          },
+                          "rate": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "converted_amount": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "rate_date": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "source": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "description": "frankfurter | currency-api | er-api | coinbase | same (crosses join with +)"
+                          }
+                        }
+                      }
+                    },
+                    "unavailable": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "from": "USD",
+                  "amount": 100,
+                  "rates": [
+                    {
+                      "to": "EUR",
+                      "rate": 0.8707,
+                      "converted_amount": 87.07,
+                      "rate_date": "2026-07-31",
+                      "source": "frankfurter"
+                    },
+                    {
+                      "to": "SAR",
+                      "rate": 3.75,
+                      "converted_amount": 375,
+                      "rate_date": "2026-08-01",
+                      "source": "currency-api"
+                    },
+                    {
+                      "to": "BTC",
+                      "rate": 0.000016014961,
+                      "converted_amount": 0.0016014961,
+                      "rate_date": "2026-08-01",
+                      "source": "coinbase"
+                    }
+                  ],
+                  "unavailable": [],
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/currency-exchange/history": {
+      "get": {
+        "operationId": "getCurrencyExchangeHistory",
+        "summary": "Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto…",
+        "tags": [
+          "currency-exchange"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Base currency: ISO 4217 fiat code or crypto ticker, e.g. USD or BTC. Aliases: base, source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "One target code, e.g. EUR or BTC. Aliases: target, quote",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Range start, YYYY-MM-DD. Alias: from_date. Caps: ECB fiat 366d, other fiat 90d, crypto 300d",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Range end, YYYY-MM-DD; default today. Alias: to_date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "description": "Alternative to start/end: lookback window ending today; default 30. Alias: period",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string"
+                    },
+                    "to": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "string"
+                    },
+                    "end": {
+                      "type": "string"
+                    },
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string"
+                          },
+                          "rate": {
+                            "type": "number",
+                            "description": "units of `to` per 1 `from` on that date"
+                          }
+                        }
+                      }
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "min": {
+                          "type": "number"
+                        },
+                        "max": {
+                          "type": "number"
+                        },
+                        "average": {
+                          "type": "number"
+                        },
+                        "change_pct": {
+                          "type": "number",
+                          "description": "first→last point, %"
+                        },
+                        "volatility_pct": {
+                          "type": "number",
+                          "description": "stdev of daily % changes"
+                        }
+                      }
+                    },
+                    "point_count": {
+                      "type": "number"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "frankfurter | ecb-xml | currency-api | coinbase"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "from": "USD",
+                  "to": "EUR",
+                  "start": "2026-07-26",
+                  "end": "2026-08-01",
+                  "series": [
+                    {
+                      "date": "2026-07-24",
+                      "rate": 0.87897
+                    },
+                    {
+                      "date": "2026-07-27",
+                      "rate": 0.87804
+                    },
+                    {
+                      "date": "2026-07-28",
+                      "rate": 0.87974
+                    },
+                    {
+                      "date": "2026-07-29",
+                      "rate": 0.87873
+                    },
+                    {
+                      "date": "2026-07-30",
+                      "rate": 0.87138
+                    },
+                    {
+                      "date": "2026-07-31",
+                      "rate": 0.8707
+                    }
+                  ],
+                  "stats": {
+                    "min": 0.8707,
+                    "max": 0.87974,
+                    "average": 0.87626,
+                    "change_pct": -0.94,
+                    "volatility_pct": 0.34
+                  },
+                  "point_count": 6,
+                  "source": "frankfurter",
+                  "cache_age_seconds": 0,
+                  "stale": false,
+                  "findings": [
+                    {
+                      "rule": "non_trading_days_omitted",
+                      "detail": "ECB publishes business days only — weekends and holidays have no reference rate and are omitted, never interpolated"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/token/info": {
+      "get": {
+        "operationId": "getTokenInfo",
+        "summary": "Full profile for any ERC-20 token by contract address — name, symbol, decimals, supply from the…",
+        "tags": [
+          "token"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "ERC-20 contract address: 0x + 40 hex chars, checksum case ignored. Aliases: contract, token, contract_address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "query",
+            "required": false,
+            "description": "base (default) or ethereum (eth accepted). Alias: network",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.020000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string"
+                    },
+                    "chain": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "symbol": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "decimals": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "total_supply": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "raw atomic units as a decimal string — can exceed Number.MAX_SAFE_INTEGER"
+                    },
+                    "total_supply_formatted": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "description": "total_supply / 10^decimals — may lose precision on huge supplies"
+                    },
+                    "price_usd": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "liquidity_usd": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "volume_24h_usd": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "top_pool": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "dex": {
+                          "type": "string"
+                        },
+                        "pair": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "holders": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "is_contract": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "e.g. \"rpc+dexscreener+blockscout\""
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "address": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+                  "chain": "base",
+                  "name": "USD Coin",
+                  "symbol": "USDC",
+                  "decimals": 6,
+                  "total_supply": "4156545500926116",
+                  "total_supply_formatted": 4156545500.926116,
+                  "price_usd": 0.9999,
+                  "liquidity_usd": 907385.42,
+                  "volume_24h_usd": 803.46,
+                  "top_pool": {
+                    "dex": "uniswap",
+                    "pair": "USDC/USDbC",
+                    "url": "https://dexscreener.com/base/0xa0ab20a64f46b5676fe1542cb87b454e5104007689e0eef4212aa0cbe34933a1"
+                  },
+                  "holders": 12726127,
+                  "is_contract": true,
+                  "source": "rpc+dexscreener+blockscout",
+                  "cache_age_seconds": 0,
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/wallet/balance": {
+      "get": {
+        "operationId": "getWalletBalance",
+        "summary": "Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD…",
+        "tags": [
+          "wallet"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Wallet address: 0x + 40 hex chars on base/ethereum, base58 on solana. Aliases: wallet, account, addr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "query",
+            "required": false,
+            "description": "base (default), ethereum, or solana (eth/sol accepted). Alias: network",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokens",
+            "in": "query",
+            "required": false,
+            "description": "EVM only: comma list of up to 10 ERC-20 contract addresses for extra balances",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string"
+                    },
+                    "chain": {
+                      "type": "string"
+                    },
+                    "native": {
+                      "type": "object",
+                      "properties": {
+                        "symbol": {
+                          "type": "string"
+                        },
+                        "raw": {
+                          "type": "string",
+                          "description": "raw units (wei/lamports) as a decimal string"
+                        },
+                        "formatted": {
+                          "type": "number"
+                        },
+                        "usd": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "usdc": {
+                      "type": "object",
+                      "properties": {
+                        "raw": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "formatted": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "usd": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "tokens": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "address": {
+                            "type": "string"
+                          },
+                          "symbol": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "raw": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "formatted": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "usd": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "source": {
+                      "type": "string",
+                      "description": "the RPC that answered"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "address": "0x4f3c04c3f17264b83ae884df7985142b7dc8047c",
+                  "chain": "base",
+                  "native": {
+                    "symbol": "ETH",
+                    "raw": "0",
+                    "formatted": 0,
+                    "usd": 0
+                  },
+                  "usdc": {
+                    "raw": "3519150",
+                    "formatted": 3.51915,
+                    "usd": 3.52
+                  },
+                  "tokens": [],
+                  "source": "https://mainnet.base.org",
+                  "cache_age_seconds": 0,
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/wallet/intel": {
+      "get": {
+        "operationId": "getWalletIntel",
+        "summary": "Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow,…",
+        "tags": [
+          "wallet"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "EVM wallet address: 0x + 40 hex chars. Aliases: wallet, account, addr",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chain",
+            "in": "query",
+            "required": false,
+            "description": "base (default) or ethereum (eth accepted). Alias: network",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "address": {
+                      "type": "string"
+                    },
+                    "chain": {
+                      "type": "string"
+                    },
+                    "is_contract": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "wallet_age_days": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "first_seen": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "first_funder": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "address": {
+                          "type": "string"
+                        },
+                        "date": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "usdc_in_total": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "usdc_out_total": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "net_flow": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "counterparties": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "top_counterparty": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "address": {
+                          "type": "string"
+                        },
+                        "volume": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "activity_30d": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "transfers": {
+                          "type": "number"
+                        },
+                        "volume": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "activity_pattern": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "dormant | steady | burst"
+                    },
+                    "native_balance": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "transfers_analyzed": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "truncated": {
+                      "type": "boolean"
+                    },
+                    "score": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "description": "0-100; null when history is unavailable"
+                    },
+                    "grade": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "A-F"
+                    },
+                    "flags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "address": "0x4f3c04c3f17264b83ae884df7985142b7dc8047c",
+                  "chain": "base",
+                  "is_contract": false,
+                  "wallet_age_days": 157,
+                  "first_seen": "2026-02-25T13:48:31.000Z",
+                  "first_funder": {
+                    "address": "0xdadc335482ad545296fd7b28518a251ffcbeb9df",
+                    "date": "2026-02-25T13:48:31.000Z"
+                  },
+                  "usdc_in_total": 31.00175,
+                  "usdc_out_total": 25.691,
+                  "net_flow": 5.31075,
+                  "counterparties": 6,
+                  "top_counterparty": {
+                    "address": "0xdadc335482ad545296fd7b28518a251ffcbeb9df",
+                    "volume": 31.691
+                  },
+                  "activity_30d": {
+                    "transfers": 213,
+                    "volume": 11.685
+                  },
+                  "activity_pattern": "steady",
+                  "native_balance": 0,
+                  "transfers_analyzed": 727,
+                  "truncated": false,
+                  "score": 100,
+                  "grade": "A",
+                  "flags": [],
+                  "source": "blockscout",
+                  "cache_age_seconds": 0,
+                  "stale": false,
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/iban/validate": {
+      "get": {
+        "operationId": "getIbanValidate",
+        "summary": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and…",
+        "tags": [
+          "iban"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postIbanValidate",
+        "summary": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and…",
+        "tags": [
+          "iban"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/market/snapshot": {
+      "get": {
+        "operationId": "getMarketSnapshot",
+        "summary": "One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR,…",
+        "tags": [
+          "market"
+        ],
+        "parameters": [
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": false,
+            "description": "Optional override of the crypto list, up to 6 tickers or full names (default \"BTC,ETH,SOL\"). Aliases: coins, tickers",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vs",
+            "in": "query",
+            "required": false,
+            "description": "Quote currency for the crypto section: USD (default), EUR or GBP. Aliases: currency, fiat, vs_currency",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.050000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "generated_at": {
+                      "type": "string"
+                    },
+                    "vs": {
+                      "type": "string"
+                    },
+                    "crypto": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "symbol": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "number"
+                          },
+                          "change_24h_pct": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "high_24h": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "low_24h": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "source": {
+                            "type": "string",
+                            "description": "coinbase | kraken | coingecko"
+                          }
+                        }
+                      }
+                    },
+                    "fiat": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "pair": {
+                            "type": "string"
+                          },
+                          "rate": {
+                            "type": "number"
+                          },
+                          "rate_date": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "gas": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "chain": {
+                            "type": "string"
+                          },
+                          "gas_price_gwei": {
+                            "type": "number"
+                          },
+                          "transfer_usd": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "sentiment": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "number"
+                        },
+                        "classification": {
+                          "type": "string"
+                        },
+                        "yesterday": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        }
+                      }
+                    },
+                    "sections_ok": {
+                      "type": "number"
+                    },
+                    "stale": {
+                      "type": "boolean"
+                    },
+                    "cache_age_seconds": {
+                      "type": "number"
+                    },
+                    "findings": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "example": {
+                  "generated_at": "2026-08-01T18:56:18.102Z",
+                  "vs": "USD",
+                  "crypto": [
+                    {
+                      "symbol": "BTC",
+                      "price": 62445.13,
+                      "change_24h_pct": -0.9224,
+                      "high_24h": 63093,
+                      "low_24h": 62209.81,
+                      "source": "coinbase"
+                    },
+                    {
+                      "symbol": "ETH",
+                      "price": 1830.6,
+                      "change_24h_pct": -2.094,
+                      "high_24h": 1873.8,
+                      "low_24h": 1820.14,
+                      "source": "coinbase"
+                    },
+                    {
+                      "symbol": "SOL",
+                      "price": 70.84,
+                      "change_24h_pct": -2.972,
+                      "high_24h": 73.19,
+                      "low_24h": 70.51,
+                      "source": "coinbase"
+                    }
+                  ],
+                  "fiat": [
+                    {
+                      "pair": "USD/EUR",
+                      "rate": 0.8707,
+                      "rate_date": "2026-07-31"
+                    },
+                    {
+                      "pair": "USD/GBP",
+                      "rate": 0.74508,
+                      "rate_date": "2026-07-31"
+                    },
+                    {
+                      "pair": "USD/JPY",
+                      "rate": 160.24,
+                      "rate_date": "2026-07-31"
+                    },
+                    {
+                      "pair": "EUR/GBP",
+                      "rate": 0.855725,
+                      "rate_date": "2026-07-31"
+                    }
+                  ],
+                  "gas": [
+                    {
+                      "chain": "base",
+                      "gas_price_gwei": 0.006,
+                      "transfer_usd": 0.000230535
+                    },
+                    {
+                      "chain": "ethereum",
+                      "gas_price_gwei": 0.119926866,
+                      "transfer_usd": 0.0046079
+                    }
+                  ],
+                  "sentiment": {
+                    "value": 27,
+                    "classification": "Fear",
+                    "yesterday": 25
+                  },
+                  "sections_ok": 4,
+                  "stale": false,
+                  "cache_age_seconds": 0,
                   "findings": []
                 }
               }
