@@ -2,6 +2,8 @@
 
 Network intelligence API with 110 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
+**Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
+
 ## Endpoints
 
 | Path | Method | Price | Description |
