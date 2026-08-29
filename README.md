@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 110 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 112 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -95,6 +95,8 @@ Network intelligence API with 110 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/username-check/lookup` | GET | $0.030 | Check username availability across 20+ social platforms and developer sites simultaneously —… |
 | `/wayback/lookup` | GET | $0.010 | Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the… |
 | `/domain-age/check` | GET | $0.030 | Determine a domain's age from registration data and archival history — tries RDAP, then port-43… |
+| `/web/fetch` | GET | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
+| `/web/fetch` | POST | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
 | `/github-intel/analyze` | GET | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/github-intel/analyze` | POST | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/holidays/check` | GET | $0.005 | Look up public holidays for any country and year, check whether a specific date is a holiday, and… |

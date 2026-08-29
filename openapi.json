@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 110 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 110 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 112 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 112 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -78,6 +78,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.002000",
+          "outputShape": "domain, records, security, propagation"
         },
         "responses": {
           "200": {
@@ -235,6 +240,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "host, port, certificate, chain, chain_valid, connection, warnings, grade"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -366,6 +376,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "chain, final_url, final_status_code, total_hops, total_timing_ms, protocol_downgrade, loop_detected, flags, grade, score, deductions"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -492,6 +507,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "service, target, timestamp, grade, score, deductions, results, warnings, errors, meta"
         },
         "responses": {
           "200": {
@@ -702,6 +722,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.002000",
+          "outputShape": "domain, resolves, grade, score, spf, dkim, dmarc, deductions"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -823,6 +848,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "domain, resolved_ips, cname_chain, hosting, cdn, waf, dns_provider, email_provider, http_fingerprint, tls, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -985,6 +1015,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "extracted, tokens_used"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1105,6 +1140,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.060000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -1235,6 +1275,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1363,6 +1408,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.090000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -1493,6 +1543,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1600,6 +1655,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "object, data, model, usage"
         },
         "responses": {
           "200": {
@@ -1711,6 +1771,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "results, method, provider, model, dimensions, normalized, usage"
         },
         "responses": {
           "200": {
@@ -1841,6 +1906,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "id, object, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1961,6 +2031,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -2091,6 +2166,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -2211,6 +2291,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.650000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -2333,6 +2418,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.250000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -2453,6 +2543,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.040000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -2575,6 +2670,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -2695,6 +2795,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.150000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -2817,6 +2922,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -2937,6 +3047,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.200000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -3059,6 +3174,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.650000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -3180,6 +3300,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.250000",
+          "outputShape": "id, object, created, model, choices, usage"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -3300,6 +3425,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.060000",
+          "outputShape": "id, object, created, model, choices, usage"
         },
         "responses": {
           "200": {
@@ -3428,6 +3558,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.250000",
+          "outputShape": "image_url, revised_prompt, alt_text, score, grade"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -3518,6 +3653,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "mode, label, labels, confidence, scores, labels_provided, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -3638,6 +3778,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "categories, flagged_categories, overall, reasoning, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -3783,6 +3928,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "entities, total_entities, types_extracted, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -3915,6 +4065,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "address, components_found, is_complete, cached, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4020,6 +4175,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "contact, fields_found, cached, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4119,6 +4279,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "invoice, line_item_count, totals_reconcile, cached, score, grade, findings, source"
         },
         "responses": {
           "200": {
@@ -4269,6 +4434,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.080000",
+          "outputShape": "resume, skills_count, experience_count, education_count, cached, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4403,6 +4573,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "table, column_count, cached, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4514,6 +4689,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "markdown, input_chars, output_chars, reduction_ratio, cached, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4623,6 +4803,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "normalized, fields_in_schema, fields_populated, fields_nulled, schema_match, cached, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -4744,6 +4929,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "result, fields_in_schema, fields_populated, fields_nulled, schema_match, cached, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -4868,6 +5058,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.002000",
+          "outputShape": "polarity, score, confidence, emotions, aspects, service_score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -4991,6 +5186,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "source, summary, key_points, original_word_count, summary_word_count, compression_ratio, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5111,6 +5311,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.080000",
+          "outputShape": "translation, source_language, target_language, source_detected, word_count, tier, service_score, grade, findings"
         },
         "responses": {
           "200": {
@@ -5248,6 +5453,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "translated, detected_language, target_language, content_type, placeholder_validation, structure_validation, glossary_compliance, warnings, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -5408,6 +5618,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "target_language, item_count, succeeded, failed, items, billed_items, pricing, usage, warnings, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5564,6 +5779,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "translation, source_language, target_language, source_detected, word_count, tier, service_score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5659,6 +5879,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "target, ip, ip_version, hostname, asn, asn_number, organization, network, country, region, city, is_hosting, is_cloud, is_vpn, classification, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -5813,6 +6038,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000",
+          "outputShape": "domain, tld, rdap_url, registrar, registrar_iana_id, created_at, updated_at, expires_at, days_until_expiry, name_servers, status, status_has_abuse_flags, score, grade, findings, raw_rdap_url"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -5958,6 +6188,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "domain, total_certs_found, unique_subdomains, unique_subdomain_count, issuers, wildcard_certs, expiring_within_30_days, recently_issued, certs, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6076,6 +6311,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "cidr, ip_version, network, broadcast, netmask, wildcard, binary_mask, hex_mask, prefix_length, total_hosts, usable_hosts, first_usable, last_usable, is_private, supernet, subnets, rfc_classification"
         },
         "responses": {
           "200": {
@@ -6222,6 +6462,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "domain, record_type, propagation_percentage, consistent, majority_value, resolvers, divergent_resolvers, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6344,6 +6589,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "domain, dnssec_enabled, resolver_validated, chain_of_trust, components, tld_ds_present, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6458,6 +6708,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "ip, reversed_ip, listed_count, total_checked, threat_level, score, grade, findings, blacklists"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6550,6 +6805,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "ip, risk_score, risk_level, composite, abuseipdb, otx"
         },
         "responses": {
           "200": {
@@ -6667,6 +6927,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "expression, is_valid, fields, explanation, pattern_name, next_runs, warnings, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -6794,6 +7059,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "from, to, amount, converted_amount, exchange_rate, inverse_rate, rate_date, is_historical, source, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -6907,6 +7177,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "symbol, name, vs, price, change_24h, change_24h_pct, high_24h, low_24h, open_24h, volume_24h, market_cap, market_cap_rank, supply, last_updated, cache_age_seconds, source, findings"
         },
         "responses": {
           "200": {
@@ -7075,6 +7350,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "chains, stale, findings"
         },
         "responses": {
           "200": {
@@ -7246,6 +7526,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "vs, prices, unresolved, stale, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7370,10 +7655,19 @@
             }
           },
           {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of most-recent candles (the usual candle-API param). Capped at 288 for 1h, 300 for 1d. Aliases: count, candles. Use instead of days.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "date",
             "in": "query",
             "required": false,
-            "description": "YYYY-MM-DD price-at-date mode: that day's single daily candle + its close as price. Mutually exclusive with days",
+            "description": "YYYY-MM-DD price-at-date mode: that day's single daily candle + its close as price. Mutually exclusive with days/limit",
             "schema": {
               "type": "string"
             }
@@ -7399,6 +7693,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "symbol, vs, interval, start, end, candles, stats, price, candle_count, source, cache_age_seconds, stale, findings"
         },
         "responses": {
           "200": {
@@ -7634,6 +7933,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "from, amount, rates, unavailable, stale, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7802,6 +8106,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "from, to, start, end, series, stats, point_count, source, cache_age_seconds, stale, findings"
         },
         "responses": {
           "200": {
@@ -7974,6 +8283,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "address, chain, name, symbol, decimals, total_supply, total_supply_formatted, price_usd, liquidity_usd, volume_24h_usd, top_pool, holders, is_contract, source, cache_age_seconds, stale, findings"
         },
         "responses": {
           "200": {
@@ -8163,6 +8477,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "address, chain, native, usdc, tokens, source, cache_age_seconds, stale, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -8338,6 +8657,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "address, chain, is_contract, wallet_age_days, first_seen, first_funder, usdc_in_total, usdc_out_total, net_flow, counterparties, top_counterparty, activity_30d, activity_pattern, native_balance, transfers_analyzed, truncated, score, grade, flags, source, cache_age_seconds, stale, findings"
         },
         "responses": {
           "200": {
@@ -8556,6 +8880,10 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -8600,6 +8928,10 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
         },
         "responses": {
           "200": {
@@ -8656,6 +8988,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "generated_at, vs, crypto, fiat, gas, sentiment, sections_ok, stale, cache_age_seconds, findings"
         },
         "responses": {
           "200": {
@@ -8962,6 +9299,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "value, from, to, result, category, assumptions, precision_note, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9076,6 +9418,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "data, meta, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9185,6 +9532,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "was_valid, repair_succeeded, repaired, method, changes, schema_valid, validation_errors, confidence, warnings, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -9330,6 +9682,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "valid, errors, error_count, repaired, is_repaired_valid, coerced, warnings, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -9480,6 +9837,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.040000",
+          "outputShape": "mapped, mapped_fields, unmapped_source, missing_target, type_conversions, schema_valid, warnings, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -9637,6 +9999,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "data, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9723,6 +10090,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.020000",
+          "outputShape": "data, meta, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -9822,6 +10194,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "data, meta, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -9911,6 +10288,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "url, status_code, response_time_ms, detections, summary, security_headers_present, security_headers_missing, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10038,6 +10420,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "breached, breach_count, risk_level, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10118,6 +10505,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "name, results, available_tlds, taken_tlds, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10230,6 +10622,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "email, domain, local_part, format_valid, mx_records_found, mx_records, is_disposable, is_role_based, is_free_provider, is_business_email, deliverability, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10352,6 +10749,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "url, final_url, status_code, title, description, image, favicon, site_name, canonical_url, content_type, author, published_at, modified_at, twitter_card, json_ld, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10506,6 +10908,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "url, final_url, title, content, preview, word_count, reading_time_minutes, language, content_length_chars, status_code, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -10612,6 +11019,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000",
+          "outputShape": "url, final_url, content_type, title, markdown, word_count, char_count, output_bytes, truncated, status_code, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10725,6 +11137,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "input, is_valid, e164, international, national, country_code, country, country_name, line_type, digit_count, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10855,6 +11272,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "domain, robots_url, found, status_code, raw_content_preview, sitemaps, rules, path_check, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -10989,6 +11411,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "url, feed_type, feed, total_items_in_feed, items_returned, items, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11099,6 +11526,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "username, taken_count, available_count, unknown_count, results, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -11227,6 +11659,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "url, is_archived, snapshot, first_capture, last_capture, capture_count_estimate, timestamp_requested, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11336,6 +11773,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "domain, created_at, age_days, age_years, age_source, first_archived_at, archive_snapshot_estimate, registration_to_archive_gap_days, maturity, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11427,6 +11869,96 @@
         }
       }
     },
+    "/web/fetch": {
+      "get": {
+        "operationId": "getWebFetch",
+        "summary": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe…",
+        "tags": [
+          "web"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postWebFetch",
+        "summary": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe…",
+        "tags": [
+          "web"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
     "/github-intel/analyze": {
       "get": {
         "operationId": "getGithubIntelAnalyze",
@@ -11446,6 +11978,10 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000"
         },
         "responses": {
           "200": {
@@ -11491,6 +12027,10 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000"
         },
         "responses": {
           "200": {
@@ -11556,6 +12096,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "country_code, year, total_holidays, holidays, date_check, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -11660,6 +12205,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.002000",
+          "outputShape": "ip, country, country_code, region, region_name, city, zip, latitude, longitude, timezone, isp, organization, asn, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -11813,6 +12363,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "valid_structure, header, payload, is_expired, seconds_until_expiry, human_expiry, signature_hex, signature_present, security_flags, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -11956,6 +12511,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "detected_language, language_code, confidence, script, is_multilingual, alternatives, text_length, word_count, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12066,6 +12626,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "package, description, latest_version, total_versions, weekly_downloads, license, repository, homepage, keywords, maintainers, maintainer_count, dependency_count, dev_dependency_count, created_at, latest_published_at, days_since_last_publish, is_deprecated, deprecation_message, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -12251,6 +12816,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "source_url, sitemap_type, total_urls, urls_returned, child_sitemaps_fetched, urls, stats, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12365,6 +12935,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "url, in_urlhaus, urlhaus_status, threat_type, malware_families, blacklisted_gsb, blacklisted_surbl, heuristic_flags, threat_classification, confidence, urlhaus_reference, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -12507,6 +13082,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "total_checked, available_count, taken_count, names_available_all_tlds, results, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -12627,6 +13207,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.030000",
+          "outputShape": "domain, name, tld, value_score, value_tier, factors, characteristics, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -12751,6 +13336,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "domain, resolved_ip, overall_score, grade, risk_level, sections, findings"
         },
         "responses": {
           "200": {
@@ -12888,6 +13478,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "ip, trust_score, risk_score, grade, recommendation, geo, network, blacklist, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13024,6 +13619,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "keyword, tld, generated_count, available_count, suggestions, top_available, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13147,6 +13747,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.010000",
+          "outputShape": "mode, tld, name, pricing, renewal_markup_pct, predatory_renewal, cheapest, cheapest_premium, options, is_reference_pricing, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -13273,6 +13878,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.050000",
+          "outputShape": "domain, name, tld, variations_checked, registered_count, available_count, registered_lookalikes, available_variations, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -13410,6 +14020,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.200000",
+          "outputShape": "domain, name, tld, generated_at, sections, sections_ok, sections_failed, verdict, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13538,6 +14153,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.250000",
+          "outputShape": "domain, generated_at, sections, sections_ok, sections_failed, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -13681,6 +14301,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.100000",
+          "outputShape": "domain, risk_score, risk_band, signals, flags, signals_unavailable, confidence, run_id, duration_ms, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -13832,6 +14457,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.200000",
+          "outputShape": "recommended, candidates, flags, signals_unavailable, run_id, duration_ms, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -13973,6 +14603,11 @@
             }
           ]
         },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.150000",
+          "outputShape": "email, domain, generated_at, sections, sections_ok, sections_failed, trust_verdict, score, grade, findings"
+        },
         "responses": {
           "200": {
             "description": "Successful response",
@@ -14084,6 +14719,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.200000",
+          "outputShape": "ip, generated_at, sections, sections_ok, sections_failed, overall_recommendation, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -14211,6 +14851,11 @@
               "x402": {}
             }
           ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.150000",
+          "outputShape": "url, generated_at, sections, sections_ok, sections_failed, final_url, safety_verdict, score, grade, findings"
         },
         "responses": {
           "200": {
