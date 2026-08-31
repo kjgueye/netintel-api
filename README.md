@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 112 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 116 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -73,6 +73,10 @@ Network intelligence API with 112 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/wallet/intel` | GET | $0.05 | Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow… |
 | `/iban/validate` | GET | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
 | `/iban/validate` | POST | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
+| `/weather/current` | GET | $0.002 | Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like… |
+| `/weather/current` | POST | $0.002 | Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like… |
+| `/weather/forecast` | GET | $0.003 | Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows… |
+| `/weather/forecast` | POST | $0.003 | Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows… |
 | `/market/snapshot` | GET | $0.05 | One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR… |
 | `/convert` | GET | $0.01 | Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure… |
 | `/money/parse` | POST | $0.01 | Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles… |
