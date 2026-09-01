@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 116 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 116 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 120 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 120 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -9085,6 +9085,186 @@
         "summary": "Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows,…",
         "tags": [
           "weather"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/prediction/markets": {
+      "get": {
+        "operationId": "getPredictionMarkets",
+        "summary": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by…",
+        "tags": [
+          "prediction"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postPredictionMarkets",
+        "summary": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by…",
+        "tags": [
+          "prediction"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/prediction/market": {
+      "get": {
+        "operationId": "getPredictionMarket",
+        "summary": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every…",
+        "tags": [
+          "prediction"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postPredictionMarket",
+        "summary": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every…",
+        "tags": [
+          "prediction"
         ],
         "requestBody": {
           "required": true,
