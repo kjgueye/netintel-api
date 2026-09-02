@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 120 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 120 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 125 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 125 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -232,7 +232,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.007000"
           },
           "protocols": [
             {
@@ -242,7 +242,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.030000",
+          "costObservedUsd": "0.007000",
           "outputShape": "host, port, certificate, chain, chain_valid, connection, warnings, grade"
         },
         "responses": {
@@ -327,6 +327,96 @@
                   },
                   "warnings": [],
                   "grade": "A"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/ssl/cert": {
+      "get": {
+        "operationId": "getSslCert",
+        "summary": "Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until…",
+        "tags": [
+          "ssl"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postSslCert",
+        "summary": "Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until…",
+        "tags": [
+          "ssl"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.003000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.003000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -1898,7 +1988,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.100000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -1908,7 +1998,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.100000",
+          "costObservedUsd": "0.005000",
           "outputShape": "id, object, model, choices, usage"
         },
         "responses": {
@@ -5265,6 +5355,261 @@
         }
       }
     },
+    "/text/chunk": {
+      "post": {
+        "operationId": "postTextChunk",
+        "summary": "Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable…",
+        "tags": [
+          "text"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Text to split — 1 to 200000 characters. Aliases: content, input, body."
+                  },
+                  "chunk_size": {
+                    "type": "number",
+                    "description": "Window size in chars or words. Default 1000; clamped to 50–20000 chars or 5–20000 words. Aliases: size, chunkSize."
+                  },
+                  "overlap": {
+                    "type": "number",
+                    "description": "Units shared by consecutive chunks. Default 10% of chunk_size (max 100); clamped to 0..chunk_size-1. Aliases: chunk_overlap, chunkOverlap."
+                  },
+                  "unit": {
+                    "type": "string",
+                    "description": "\"chars\" (default) or \"words\". Aliases: by, mode."
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.001000",
+          "outputShape": "unit, chunk_size, overlap, count, source_length, chunks, findings"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "description": "chars or words"
+                    },
+                    "chunk_size": {
+                      "type": "number",
+                      "description": "Effective window size after clamping"
+                    },
+                    "overlap": {
+                      "type": "number",
+                      "description": "Effective overlap after clamping"
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "Number of chunks (max 2000)"
+                    },
+                    "source_length": {
+                      "type": "number",
+                      "description": "Length of the input text in characters"
+                    },
+                    "chunks": {
+                      "type": "array",
+                      "description": "Sliding-window chunks in order. start/end are UTF-16 character offsets into the source (text.slice(start, end) reproduces a chars-mode chunk; words-mode chunks are re-joined with single spaces). Surrogate pairs are never split.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "number"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "start": {
+                            "type": "number"
+                          },
+                          "end": {
+                            "type": "number"
+                          },
+                          "length": {
+                            "type": "number",
+                            "description": "Characters in this chunk's text"
+                          }
+                        }
+                      }
+                    },
+                    "findings": {
+                      "type": "array",
+                      "description": "Parameter adjustments applied (clamped chunk_size/overlap, unknown unit); [] when none",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "rule": {
+                            "type": "string"
+                          },
+                          "detail": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "unit": "chars",
+                  "chunk_size": 60,
+                  "overlap": 15,
+                  "count": 3,
+                  "source_length": 115,
+                  "chunks": [
+                    {
+                      "index": 0,
+                      "text": "NetIntel is a pay-per-call API for AI agents. It offers over",
+                      "start": 0,
+                      "end": 60,
+                      "length": 60
+                    },
+                    {
+                      "index": 1,
+                      "text": " It offers over one hundred endpoints. Agents pay per reques",
+                      "start": 45,
+                      "end": 105,
+                      "length": 60
+                    },
+                    {
+                      "index": 2,
+                      "text": " pay per request in USDC.",
+                      "start": 90,
+                      "end": 115,
+                      "length": 25
+                    }
+                  ],
+                  "findings": []
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/text/stats": {
+      "get": {
+        "operationId": "getTextStats",
+        "summary": "Instant text statistics — characters (with/without spaces), words, unique words, sentences,…",
+        "tags": [
+          "text"
+        ],
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.001000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postTextStats",
+        "summary": "Instant text statistics — characters (with/without spaces), words, unique words, sentences,…",
+        "tags": [
+          "text"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.001000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
     "/translate/long": {
       "post": {
         "operationId": "postTranslateLong",
@@ -7518,7 +7863,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.010000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -7528,7 +7873,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.010000",
+          "costObservedUsd": "0.005000",
           "outputShape": "vs, prices, unresolved, stale, findings"
         },
         "responses": {

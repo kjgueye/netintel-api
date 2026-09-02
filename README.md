@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 120 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 125 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -9,7 +9,9 @@ Network intelligence API with 120 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | Path | Method | Price | Description |
 |------|--------|-------|-------------|
 | `/dns/lookup` | GET | $0.002 | DNS lookup / nslookup / dig API — resolve the common DNS record types (A, AAAA, MX, TXT, NS, CNAME… |
-| `/ssl/analyze` | GET | $0.030 | Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3)… |
+| `/ssl/analyze` | GET | $0.007 | Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3)… |
+| `/ssl/cert` | GET | $0.003 | Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until… |
+| `/ssl/cert` | POST | $0.003 | Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until… |
 | `/redirect/trace` | GET | $0.010 | Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing… |
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
@@ -21,7 +23,7 @@ Network intelligence API with 120 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/openai/gpt-4-1-mini` | POST | $0.005 | Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/v1/embeddings` | POST | $0.005 | OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or… |
 | `/semantic/rank` | POST | $0.02 | Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back… |
-| `/v1/chat/completions` | POST | $0.10 | OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape… |
+| `/v1/chat/completions` | POST | $0.005 | OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape… |
 | `/openai/gpt-4o-mini` | POST | $0.005 | Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-4-1-nano` | POST | $0.005 | Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-5` | POST | $0.65 | Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
@@ -48,6 +50,9 @@ Network intelligence API with 120 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/text-to-json` | POST | $0.05 | Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku —… |
 | `/sentiment/analyze` | POST | $0.002 | Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call:… |
 | `/text-summarize` | POST | $0.005 | Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key… |
+| `/text/chunk` | POST | $0.001 | Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable… |
+| `/text/stats` | GET | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
+| `/text/stats` | POST | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
 | `/translate/long` | POST | $0.08 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
 | `/translate/structured` | POST | $0.05 | Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking… |
 | `/translate/batch` | POST | $0.05 | Translate many independent strings in one request — each with a caller ID preserved in the response… |
@@ -64,7 +69,7 @@ Network intelligence API with 120 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
 | `/crypto/market` | GET | $0.005 | Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h… |
 | `/gas/price` | GET | $0.005 | Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for… |
-| `/crypto/price` | GET | $0.01 | Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken… |
+| `/crypto/price` | GET | $0.005 | Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken… |
 | `/crypto/ohlc` | GET | $0.02 | Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with… |
 | `/currency-exchange/batch` | GET | $0.02 | Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR… |
 | `/currency-exchange/history` | GET | $0.02 | Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto… |
