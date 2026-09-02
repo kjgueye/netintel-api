@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 125 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -22,6 +22,7 @@ Network intelligence API with 125 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/openai/gpt-4-1` | POST | $0.09 | Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-4-1-mini` | POST | $0.005 | Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/v1/embeddings` | POST | $0.005 | OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or… |
+| `/embeddings` | POST | $0.001 | Multilingual text embeddings (384-dim) served in-house, no OpenAI dependency, no API key… |
 | `/semantic/rank` | POST | $0.02 | Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back… |
 | `/v1/chat/completions` | POST | $0.005 | OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape… |
 | `/openai/gpt-4o-mini` | POST | $0.005 | Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key… |

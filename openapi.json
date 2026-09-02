@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 125 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 125 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 126 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 126 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -1794,6 +1794,121 @@
                     "prompt_tokens": 4,
                     "total_tokens": 4
                   }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/embeddings": {
+      "post": {
+        "operationId": "postEmbeddings",
+        "summary": "Multilingual text embeddings (384-dim) served in-house, no OpenAI dependency, no API key.",
+        "tags": [
+          "embeddings"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "description": "Text to embed. Also accepts an array of up to 256 strings (200000 chars total). Aliases: text, inputs."
+                  },
+                  "input_type": {
+                    "type": "string",
+                    "description": "query or passage (default). Aliases: task, type."
+                  },
+                  "encoding_format": {
+                    "type": "string",
+                    "description": "float (default) or base64."
+                  }
+                },
+                "required": [
+                  "input"
+                ]
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.001000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.001000",
+          "outputShape": "object, data, model, dimensions, usage"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "description": "Always 'list'"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "[{object:'embedding', index, embedding:[…384 floats]}]"
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "Always 'netintel-embed-small'"
+                    },
+                    "dimensions": {
+                      "type": "number",
+                      "description": "Always 384"
+                    },
+                    "usage": {
+                      "type": "object",
+                      "description": "prompt_tokens, total_tokens (input-only, estimated)"
+                    }
+                  }
+                },
+                "example": {
+                  "object": "list",
+                  "data": [
+                    {
+                      "object": "embedding",
+                      "index": 0,
+                      "embedding": [
+                        0.0123,
+                        -0.0456,
+                        0.0789
+                      ]
+                    }
+                  ],
+                  "model": "netintel-embed-small",
+                  "provider": "netintel",
+                  "source_model": "multilingual-e5-small",
+                  "dimensions": 384,
+                  "input_type": "passage",
+                  "normalized": true,
+                  "usage": {
+                    "prompt_tokens": 6,
+                    "total_tokens": 6
+                  },
+                  "findings": []
                 }
               }
             }
