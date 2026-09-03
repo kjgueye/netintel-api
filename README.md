@@ -16,7 +16,7 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
 | `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
-| `/schema-parse/extract` | POST | $0.100 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
+| `/schema-parse/extract` | POST | $0.010 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
 | `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
 | `/openai/gpt-4o` | POST | $0.10 | Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed… |
 | `/openai/gpt-4-1` | POST | $0.09 | Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
@@ -39,13 +39,13 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/openai/gpt-5-6-luna` | POST | $0.06 | Call OpenAI's gpt-5.6-luna via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/ai-image/generate` | POST | $0.25 | Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with… |
 | `/classify` | POST | $0.005 | Text classification API — zero-shot text classifier / categorization: caller supplies 2–20 labels… |
-| `/content-moderate` | POST | $0.05 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
+| `/content-moderate` | POST | $0.005 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
 | `/entity-extract` | POST | $0.050 | Extract named entities from text using Claude Haiku — people, organizations, locations, dates… |
-| `/extract/address` | POST | $0.03 | Parse and normalize a freeform address string using Claude Haiku — splits it into street, city… |
-| `/extract/contact` | POST | $0.05 | Extract structured contact details from text, an email signature, or webpage text using Claude… |
-| `/extract/invoice` | POST | $0.10 | Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML… |
-| `/extract/resume` | POST | $0.08 | Extract structured data from resume/CV text using Claude Haiku — returns name, contact info… |
-| `/extract/table` | POST | $0.05 | Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in… |
+| `/extract/address` | POST | $0.01 | Parse and normalize a freeform address string using Claude Haiku — splits it into street, city… |
+| `/extract/contact` | POST | $0.01 | Extract structured contact details from text, an email signature, or webpage text using Claude… |
+| `/extract/invoice` | POST | $0.02 | Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML… |
+| `/extract/resume` | POST | $0.02 | Extract structured data from resume/CV text using Claude Haiku — returns name, contact info… |
+| `/extract/table` | POST | $0.02 | Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in… |
 | `/markdown/clean` | POST | $0.03 | Convert messy HTML or text into clean, well-structured Markdown using Claude Haiku — strips… |
 | `/normalize/json` | POST | $0.05 | Conform messy or inconsistent JSON to a target schema using Claude Haiku — renames keys, coerces… |
 | `/text-to-json` | POST | $0.05 | Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku —… |
@@ -54,10 +54,10 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/text/chunk` | POST | $0.001 | Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable… |
 | `/text/stats` | GET | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
 | `/text/stats` | POST | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
-| `/translate/long` | POST | $0.08 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
-| `/translate/structured` | POST | $0.05 | Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking… |
+| `/translate/long` | POST | $0.02 | Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+… |
+| `/translate/structured` | POST | $0.02 | Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking… |
 | `/translate/batch` | POST | $0.05 | Translate many independent strings in one request — each with a caller ID preserved in the response… |
-| `/translate/short` | POST | $0.03 | Translate text between languages — text translation API for short content: translate a sentence… |
+| `/translate/short` | POST | $0.01 | Translate text between languages — text translation API for short content: translate a sentence… |
 | `/asn-lookup/analyze` | GET | $0.030 | Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and… |
 | `/whois-rdap/lookup` | GET | $0.003 | WHOIS domain lookup via RDAP — registrar, creation/expiry/updated dates, nameservers, and status… |
 | `/cert-transparency/lookup` | GET | $0.010 | Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever… |
@@ -69,7 +69,7 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
 | `/crypto/market` | GET | $0.005 | Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h… |
-| `/gas/price` | GET | $0.005 | Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for… |
+| `/gas/price` | GET | $0.002 | Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for… |
 | `/crypto/price` | GET | $0.005 | Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken… |
 | `/crypto/ohlc` | GET | $0.02 | Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with… |
 | `/currency-exchange/batch` | GET | $0.02 | Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR… |
@@ -98,7 +98,7 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/event-extract` | POST | $0.050 | Event extraction / event parsing — turn any caption, announcement, listing, or page text into a… |
 | `/tech-fingerprint/analyze` | GET | $0.050 | Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags… |
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
-| `/domain-availability/check` | GET | $0.050 | Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name… |
+| `/domain-availability/check` | GET | $0.010 | Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name… |
 | `/email-intel/analyze` | GET | $0.005 | Email verification & deliverability check (email validator / verifier) — validate an address… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
@@ -119,7 +119,7 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/lang-detect/analyze` | POST | $0.005 | Detect the language of any text input using stopword-set matching and Unicode script analysis —… |
 | `/npm-intel/analyze` | GET | $0.010 | Fetch metadata for any npm package — download counts, latest version, version count… |
 | `/sitemap-parser/fetch` | GET | $0.010 | Fetch and parse any XML sitemap or sitemap index file — returns URLs with their priority, change… |
-| `/url-safety/check` | GET | $0.050 | Check a URL against URLhaus malware database and heuristic phishing pattern analysis — returns… |
+| `/url-safety/check` | GET | $0.010 | Check a URL against URLhaus malware database and heuristic phishing pattern analysis — returns… |
 | `/bulk-domain/check` | POST | $0.100 | Check availability of many domain names across multiple TLDs in a single call — submit up to 50… |
 | `/domain-appraise/estimate` | GET | $0.030 | Estimate the market value tier of a domain name using transparent heuristics — length, TLD premium… |
 | `/domain-report/analyze` | GET | $0.100 | One call returns a complete intelligence profile for a domain — WHOIS registration, DNS records… |

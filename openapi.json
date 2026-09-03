@@ -1097,7 +1097,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.100000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -1107,7 +1107,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.100000",
+          "costObservedUsd": "0.010000",
           "outputShape": "extracted, tokens_used"
         },
         "responses": {
@@ -3976,7 +3976,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.005000"
           },
           "protocols": [
             {
@@ -3986,7 +3986,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.005000",
           "outputShape": "categories, flagged_categories, overall, reasoning, score, grade, findings"
         },
         "responses": {
@@ -4262,7 +4262,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -4272,7 +4272,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.030000",
+          "costObservedUsd": "0.010000",
           "outputShape": "address, components_found, is_complete, cached, score, grade, findings"
         },
         "responses": {
@@ -4372,7 +4372,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -4382,7 +4382,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.010000",
           "outputShape": "contact, fields_found, cached, score, grade, findings"
         },
         "responses": {
@@ -4477,7 +4477,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.100000"
+            "amount": "0.020000"
           },
           "protocols": [
             {
@@ -4487,7 +4487,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.100000",
+          "costObservedUsd": "0.020000",
           "outputShape": "invoice, line_item_count, totals_reconcile, cached, score, grade, findings, source"
         },
         "responses": {
@@ -4631,7 +4631,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.080000"
+            "amount": "0.020000"
           },
           "protocols": [
             {
@@ -4641,7 +4641,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.080000",
+          "costObservedUsd": "0.020000",
           "outputShape": "resume, skills_count, experience_count, education_count, cached, score, grade, findings"
         },
         "responses": {
@@ -4770,7 +4770,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.020000"
           },
           "protocols": [
             {
@@ -4780,7 +4780,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.020000",
           "outputShape": "table, column_count, cached, score, grade, findings"
         },
         "responses": {
@@ -5764,7 +5764,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.080000"
+            "amount": "0.020000"
           },
           "protocols": [
             {
@@ -5774,7 +5774,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.080000",
+          "costObservedUsd": "0.020000",
           "outputShape": "translation, source_language, target_language, source_detected, word_count, tier, service_score, grade, findings"
         },
         "responses": {
@@ -5906,7 +5906,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.020000"
           },
           "protocols": [
             {
@@ -5916,7 +5916,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.020000",
           "outputShape": "translated, detected_language, target_language, content_type, placeholder_validation, structure_validation, glossary_compliance, warnings, score, grade, findings"
         },
         "responses": {
@@ -6231,7 +6231,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.030000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -6241,7 +6241,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.030000",
+          "costObservedUsd": "0.010000",
           "outputShape": "translation, source_language, target_language, source_detected, word_count, tier, service_score, grade, findings"
         },
         "responses": {
@@ -7803,7 +7803,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.005000"
+            "amount": "0.002000"
           },
           "protocols": [
             {
@@ -7813,7 +7813,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.005000",
+          "costObservedUsd": "0.002000",
           "outputShape": "chains, stale, findings"
         },
         "responses": {
@@ -11318,7 +11318,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -11328,7 +11328,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.010000",
           "outputShape": "name, results, available_tlds, taken_tlds, score, grade, findings"
         },
         "responses": {
@@ -13748,7 +13748,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USD",
-            "amount": "0.050000"
+            "amount": "0.010000"
           },
           "protocols": [
             {
@@ -13758,7 +13758,7 @@
         },
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.050000",
+          "costObservedUsd": "0.010000",
           "outputShape": "url, in_urlhaus, urlhaus_status, threat_type, malware_families, blacklisted_gsb, blacklisted_surbl, heuristic_flags, threat_classification, confidence, urlhaus_reference, score, grade, findings"
         },
         "responses": {
