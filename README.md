@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -100,6 +100,8 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
 | `/domain-availability/check` | GET | $0.010 | Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name… |
 | `/email-intel/analyze` | GET | $0.005 | Email verification & deliverability check (email validator / verifier) — validate an address… |
+| `/email/verify` | GET | $0.001 | Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in… |
+| `/email/verify` | POST | $0.001 | Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
 | `/web/extract` | GET | $0.003 | Extract article / main content from any URL or PDF to clean, LLM-ready Markdown (web scraper /… |
@@ -111,6 +113,14 @@ Network intelligence API with 126 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/domain-age/check` | GET | $0.030 | Determine a domain's age from registration data and archival history — tries RDAP, then port-43… |
 | `/web/fetch` | GET | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
 | `/web/fetch` | POST | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
+| `/exa/search` | GET | $0.01 | Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url… |
+| `/exa/search` | POST | $0.01 | exaSearchRouteConfig.description |
+| `/web/search` | GET | $0.01 | Web search for AI agents — one query in, ranked live results out (title, url, published_date… |
+| `/web/search` | POST | $0.01 | webSearchRouteConfig.description |
+| `/exa/contents` | GET | $0.005 | Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered… |
+| `/exa/contents` | POST | $0.005 | Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered… |
+| `/exa/answer` | GET | $0.01 | Ask a question, get a direct answer grounded in a live web search, with numbered citations (title… |
+| `/exa/answer` | POST | $0.01 | Ask a question, get a direct answer grounded in a live web search, with numbered citations (title… |
 | `/github-intel/analyze` | GET | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/github-intel/analyze` | POST | $0.030 | Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown… |
 | `/holidays/check` | GET | $0.005 | Look up public holidays for any country and year, check whether a specific date is a holiday, and… |
