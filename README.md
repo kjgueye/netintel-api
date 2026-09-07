@@ -15,7 +15,7 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/redirect/trace` | GET | $0.010 | Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing… |
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
-| `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups… |
+| `/cloud-fingerprint/analyze` | GET | $0.010 | Fingerprints a domain's cloud infrastructure — DNS records, HTTP headers, a TLS handshake and PTR… |
 | `/schema-parse/extract` | POST | $0.010 | Extract structured data from any unstructured text into your own JSON Schema — structured-data /… |
 | `/messages` | POST | $0.06 | OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array… |
 | `/openai/gpt-4o` | POST | $0.10 | Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed… |
@@ -114,9 +114,9 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/web/fetch` | GET | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
 | `/web/fetch` | POST | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
 | `/exa/search` | GET | $0.01 | Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url… |
-| `/exa/search` | POST | $0.01 | exaSearchRouteConfig.description |
+| `/exa/search` | POST | $0.01 | Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url… |
 | `/web/search` | GET | $0.01 | Web search for AI agents — one query in, ranked live results out (title, url, published_date… |
-| `/web/search` | POST | $0.01 | webSearchRouteConfig.description |
+| `/web/search` | POST | $0.01 | Web search for AI agents — one query in, ranked live results out (title, url, published_date… |
 | `/exa/contents` | GET | $0.005 | Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered… |
 | `/exa/contents` | POST | $0.005 | Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered… |
 | `/exa/answer` | GET | $0.01 | Ask a question, get a direct answer grounded in a live web search, with numbered citations (title… |

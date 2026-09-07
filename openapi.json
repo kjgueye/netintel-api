@@ -912,7 +912,7 @@
     "/cloud-fingerprint/analyze": {
       "get": {
         "operationId": "getCloudFingerprintAnalyze",
-        "summary": "Fingerprints a domain's cloud infrastructure by probing DNS records, HTTP headers, and PTR lookups…",
+        "summary": "Fingerprints a domain's cloud infrastructure — DNS records, HTTP headers, a TLS handshake and PTR…",
         "tags": [
           "cloud-fingerprint"
         ],
@@ -942,7 +942,7 @@
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
           "costObservedUsd": "0.010000",
-          "outputShape": "domain, resolved_ips, cname_chain, hosting, cdn, waf, dns_provider, email_provider, http_fingerprint, tls, score, grade, findings"
+          "outputShape": "domain, resolved_ips, cname_chain, http_reachable, hosting, cdn, waf, dns_provider, email_provider, http_fingerprint, tls, score, grade, findings"
         },
         "responses": {
           "200": {
@@ -960,6 +960,9 @@
                     },
                     "cname_chain": {
                       "type": "array"
+                    },
+                    "http_reachable": {
+                      "type": "boolean"
                     },
                     "hosting": {
                       "type": "object"
@@ -980,10 +983,33 @@
                       "type": "object"
                     },
                     "tls": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "issuer": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "wildcard": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "san_count": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        }
+                      }
                     },
                     "score": {
-                      "type": "number"
+                      "type": [
+                        "number",
+                        "null"
+                      ]
                     },
                     "grade": {
                       "type": "string"
@@ -1000,6 +1026,7 @@
                     "104.16.132.229"
                   ],
                   "cname_chain": [],
+                  "http_reachable": true,
                   "hosting": {
                     "provider": "Cloudflare",
                     "confidence": "medium",
@@ -1045,9 +1072,9 @@
                     ]
                   },
                   "tls": {
-                    "issuer": null,
-                    "wildcard": null,
-                    "san_count": null
+                    "issuer": "Google Trust Services",
+                    "wildcard": true,
+                    "san_count": 5
                   },
                   "score": 100,
                   "grade": "A",
@@ -12911,7 +12938,7 @@
       },
       "post": {
         "operationId": "postExaSearch",
-        "summary": "exaSearchRouteConfig.description",
+        "summary": "Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url,…",
         "tags": [
           "exa"
         ],
@@ -13001,7 +13028,7 @@
       },
       "post": {
         "operationId": "postWebSearch",
-        "summary": "webSearchRouteConfig.description",
+        "summary": "Web search for AI agents — one query in, ranked live results out (title, url, published_date,…",
         "tags": [
           "web"
         ],
