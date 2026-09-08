@@ -1341,7 +1341,7 @@
                 "properties": {
                   "messages": {
                     "type": "array",
-                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~48000 chars total.",
+                    "description": "OpenAI chat messages: [{role, content}]. content is text, or parts: {type:'text',text} and (user role, max 4 per call) {type:'image_url',image_url:{url:'https://…',detail:'low'|'high'|'auto'}}. EVERY request — with or without images — must fit a 16000-token combined input budget and a 48000-char cap.",
                     "items": {
                       "type": "object",
                       "properties": {
@@ -1350,8 +1350,7 @@
                           "description": "system, user, or assistant"
                         },
                         "content": {
-                          "type": "string",
-                          "description": "Message text"
+                          "description": "Message text, or content parts: {type:'text',text} / {type:'image_url',image_url:{url,detail}}"
                         }
                       },
                       "required": [
