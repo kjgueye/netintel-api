@@ -22,7 +22,7 @@
     "/health": {
       "get": {
         "operationId": "getHealth",
-        "summary": "Health check (free, no payment)",
+        "summary": "Report service health and uptime",
         "tags": [
           "meta"
         ],
@@ -52,10 +52,11 @@
     "/dns/lookup": {
       "get": {
         "operationId": "getDnsLookup",
-        "summary": "DNS lookup / nslookup / dig API — resolve the common DNS record types (A, AAAA, MX, TXT, NS, CNAME,…",
+        "summary": "DNS lookup for any domain",
         "tags": [
           "dns"
         ],
+        "description": "DNS lookup for any domain — resolve A, AAAA, MX, TXT, NS, CNAME, SOA and PTR records in one call. Parses SPF/DMARC from TXT plus DKIM at the default._domainkey selector, and cross-checks A records across Google/Cloudflare/Quad9 resolvers for propagation consistency. Also answers nslookup / dig style queries.",
         "parameters": [
           {
             "name": "domain",
@@ -204,10 +205,11 @@
     "/ssl/analyze": {
       "get": {
         "operationId": "getSslAnalyze",
-        "summary": "Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3),…",
+        "summary": "Inspect a TLS handshake, cert chain, protocols and ciphers",
         "tags": [
           "ssl"
         ],
+        "description": "Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3), detects weak keys and expiry issues, and returns an overall security grade (A/B/C/F). For just the cert facts fast, see the cheaper /ssl/cert (quick tier).",
         "parameters": [
           {
             "name": "domain",
@@ -340,10 +342,11 @@
     "/ssl/cert": {
       "get": {
         "operationId": "getSslCert",
-        "summary": "Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until…",
+        "summary": "SSL certificate check for any domain",
         "tags": [
           "ssl"
         ],
+        "description": "SSL certificate check for any domain — issuer, subject, SANs, valid from/to, days until expiry, expired/self-signed flags, TLS version, chain length. One TLS handshake, sub-2-second answer. The light, cheap tier under /ssl/analyze (full analysis, grading). No API key.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -379,10 +382,11 @@
       },
       "post": {
         "operationId": "postSslCert",
-        "summary": "Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until…",
+        "summary": "SSL certificate check for any domain",
         "tags": [
           "ssl"
         ],
+        "description": "SSL certificate check for any domain — issuer, subject, SANs, valid from/to, days until expiry, expired/self-signed flags, TLS version, chain length. One TLS handshake, sub-2-second answer. The light, cheap tier under /ssl/analyze (full analysis, grading). No API key.",
         "requestBody": {
           "required": true,
           "content": {
@@ -430,10 +434,11 @@
     "/redirect/trace": {
       "get": {
         "operationId": "getRedirectTrace",
-        "summary": "Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing,…",
+        "summary": "Follows a URL through its full redirect chain",
         "tags": [
           "redirect"
         ],
+        "description": "Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing, headers, TLS status, and protocol downgrades per hop, then returns an overall redirect health grade (A–F).",
         "parameters": [
           {
             "name": "url",
@@ -571,10 +576,11 @@
     "/security-headers/analyze": {
       "get": {
         "operationId": "getSecurityHeadersAnalyze",
-        "summary": "Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS,…",
+        "summary": "Grade a URL's 10 security-critical response headers",
         "tags": [
           "security-headers"
         ],
+        "description": "Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy, X-XSS-Protection, CORP, COEP, COOP), detects anti-patterns, and returns an overall security grade (A–F).",
         "parameters": [
           {
             "name": "target",
@@ -770,10 +776,11 @@
     "/email-auth": {
       "post": {
         "operationId": "postEmailAuth",
-        "summary": "Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC,…",
+        "summary": "Email deliverability & domain security check",
         "tags": [
           "email-auth"
         ],
+        "description": "Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC, detects spoofing and misconfigurations, and returns an A–F email security grade with transparent deductions. Anti-spam / anti-phishing readiness for any sending domain.",
         "requestBody": {
           "required": true,
           "content": {
@@ -912,10 +919,11 @@
     "/cloud-fingerprint/analyze": {
       "get": {
         "operationId": "getCloudFingerprintAnalyze",
-        "summary": "Fingerprints a domain's cloud infrastructure — DNS records, HTTP headers, a TLS handshake and PTR…",
+        "summary": "Fingerprints a domain's cloud infrastructure",
         "tags": [
           "cloud-fingerprint"
         ],
+        "description": "Fingerprints a domain's cloud infrastructure — DNS records, HTTP headers, a TLS handshake and PTR lookups — to detect CDN, WAF, hosting, DNS and email provider, plus cert issuer/wildcard/SAN count, with confidence scores and a security grade (A–F). Hosts that resolve but answer nothing on 80/443 return http_reachable:false, score null and grade insufficient_data — never a grade inferred from an unanswered probe.",
         "parameters": [
           {
             "name": "domain",
@@ -1092,10 +1100,11 @@
     "/schema-parse/extract": {
       "post": {
         "operationId": "postSchemaParseExtract",
-        "summary": "Extract structured data from any unstructured text into your own JSON Schema — structured-data /…",
+        "summary": "Extract text into your own JSON Schema",
         "tags": [
           "schema-parse"
         ],
+        "description": "Extract structured data from any unstructured text into your own JSON Schema — structured-data / information extraction, text-to-JSON, LLM data enrichment. You supply the schema; the LLM returns a matching object. Works for contacts, invoices, events, product specs, medical records, legal clauses, resumes — any shape. Returns the extracted object plus token usage; unfound fields are omitted or null.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1190,10 +1199,11 @@
     "/messages": {
       "post": {
         "operationId": "postMessages",
-        "summary": "OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array…",
+        "summary": "Chat completions answered by Claude Sonnet",
         "tags": [
           "messages"
         ],
+        "description": "OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array and get an assistant reply for Q&A, reasoning, agent planning, coding help, summarization, extraction, and classification. Body is OpenAI chat.completions-shaped ({model?, messages:[{role,content}], max_tokens?, temperature?}); response is a chat.completion object. Flat $0.06; inputs capped ~6KB, max_tokens 1024; no streaming in v1.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1328,10 +1338,11 @@
     "/openai/gpt-4o": {
       "post": {
         "operationId": "postOpenaiGpt4o",
-        "summary": "Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed,…",
+        "summary": "Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-4o via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.10 per request in USDC. Standard OpenAI chat.completions shape. EVERY call is bounded by a 16000-token combined input budget (real tokenizer) plus the 48000-char cap; output 2048. Vision: up to 4 https image_url parts (detail low/high/auto).",
         "requestBody": {
           "required": true,
           "content": {
@@ -1461,10 +1472,11 @@
     "/openai/gpt-4-1": {
       "post": {
         "operationId": "postOpenaiGpt41",
-        "summary": "Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-4.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.09 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1595,10 +1607,11 @@
     "/openai/gpt-4-1-mini": {
       "post": {
         "operationId": "postOpenaiGpt41Mini",
-        "summary": "Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-4.1-mini, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-4.1-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1729,10 +1742,11 @@
     "/v1/embeddings": {
       "post": {
         "operationId": "postV1Embeddings",
-        "summary": "OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or…",
+        "summary": "OpenAI-compatible text embeddings API",
         "tags": [
           "v1"
         ],
+        "description": "OpenAI-compatible text embeddings API — standard /v1/embeddings request shape: input as a string or a batch of up to 128 strings (64000 chars total on text-embedding-3-small, the default; 24000 on text-embedding-3-large). Flat $0.005 per call in USDC via x402, no OpenAI account or API key. Returns float vectors for RAG, semantic search, clustering, and dedup.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1741,8 +1755,19 @@
                 "type": "object",
                 "properties": {
                   "input": {
-                    "type": "string",
-                    "description": "Text to embed. Also accepts an array of up to 128 strings (64000 chars total)."
+                    "description": "Text to embed. Also accepts an array of up to 128 strings (64000 chars total).",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "maxItems": 128
+                      }
+                    ]
                   },
                   "model": {
                     "type": "string",
@@ -1833,10 +1858,11 @@
     "/embeddings": {
       "post": {
         "operationId": "postEmbeddings",
-        "summary": "Multilingual text embeddings (384-dim) served in-house, no OpenAI dependency, no API key.",
+        "summary": "Multilingual text embeddings",
         "tags": [
           "embeddings"
         ],
+        "description": "Multilingual text embeddings (384-dim) served in-house, no OpenAI dependency, no API key. NetIntel's cheapest embeddings at $0.001/call, batches up to 256 texts. Supports query/passage input types for retrieval (e5). Pairs with /text/chunk for a full chunk→embed RAG pipeline on one provider.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1845,8 +1871,19 @@
                 "type": "object",
                 "properties": {
                   "input": {
-                    "type": "string",
-                    "description": "Text to embed. Also accepts an array of up to 256 strings (200000 chars total). Aliases: text, inputs."
+                    "description": "Text to embed. Also accepts an array of up to 256 strings (200000 chars total). Aliases: text, inputs.",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "maxItems": 256
+                      }
+                    ]
                   },
                   "input_type": {
                     "type": "string",
@@ -1948,10 +1985,11 @@
     "/semantic/rank": {
       "post": {
         "operationId": "postSemanticRank",
-        "summary": "Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back…",
+        "summary": "Semantic similarity ranking",
         "tags": [
           "semantic"
         ],
+        "description": "Semantic similarity ranking — send a query plus up to 100 candidate texts, get the candidates back ranked by semantic similarity with scores. No vectors, no cosine math, no embedding model to manage: one call, one price, ranked results. Flat $0.02 per call in USDC via x402, no API key. For RAG retrieval, FAQ matching, and search result ordering.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2076,10 +2114,11 @@
     "/v1/chat/completions": {
       "post": {
         "operationId": "postV1ChatCompletions",
-        "summary": "OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape,…",
+        "summary": "OpenAI-compatible chat completions gateway",
         "tags": [
           "v1"
         ],
+        "description": "OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape, model chosen in the body (gpt-4.1-mini, gpt-5.4-nano, gpt-4o-mini, gpt-4.1-nano, gpt-5-nano). Flat $0.005 per call in USDC via x402, no OpenAI account or API key. Supports response_format json_object. Pricier models have dedicated endpoints; GET /v1/models (free) lists every model with its endpoint and price.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2088,8 +2127,7 @@
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string",
-                    "description": "Model id, e.g. gpt-4o or gpt-4o-mini. Free catalog: GET /v1/models"
+                    "type": "string"
                   },
                   "messages": {
                     "type": "array",
@@ -2199,10 +2237,11 @@
     "/openai/gpt-4o-mini": {
       "post": {
         "operationId": "postOpenaiGpt4oMini",
-        "summary": "Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-4o-mini, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-4o-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2333,10 +2372,11 @@
     "/openai/gpt-4-1-nano": {
       "post": {
         "operationId": "postOpenaiGpt41Nano",
-        "summary": "Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-4.1-nano, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2467,10 +2507,11 @@
     "/openai/gpt-5-5": {
       "post": {
         "operationId": "postOpenaiGpt55",
-        "summary": "Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.5 via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.65 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2593,10 +2634,11 @@
     "/openai/gpt-5-4": {
       "post": {
         "operationId": "postOpenaiGpt54",
-        "summary": "Call OpenAI's gpt-5.4 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.4 via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.4 via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.25 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2719,10 +2761,11 @@
     "/openai/gpt-5-4-mini": {
       "post": {
         "operationId": "postOpenaiGpt54Mini",
-        "summary": "Call OpenAI's gpt-5.4-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.4-mini, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.4-mini via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.04 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2845,10 +2888,11 @@
     "/openai/gpt-5-4-nano": {
       "post": {
         "operationId": "postOpenaiGpt54Nano",
-        "summary": "Call OpenAI's gpt-5.4-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.4-nano, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.4-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2971,10 +3015,11 @@
     "/openai/gpt-5-1": {
       "post": {
         "operationId": "postOpenaiGpt51",
-        "summary": "Call OpenAI's gpt-5.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.1 via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.1 via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.15 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3097,10 +3142,11 @@
     "/openai/gpt-5-nano": {
       "post": {
         "operationId": "postOpenaiGpt5Nano",
-        "summary": "Call OpenAI's gpt-5-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5-nano, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3223,10 +3269,11 @@
     "/openai/gpt-5-2": {
       "post": {
         "operationId": "postOpenaiGpt52",
-        "summary": "Call OpenAI's gpt-5.2 via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.2 via a single pay-per-call x402 endpoint",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.2 via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.20 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3349,10 +3396,11 @@
     "/openai/gpt-5-6-sol": {
       "post": {
         "operationId": "postOpenaiGpt56Sol",
-        "summary": "Call OpenAI's gpt-5.6-sol via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.6-sol, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.6-sol via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.65 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3475,10 +3523,11 @@
     "/openai/gpt-5-6-terra": {
       "post": {
         "operationId": "postOpenaiGpt56Terra",
-        "summary": "Call OpenAI's gpt-5.6-terra via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.6-terra, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.6-terra via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.25 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3601,10 +3650,11 @@
     "/openai/gpt-5-6-luna": {
       "post": {
         "operationId": "postOpenaiGpt56Luna",
-        "summary": "Call OpenAI's gpt-5.6-luna via a single pay-per-call x402 endpoint — no OpenAI account or API key…",
+        "summary": "Call OpenAI's gpt-5.6-luna, pay per call",
         "tags": [
           "openai"
         ],
+        "description": "Call OpenAI's gpt-5.6-luna via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.06 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3727,10 +3777,11 @@
     "/ai-image/generate": {
       "post": {
         "operationId": "postAiImageGenerate",
-        "summary": "Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with…",
+        "summary": "Generate agent-ready image assets",
         "tags": [
           "ai-image"
         ],
+        "description": "Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with gpt-image-1. Claude refines the prompt, screens content, adds alt text and a score. Returns image_url as a base64 PNG data URI. Flat $0.25; n=1; ratios 1:1/16:9/9:16.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3838,10 +3889,11 @@
     "/classify": {
       "post": {
         "operationId": "postClassify",
-        "summary": "Text classification API — zero-shot text classifier / categorization: caller supplies 2–20 labels…",
+        "summary": "Classify text into your own categories",
         "tags": [
           "classify"
         ],
+        "description": "Classify text into your own categories — zero-shot: supply 2–20 labels and Claude Haiku returns the best-matching category with confidence and per-label scores. Route, tag, triage, and detect intent or topic with your own taxonomy in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3975,10 +4027,11 @@
     "/content-moderate": {
       "post": {
         "operationId": "postContentModerate",
-        "summary": "Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content,…",
+        "summary": "Moderate text content using Claude Haiku",
         "tags": [
           "content-moderate"
         ],
+        "description": "Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content, violence, self-harm, and spam with per-category severity and an overall allow/flag/block recommendation, so agents can screen user-generated content before publishing or storing it.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4117,10 +4170,11 @@
     "/entity-extract": {
       "post": {
         "operationId": "postEntityExtract",
-        "summary": "Extract named entities from text using Claude Haiku — people, organizations, locations, dates,…",
+        "summary": "Extract named entities from text using Claude Haiku",
         "tags": [
           "entity-extract"
         ],
+        "description": "Extract named entities from text using Claude Haiku — people, organizations, locations, dates, emails, URLs, money amounts, and products — returned as structured typed arrays so agents can pull structured signals out of unstructured text in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4261,10 +4315,11 @@
     "/extract/address": {
       "post": {
         "operationId": "postExtractAddress",
-        "summary": "Parse and normalize a freeform address string using Claude Haiku — splits it into street, city,…",
+        "summary": "Parse a freeform address into normalized parts",
         "tags": [
           "extract"
         ],
+        "description": "Parse and normalize a freeform address string using Claude Haiku — splits it into street, city, state/region, postal code, and country, plus a normalized single-line form, so agents can clean and standardize messy address data for shipping, CRM, and verification workflows.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4371,10 +4426,11 @@
     "/extract/contact": {
       "post": {
         "operationId": "postExtractContact",
-        "summary": "Extract structured contact details from text, an email signature, or webpage text using Claude…",
+        "summary": "Extract contact details from text or a signature",
         "tags": [
           "extract"
         ],
+        "description": "Extract structured contact details from text, an email signature, or webpage text using Claude Haiku — returns name, title, company, email, phone, and address as clean JSON so agents can turn unstructured contact blocks into CRM-ready records in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4475,10 +4531,11 @@
     "/extract/invoice": {
       "post": {
         "operationId": "postExtractInvoice",
-        "summary": "Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML,…",
+        "summary": "Extract structured data from invoice or receipt text",
         "tags": [
           "extract"
         ],
+        "description": "Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML, or plain text, fetched and parsed server-side) — using Claude Haiku: returns vendor, invoice number, dates, line items, subtotal, tax, total, and currency as clean JSON for accounts-payable, expense processing, and bookkeeping automation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4630,10 +4687,11 @@
     "/extract/resume": {
       "post": {
         "operationId": "postExtractResume",
-        "summary": "Extract structured data from resume/CV text using Claude Haiku — returns name, contact info,…",
+        "summary": "Extract structured data from resume/CV text using Claude Haiku",
         "tags": [
           "extract"
         ],
+        "description": "Extract structured data from resume/CV text using Claude Haiku — returns name, contact info, skills, work experience, and education as clean JSON arrays so agents can automate applicant screening, candidate databases, and recruiting workflows from raw resume text.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4769,10 +4827,11 @@
     "/extract/table": {
       "post": {
         "operationId": "postExtractTable",
-        "summary": "Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in…",
+        "summary": "Extract tabular data from messy text or HTML using Claude Haiku",
         "tags": [
           "extract"
         ],
+        "description": "Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in unstructured content and returns clean structured JSON (columns + rows) so agents can turn pasted tables, HTML tables, and delimited text into usable data in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4885,10 +4944,11 @@
     "/markdown/clean": {
       "post": {
         "operationId": "postMarkdownClean",
-        "summary": "Convert messy HTML or text into clean, well-structured Markdown using Claude Haiku — strips…",
+        "summary": "Convert messy HTML or text into clean Markdown",
         "tags": [
           "markdown"
         ],
+        "description": "Convert messy HTML or text into clean, well-structured Markdown using Claude Haiku — strips boilerplate, fixes heading hierarchy, normalizes lists and links, and returns readable Markdown so agents can feed clean docs into downstream pipelines, knowledge bases, or LLM context.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4992,10 +5052,11 @@
     "/normalize/json": {
       "post": {
         "operationId": "postNormalizeJson",
-        "summary": "Conform messy or inconsistent JSON to a target schema using Claude Haiku — renames keys, coerces…",
+        "summary": "Conform messy JSON to a target schema",
         "tags": [
           "normalize"
         ],
+        "description": "Conform messy or inconsistent JSON to a target schema using Claude Haiku — renames keys, coerces types (string→number, \"true\"→boolean, etc.), and fills missing fields with null, returning JSON that matches the exact shape the caller specified so agents can normalize data from varied sources into one consistent structure.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5121,10 +5182,11 @@
     "/text-to-json": {
       "post": {
         "operationId": "postTextToJson",
-        "summary": "Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku —…",
+        "summary": "Turn text into JSON matching your schema",
         "tags": [
           "text-to-json"
         ],
+        "description": "Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku — the agent declares the fields and types it wants, and gets back populated JSON with values pulled from the text and coerced to the right types, so agents can structure any prose into the exact shape their pipeline expects.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5247,10 +5309,11 @@
     "/sentiment/analyze": {
       "post": {
         "operationId": "postSentimentAnalyze",
-        "summary": "Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call:…",
+        "summary": "Score text sentiment from -1 to +1 with polarity",
         "tags": [
           "sentiment"
         ],
+        "description": "Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call: classifies positive / negative / neutral / mixed polarity with a -1 to +1 sentiment score, plus emotion detection in text (joy, anger, sadness, fear, surprise, disgust, trust, anticipation). Aspect-based sentiment and opinion mining for customer feedback analysis — analyze reviews, support tickets, social posts, chat messages. Via Claude Haiku.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5377,10 +5440,11 @@
     "/text-summarize": {
       "post": {
         "operationId": "postTextSummarize",
-        "summary": "Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key…",
+        "summary": "Text summarizer / summarization API",
         "tags": [
           "text-summarize"
         ],
+        "description": "Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key bullet points using Claude Haiku. Accepts raw text or a URL (fetched and extracted), enforces an input cap, and returns a clean structured summary so agents can compress documents and articles in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5499,10 +5563,11 @@
     "/text/chunk": {
       "post": {
         "operationId": "postTextChunk",
-        "summary": "Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable…",
+        "summary": "Split text into overlapping chunks for RAG ingestion",
         "tags": [
           "text"
         ],
+        "description": "Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable chunk size and overlap. Deterministic (same input → same chunks), returns each chunk with its index and start/end offsets. No API key, no LLM. Pairs with /v1/embeddings for a full chunk→embed pipeline.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5664,10 +5729,11 @@
     "/text/stats": {
       "get": {
         "operationId": "getTextStats",
-        "summary": "Instant text statistics — characters (with/without spaces), words, unique words, sentences,…",
+        "summary": "Count words, sentences and reading time in text",
         "tags": [
           "text"
         ],
+        "description": "Instant text statistics — characters (with/without spaces), words, unique words, sentences, paragraphs, average word/sentence length, longest word, reading and speaking time. Deterministic, no LLM, no API key. For agents sizing content before summarizing, chunking, embedding, or posting. Pass text as ?text= (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -5703,10 +5769,11 @@
       },
       "post": {
         "operationId": "postTextStats",
-        "summary": "Instant text statistics — characters (with/without spaces), words, unique words, sentences,…",
+        "summary": "Count words, sentences and reading time in text",
         "tags": [
           "text"
         ],
+        "description": "Instant text statistics — characters (with/without spaces), words, unique words, sentences, paragraphs, average word/sentence length, longest word, reading and speaking time. Deterministic, no LLM, no API key. For agents sizing content before summarizing, chunking, embedding, or posting. Pass text as ?text= (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -5754,10 +5821,11 @@
     "/translate/long": {
       "post": {
         "operationId": "postTranslateLong",
-        "summary": "Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+…",
+        "summary": "Translate up to 2000 words between languages using Claude Haiku",
         "tags": [
           "translate"
         ],
+        "description": "Translate up to 2000 words between languages using Claude Haiku — auto-detects source, supports 30+ target languages, preserves formatting, for larger documents and articles. For short snippets use the cheaper /translate/short.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5872,10 +5940,11 @@
     "/translate/structured": {
       "post": {
         "operationId": "postTranslateStructured",
-        "summary": "Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking…",
+        "summary": "Translate structured content",
         "tags": [
           "translate"
         ],
+        "description": "Translate structured content — JSON, HTML, Markdown, templates, UI strings — without breaking structure. Preserves keys, tags, markdown, URLs, emails, variables, placeholders, code blocks, and brand names, honors a caller glossary, and validates that no placeholder was dropped, so agents can localize app content safely.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5884,8 +5953,18 @@
                 "type": "object",
                 "properties": {
                   "content": {
-                    "type": "object",
-                    "description": "The structured content to translate: a JSON object/array, or a string of HTML, Markdown, or template text. Max 32KB / 500 strings."
+                    "description": "The structured content to translate: a JSON object/array, or a string of HTML, Markdown, or template text. Max 32KB / 500 strings.",
+                    "oneOf": [
+                      {
+                        "type": "object"
+                      },
+                      {
+                        "type": "array"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   },
                   "content_type": {
                     "type": "string",
@@ -6044,10 +6123,11 @@
     "/translate/batch": {
       "post": {
         "operationId": "postTranslateBatch",
-        "summary": "Translate many independent strings in one request — each with a caller ID preserved in the response…",
+        "summary": "Translate many independent strings in one request",
         "tags": [
           "translate"
         ],
+        "description": "Translate many independent strings in one request — each with a caller ID preserved in the response — with per-item status, glossary and tone support, and partial success so one bad item never fails the batch, so agents can localize whole string tables in a single call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6221,10 +6301,11 @@
     "/translate/short": {
       "post": {
         "operationId": "postTranslateShort",
-        "summary": "Translate text between languages — text translation API for short content: translate a sentence,…",
+        "summary": "Translate text between languages",
         "tags": [
           "translate"
         ],
+        "description": "Translate text between languages — text translation API for short content: translate a sentence, chat message, or up to 500 words to English, Spanish, French, Chinese, or any of 30+ languages. Language translation with auto-detected source language, formatting preserved; returns the translation plus detected source. Machine translation via Claude Haiku for agents localizing content cheaply. For longer documents use /translate/long.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6339,10 +6420,11 @@
     "/asn-lookup/analyze": {
       "get": {
         "operationId": "getAsnLookupAnalyze",
-        "summary": "Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and…",
+        "summary": "Resolve an IP or domain to its ASN and network owner",
         "tags": [
           "asn-lookup"
         ],
+        "description": "Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and hosting/cloud classification — agents get structured network ownership context plus a trust score to assess infrastructure risk.",
         "parameters": [
           {
             "name": "target",
@@ -6497,10 +6579,11 @@
     "/whois-rdap/lookup": {
       "get": {
         "operationId": "getWhoisRdapLookup",
-        "summary": "WHOIS domain lookup via RDAP — registrar, creation/expiry/updated dates, nameservers, and status…",
+        "summary": "Domain registration lookup, WHOIS via RDAP",
         "tags": [
           "whois-rdap"
         ],
+        "description": "Domain registration lookup, WHOIS via RDAP — registrar, registration and expiry dates, last-updated date, nameservers, and status flags from the authoritative registry, plus an actionability score so agents can assess domain trustworthiness, ownership, or availability risk.",
         "parameters": [
           {
             "name": "domain",
@@ -6629,10 +6712,11 @@
     "/cert-transparency/lookup": {
       "get": {
         "operationId": "getCertTransparencyLookup",
-        "summary": "Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever…",
+        "summary": "Enumerate certificates issued for a domain via crt.sh",
         "tags": [
           "cert-transparency"
         ],
+        "description": "Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever issued for a domain — returns subdomains discovered, certificate issuers, validity periods, and a risk score flagging wildcard certs, expiring certs, and suspicious issuance patterns.",
         "parameters": [
           {
             "name": "domain",
@@ -6771,10 +6855,11 @@
     "/subnet/calc": {
       "get": {
         "operationId": "getSubnetCalc",
-        "summary": "Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard…",
+        "summary": "Calculates IPv4/IPv6 subnet details from CIDR notation",
         "tags": [
           "subnet"
         ],
+        "description": "Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard (Cisco ACL) mask, binary/hex masks, usable host range, RFC classification (private/loopback/multicast), supernet, and subnet-split counts. Pass comma-separated CIDRs to detect overlaps and classify each pair (subnet/supernet/partial overlap/disjoint); multi-CIDR responses return {subnets, overlaps}.",
         "parameters": [
           {
             "name": "cidr",
@@ -6912,10 +6997,11 @@
     "/dns-propagation/check": {
       "get": {
         "operationId": "getDnsPropagationCheck",
-        "summary": "Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously —…",
+        "summary": "Compare a DNS record across 10 global resolvers",
         "tags": [
           "dns-propagation"
         ],
+        "description": "Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously — returns what each resolver sees, whether results are consistent, propagation percentage, and a readiness score so agents can confirm DNS changes have fully propagated globally.",
         "parameters": [
           {
             "name": "domain",
@@ -7048,10 +7134,11 @@
     "/dnssec/validate": {
       "get": {
         "operationId": "getDnssecValidate",
-        "summary": "Validate a domain's DNSSEC configuration over DNS-over-HTTPS: DS records at the parent zone, DNSKEY…",
+        "summary": "Validate a domain's DNSSEC configuration over DNS-over-HTTPS",
         "tags": [
           "dnssec"
         ],
+        "description": "Validate a domain's DNSSEC configuration over DNS-over-HTTPS: DS records at the parent zone, DNSKEY records at the domain, RRSIG signatures, NSEC/NSEC3, plus the validating resolver's AD bit — returns a full chain-of-trust assessment and readiness score so agents can verify DNS integrity before trusting resolution results.",
         "parameters": [
           {
             "name": "domain",
@@ -7167,10 +7254,11 @@
     "/ip-blacklist/check": {
       "get": {
         "operationId": "getIpBlacklistCheck",
-        "summary": "Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.)…",
+        "summary": "Check an IP address against 15 major DNS blacklists",
         "tags": [
           "ip-blacklist"
         ],
+        "description": "Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.) simultaneously — returns which lists it appears on, a reputation score, and a threat classification so agents can make block/allow decisions instantly.",
         "parameters": [
           {
             "name": "ip",
@@ -7265,10 +7353,11 @@
     "/ip-reputation/analyze": {
       "get": {
         "operationId": "getIpReputationAnalyze",
-        "summary": "Check an IP address against AbuseIPDB and AlienVault OTX threat feeds.",
+        "summary": "IP reputation and malicious-IP check",
         "tags": [
           "ip-reputation"
         ],
+        "description": "IP reputation and malicious-IP check — screens an address against AbuseIPDB and AlienVault OTX threat feeds and returns a composite risk score, threat categories, malware families, and full source data.",
         "parameters": [
           {
             "name": "ip",
@@ -7378,10 +7467,11 @@
     "/cron-parser/explain": {
       "get": {
         "operationId": "getCronParserExplain",
-        "summary": "Parse any cron expression into a human-readable explanation, validate its syntax, compute the next…",
+        "summary": "Explain and validate a cron expression",
         "tags": [
           "cron-parser"
         ],
+        "description": "Parse any cron expression into a human-readable explanation, validate its syntax, compute the next 5 scheduled run times (UTC), and detect common patterns (daily, weekly, monthly, hourly) — accepts standard numeric fields plus JAN-DEC/SUN-SAT name tokens — so agents can understand, validate, and work with cron schedules without implementing their own cron parser.",
         "parameters": [
           {
             "name": "expression",
@@ -7491,10 +7581,11 @@
     "/currency-exchange/convert": {
       "get": {
         "operationId": "getCurrencyExchangeConvert",
-        "summary": "Convert any amount between 32 fiat currencies (live European Central Bank rates) and major…",
+        "summary": "Convert any amount between 32 fiat currencies",
         "tags": [
           "currency-exchange"
         ],
+        "description": "Convert any amount between 32 fiat currencies (live European Central Bank rates) and major cryptocurrencies (BTC, ETH, USDC, SOL, ICP, CELO and more, live Coinbase spot rates) — fiat↔fiat, crypto↔fiat, and crypto↔crypto all work. Returns converted amount, exchange rate, inverse rate, rate date, and rate source so agents can price and invoice across fiat and crypto without a paid forex API.",
         "parameters": [
           {
             "name": "from",
@@ -7628,10 +7719,11 @@
     "/crypto/market": {
       "get": {
         "operationId": "getCryptoMarket",
-        "summary": "Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h…",
+        "summary": "Fetch live market data for ~50 top crypto assets",
         "tags": [
           "crypto"
         ],
+        "description": "Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h open/high/low/volume/change (Coinbase Exchange) plus market cap, rank and circulating/total/max supply (CoinGecko). Quote in USD, EUR or GBP; defaults symbol=BTC vs=USD, so a bare call returns Bitcoin. 60s cache, keyless upstreams — the purpose-built replacement for scraping exchange price pages.",
         "parameters": [
           {
             "name": "symbol",
@@ -7810,10 +7902,11 @@
     "/gas/price": {
       "get": {
         "operationId": "getGasPrice",
-        "summary": "Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for…",
+        "summary": "Fetch live gas prices across 5 EVM chains",
         "tags": [
           "gas"
         ],
+        "description": "Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for a transfer, an ERC-20 send, and a swap — keyless, one call, all chains. Per chain: gas price + EIP-1559 base/priority fee in gwei, native-token USD price, 15s cache. L2 figures are execution-gas only (L1 data fee excluded, flagged in findings).",
         "parameters": [
           {
             "name": "chains",
@@ -7976,10 +8069,11 @@
     "/crypto/price": {
       "get": {
         "operationId": "getCryptoPrice",
-        "summary": "Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken…",
+        "summary": "Crypto prices for up to 25 coins in one call",
         "tags": [
           "crypto"
         ],
+        "description": "Crypto prices for up to 25 coins in one call — live cryptocurrency spot prices for BTC, ETH, SOL and more in USD, EUR, or GBP from Coinbase with Kraken and CoinGecko fallback; no API key, one flat price. Per asset: price, 24h change when the source provides it, source, cache age. 30s cache; unknown symbols land in unresolved without failing the call. 25 prices for one $0.005 call vs 25 single-symbol lookups.",
         "parameters": [
           {
             "name": "symbols",
@@ -8108,10 +8202,11 @@
     "/crypto/ohlc": {
       "get": {
         "operationId": "getCryptoOhlc",
-        "summary": "Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with…",
+        "summary": "Historical OHLC candles for any major crypto asset",
         "tags": [
           "crypto"
         ],
+        "description": "Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with period stats (change %, high, low) — from Coinbase Exchange with Kraken fallback, no API key. Also a price-at-date mode: pass date=YYYY-MM-DD for that day's candle and close. USD, EUR, or GBP quotes; 5min cache.",
         "parameters": [
           {
             "name": "symbol",
@@ -8374,10 +8469,11 @@
     "/currency-exchange/batch": {
       "get": {
         "operationId": "getCurrencyExchangeBatch",
-        "summary": "Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl.",
+        "summary": "Convert one base currency to up to 30 targets in a single call",
         "tags": [
           "currency-exchange"
         ],
+        "description": "Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR, AED, COP) and major crypto — ECB reference rates + Coinbase spot, no API key. Per target: rate, converted amount, rate date, source. The batch sibling of /currency-exchange/convert: 30 pairs for one $0.02 call instead of 30 singles.",
         "parameters": [
           {
             "name": "from",
@@ -8530,10 +8626,11 @@
     "/currency-exchange/history": {
       "get": {
         "operationId": "getCurrencyExchangeHistory",
-        "summary": "Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto…",
+        "summary": "Daily historical exchange-rate series for any currency pair",
         "tags": [
           "currency-exchange"
         ],
+        "description": "Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto via Coinbase daily closes — with min/max/average/change stats, no API key. Pass start/end dates or a days lookback (default 30). The history sibling of /currency-exchange/convert: trend and repricing context for the pairs agents already quote spot.",
         "parameters": [
           {
             "name": "from",
@@ -8734,10 +8831,11 @@
     "/token/info": {
       "get": {
         "operationId": "getTokenInfo",
-        "summary": "Full profile for any ERC-20 token by contract address — name, symbol, decimals, supply from the…",
+        "summary": "Full profile for any ERC-20 token by contract address",
         "tags": [
           "token"
         ],
+        "description": "Full profile for any ERC-20 token by contract address — name, symbol, decimals, supply from the chain itself, plus live price, liquidity, and volume from DEX data — Base and Ethereum, no API key. Holder count included; identity read on-chain so it can't lie or be rate-limited away. 10min cache; unlisted tokens return nulls with a no_dex_liquidity finding.",
         "parameters": [
           {
             "name": "address",
@@ -8918,10 +9016,11 @@
     "/wallet/balance": {
       "get": {
         "operationId": "getWalletBalance",
-        "summary": "Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD…",
+        "summary": "Fetch native, USDC and token balances for a wallet",
         "tags": [
           "wallet"
         ],
+        "description": "Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD estimates — straight from public RPCs, no API key. Raw units as decimal strings plus formatted numbers; add up to 10 ERC-20 contracts via tokens=. 60s cache; an empty, never-used address is a real answer (zeros + no_activity_detected finding).",
         "parameters": [
           {
             "name": "address",
@@ -9108,10 +9207,11 @@
     "/wallet/intel": {
       "get": {
         "operationId": "getWalletIntel",
-        "summary": "Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow,…",
+        "summary": "Counterparty due-diligence for any Base or Ethereum wallet",
         "tags": [
           "wallet"
         ],
+        "description": "Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow, activity pattern, and risk flags in one scored report. The domain-report of wallets: wallet age, first funder, in/out totals, distinct counterparties, 30d activity shape, contract-or-EOA, score + A–F grade. An empty or fresh wallet is a real answer (low score + flags). 5min cache.",
         "parameters": [
           {
             "name": "address",
@@ -9349,10 +9449,11 @@
     "/iban/validate": {
       "get": {
         "operationId": "getIbanValidate",
-        "summary": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and…",
+        "summary": "Validate any IBAN offline",
         "tags": [
           "iban"
         ],
+        "description": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and pretty formatting for ~80 countries — deterministic, instant, no upstream. A structurally invalid IBAN is a real answer: valid:false + findings naming exactly what failed. Pass iban as ?iban= (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9388,10 +9489,11 @@
       },
       "post": {
         "operationId": "postIbanValidate",
-        "summary": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and…",
+        "summary": "Validate any IBAN offline",
         "tags": [
           "iban"
         ],
+        "description": "Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and pretty formatting for ~80 countries — deterministic, instant, no upstream. A structurally invalid IBAN is a real answer: valid:false + findings naming exactly what failed. Pass iban as ?iban= (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9439,10 +9541,11 @@
     "/weather/current": {
       "get": {
         "operationId": "getWeatherCurrent",
-        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like,…",
+        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide",
         "tags": [
           "weather"
         ],
+        "description": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9478,10 +9581,11 @@
       },
       "post": {
         "operationId": "postWeatherCurrent",
-        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like,…",
+        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide",
         "tags": [
           "weather"
         ],
+        "description": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9529,10 +9633,11 @@
     "/weather/forecast": {
       "get": {
         "operationId": "getWeatherForecast",
-        "summary": "Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows,…",
+        "summary": "Multi-day weather forecast for any city or lat/lon worldwide",
         "tags": [
           "weather"
         ],
+        "description": "Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows, precipitation & probability, UV, sunrise/sunset, wind, and plain-language conditions, plus optional next-24h hourly. Give a city name (geocoded) or coordinates. No API key, metric or imperial. Pass params as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9568,10 +9673,11 @@
       },
       "post": {
         "operationId": "postWeatherForecast",
-        "summary": "Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows,…",
+        "summary": "Multi-day weather forecast for any city or lat/lon worldwide",
         "tags": [
           "weather"
         ],
+        "description": "Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows, precipitation & probability, UV, sunrise/sunset, wind, and plain-language conditions, plus optional next-24h hourly. Give a city name (geocoded) or coordinates. No API key, metric or imperial. Pass params as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9619,10 +9725,11 @@
     "/prediction/markets": {
       "get": {
         "operationId": "getPredictionMarkets",
-        "summary": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by…",
+        "summary": "Live prediction-market odds from Polymarket",
         "tags": [
           "prediction"
         ],
+        "description": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9658,10 +9765,11 @@
       },
       "post": {
         "operationId": "postPredictionMarkets",
-        "summary": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by…",
+        "summary": "Live prediction-market odds from Polymarket",
         "tags": [
           "prediction"
         ],
+        "description": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9709,10 +9817,11 @@
     "/prediction/market": {
       "get": {
         "operationId": "getPredictionMarket",
-        "summary": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every…",
+        "summary": "Full detail for ONE Polymarket prediction market by id or slug",
         "tags": [
           "prediction"
         ],
+        "description": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every outcome with its current price (implied probability), volume, liquidity, open/close dates, resolution source, category, and status. No API key. The drill-in companion to /prediction/markets (browse/search): find a market there, then pull its full state here. Pass id or slug as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9748,10 +9857,11 @@
       },
       "post": {
         "operationId": "postPredictionMarket",
-        "summary": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every…",
+        "summary": "Full detail for ONE Polymarket prediction market by id or slug",
         "tags": [
           "prediction"
         ],
+        "description": "Full detail for ONE Polymarket prediction market by id or slug — question, description, every outcome with its current price (implied probability), volume, liquidity, open/close dates, resolution source, category, and status. No API key. The drill-in companion to /prediction/markets (browse/search): find a market there, then pull its full state here. Pass id or slug as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9799,10 +9909,11 @@
     "/market/snapshot": {
       "get": {
         "operationId": "getMarketSnapshot",
-        "summary": "One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR,…",
+        "summary": "One-call market briefing for agents",
         "tags": [
           "market"
         ],
+        "description": "One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR, USD/GBP, USD/JPY, EUR/GBP), Base and Ethereum gas with USD transfer cost, and the crypto fear/greed index. Four sections fetched concurrently with graceful partial failure; any dead section is null with a finding, never a failed call. 60s cache; no API key.",
         "parameters": [
           {
             "name": "symbols",
@@ -10055,10 +10166,11 @@
     "/convert": {
       "get": {
         "operationId": "getConvert",
-        "summary": "Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure,…",
+        "summary": "Convert any physical measurement",
         "tags": [
           "convert"
         ],
+        "description": "Convert any physical measurement — length, mass, volume, temperature, area, speed, pressure, energy, time, data storage & transfer rate, power, frequency, force, fuel economy (mpg/L per 100 km), angle. Auto-detects the category, handles US/imperial ambiguity, reports assumptions. Accepts natural-language queries (\"what is 5 km in miles\") and volume↔mass via density/substance. Deterministic and instant.",
         "parameters": [
           {
             "name": "value",
@@ -10217,10 +10329,11 @@
     "/money/parse": {
       "post": {
         "operationId": "postMoneyParse",
-        "summary": "Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles…",
+        "summary": "Normalize a money string to a decimal and ISO 4217 code",
         "tags": [
           "money"
         ],
+        "description": "Normalize any messy money string into a typed decimal amount plus ISO 4217 currency — handles symbols, locale separators ($1,234.56 vs €1.234,56), magnitude suffixes (1.2M), accounting notation, and natural-language amounts — so agents can clean money values before converting or storing them, with no external data and a deterministic fast path.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10332,10 +10445,11 @@
     "/json/repair": {
       "post": {
         "operationId": "postJsonRepair",
-        "summary": "Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted…",
+        "summary": "Repair malformed JSON into valid JSON",
         "tags": [
           "json"
         ],
+        "description": "Repair malformed JSON into valid JSON — fixes code fences, trailing commas, single quotes, unquoted keys, bad escapes, duplicate keys, truncation, and JSON buried in prose. A deterministic tokenizer runs first (no LLM cost), with an optional Haiku fallback, plus optional schema validation and type coercion — so agents can rescue broken model output or dirty data in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10473,10 +10587,11 @@
     "/schema/validate": {
       "post": {
         "operationId": "postSchemaValidate",
-        "summary": "Validate data against a supplied schema — checks required fields, nested objects, arrays, enums,…",
+        "summary": "Validate data against a supplied schema",
         "tags": [
           "schema"
         ],
+        "description": "Validate data against a supplied schema — checks required fields, nested objects, arrays, enums, string formats, numeric ranges, lengths, and additional-property rules deterministically, with optional type coercion and repair, returning precise errors with JSON paths so agents can verify structured data before acting on it.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10624,10 +10739,11 @@
     "/schema/map": {
       "post": {
         "operationId": "postSchemaMap",
-        "summary": "Transform a source object into a target schema — matches fields by alias and structure…",
+        "summary": "Transform a source object into a target schema",
         "tags": [
           "schema"
         ],
+        "description": "Transform a source object into a target schema — matches fields by alias and structure deterministically, uses an LLM only for semantic mapping when needed, and supports mapping hints, transforms, and defaults, so agents can reshape data between systems with per-field confidence and a clear report of what mapped and what didn't.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10777,10 +10893,11 @@
     "/calendar/ics": {
       "post": {
         "operationId": "postCalendarIcs",
-        "summary": "Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events,…",
+        "summary": "Turn event fields into a valid RFC 5545 .ics calendar file",
         "tags": [
           "calendar"
         ],
+        "description": "Turn event fields into a valid RFC 5545 .ics calendar file — handles timed and all-day events, escaping, line folding, and a deterministic UID for idempotent re-import — so agents can publish events that import cleanly into Google, Apple, and Outlook calendars. Add ?download=1 (or Accept: text/calendar) to receive the raw .ics file with a Content-Disposition attachment header instead of the JSON envelope. Pure compute, no LLM.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10894,10 +11011,11 @@
     "/event-classify": {
       "post": {
         "operationId": "postEventClassify",
-        "summary": "Cheap, fast \"is this a dateable event?\" filter for social and web text — one tiny Haiku call…",
+        "summary": "Classify whether text describes a dateable event",
         "tags": [
           "event-classify"
         ],
+        "description": "Cheap, fast \"is this a dateable event?\" filter for social and web text — one tiny Haiku call returns is_event, confidence, and a one-line reason, so agents can screen every post for free-ish and only pay for full extraction on the ones that pass. Front-end filter to /event-extract; intentionally minimal output for cost/latency discipline.",
         "requestBody": {
           "required": true,
           "content": {
@@ -10993,10 +11111,11 @@
     "/event-extract": {
       "post": {
         "operationId": "postEventExtract",
-        "summary": "Event extraction / event parsing — turn any caption, announcement, listing, or page text into a…",
+        "summary": "Event extraction / event parsing",
         "tags": [
           "event-extract"
         ],
+        "description": "Event extraction / event parsing — turn any caption, announcement, listing, or page text into a normalized calendar event via Claude Haiku. Resolves relative dates (\"this Saturday 7pm\") against post time + timezone, handles all-day/multi-day, and returns title, start/end, venue, address, city, price, organizer, url. Purpose-built for structured event data (no schema to define); pairs with /event-classify and /calendar/ics.",
         "requestBody": {
           "required": true,
           "content": {
@@ -11108,10 +11227,11 @@
     "/tech-fingerprint/analyze": {
       "get": {
         "operationId": "getTechFingerprintAnalyze",
-        "summary": "Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags,…",
+        "summary": "Detect a site's technology stack from headers and HTML",
         "tags": [
           "tech-fingerprint"
         ],
+        "description": "Fetch a URL and detect the full technology stack from HTTP response headers, HTML meta tags, cookies, and script patterns — returns CMS, framework, CDN, server, analytics, and security tool detections so agents can profile any web target without a browser.",
         "parameters": [
           {
             "name": "url",
@@ -11239,10 +11359,12 @@
     "/breach-check/password": {
       "get": {
         "operationId": "getBreachCheckPassword",
-        "summary": "Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords…",
+        "summary": "Check a password against HaveIBeenPwned breaches",
         "tags": [
           "breach-check"
         ],
+        "description": "Deprecated: sends the `password` in the URL, where it can be retained by edge logs, proxies and shell history. Use POST /breach-check/password and send it in the JSON body instead. This form still works and is still supported for existing callers.\n\nCheck if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords API with k-anonymity — the full password is never transmitted, only a 5-character SHA-1 hash prefix — returns breach count and a risk classification so agents can enforce password policies without storing or exposing credentials.",
+        "deprecated": true,
         "parameters": [
           {
             "name": "password",
@@ -11325,10 +11447,11 @@
     "/domain-availability/check": {
       "get": {
         "operationId": "getDomainAvailabilityCheck",
-        "summary": "Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name…",
+        "summary": "Check whether a domain is available to register",
         "tags": [
           "domain-availability"
         ],
+        "description": "Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name (e.g. mybrand) to sweep it across 10 popular TLDs simultaneously, or a full domain (e.g. mybrand.com) to check that single domain — returns registration status, expiry date if registered, and available/taken TLD lists so agents can find the best domain for a brand or project.",
         "parameters": [
           {
             "name": "domain",
@@ -11442,10 +11565,11 @@
     "/email-intel/analyze": {
       "get": {
         "operationId": "getEmailIntelAnalyze",
-        "summary": "Email verification & deliverability check (email validator / verifier) — validate an address,…",
+        "summary": "Email verification & deliverability check",
         "tags": [
           "email-intel"
         ],
+        "description": "Email verification & deliverability check (email validator / verifier) — validate an address, detect disposable/temporary domains, flag role-based inboxes, confirm MX records exist, and return a trust/risk score so agents can qualify leads, clean lists, and gate signups without sending a single email.",
         "parameters": [
           {
             "name": "email",
@@ -11569,10 +11693,11 @@
     "/email/verify": {
       "get": {
         "operationId": "getEmailVerify",
-        "summary": "Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in…",
+        "summary": "Validate an email address",
         "tags": [
           "email"
         ],
+        "description": "Validate an email address — email verification before you send: syntax + MX + disposable/role/free-provider detection in one call, boolean-first (deliverable, safe_to_send) with a machine-readable reason. DNS-level check only — does not confirm the individual mailbox exists (no SMTP probe). For a scored trust report instead of a yes/no gate, see /email-intel/analyze.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -11608,10 +11733,11 @@
       },
       "post": {
         "operationId": "postEmailVerify",
-        "summary": "Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in…",
+        "summary": "Validate an email address",
         "tags": [
           "email"
         ],
+        "description": "Validate an email address — email verification before you send: syntax + MX + disposable/role/free-provider detection in one call, boolean-first (deliverable, safe_to_send) with a machine-readable reason. DNS-level check only — does not confirm the individual mailbox exists (no SMTP probe). For a scored trust report instead of a yes/no gate, see /email-intel/analyze.",
         "requestBody": {
           "required": true,
           "content": {
@@ -11659,10 +11785,11 @@
     "/og-scraper/extract": {
       "get": {
         "operationId": "getOgScraperExtract",
-        "summary": "Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags,…",
+        "summary": "Fetch any public URL and extract structured metadata",
         "tags": [
           "og-scraper"
         ],
+        "description": "Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags, canonical URL, title, description, favicon, article author/date, JSON-LD structured data, and content type — so agents can preview, classify, and enrich links without building their own scraper.",
         "parameters": [
           {
             "name": "url",
@@ -11817,10 +11944,11 @@
     "/page-extract/read": {
       "get": {
         "operationId": "getPageExtractRead",
-        "summary": "Fetch any article or web page and extract clean readable text stripped of navigation, ads, and…",
+        "summary": "Extract clean readable text from a web page",
         "tags": [
           "page-extract"
         ],
+        "description": "Fetch any article or web page and extract clean readable text stripped of navigation, ads, and boilerplate — returns the main content body, word count, estimated reading time, detected language, and key sentences so agents can read the web without a browser or third-party scraping service. For JS-rendered or bot-walled pages a plain fetch can't read, use /exa/contents.",
         "parameters": [
           {
             "name": "url",
@@ -11929,10 +12057,11 @@
     "/web/extract": {
       "get": {
         "operationId": "getWebExtract",
-        "summary": "Extract article / main content from any URL or PDF to clean, LLM-ready Markdown (web scraper /…",
+        "summary": "Extract text from a web page or PDF as clean Markdown",
         "tags": [
           "web"
         ],
+        "description": "Extract text from a web page or PDF as clean Markdown — HTML to Markdown for any URL: strips scripts, nav, ads, and boilerplate while preserving headings, links, lists, tables, code blocks, and blockquotes; extracts the text layer from PDFs. Returns Markdown body, title, word count, and a quality grade. Web scraper / reader for article and main content. For JS-rendered or bot-walled pages a plain fetch can't read, use /exa/contents.",
         "parameters": [
           {
             "name": "url",
@@ -12038,10 +12167,11 @@
     "/phone-intel/analyze": {
       "get": {
         "operationId": "getPhoneIntelAnalyze",
-        "summary": "Parse and validate any phone number in any format, identify its country and line type…",
+        "summary": "Validate a phone number and identify country and carrier",
         "tags": [
           "phone-intel"
         ],
+        "description": "Parse and validate any phone number in any format, identify its country and line type (mobile/landline/VOIP/toll-free/premium for NANP + UK numbers; other countries return line_type unknown), and return all standard format variants (E.164, international, national) — catches fictional/unassigned NANP numbers (555 area code, 555-01XX range) so agents can validate contacts and normalize phone data without a paid telecom API.",
         "parameters": [
           {
             "name": "phone",
@@ -12164,10 +12294,11 @@
     "/robots-txt/analyze": {
       "get": {
         "operationId": "getRobotsTxtAnalyze",
-        "summary": "Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs,…",
+        "summary": "Fetch and parse a domain's robots.txt file",
         "tags": [
           "robots-txt"
         ],
+        "description": "Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs, crawl delay settings, and checks whether a specific path is allowed or blocked for any bot — so agents can respect crawl policies and locate sitemaps before scraping.",
         "parameters": [
           {
             "name": "domain",
@@ -12311,10 +12442,11 @@
     "/rss-parser/fetch": {
       "get": {
         "operationId": "getRssParserFetch",
-        "summary": "Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link,…",
+        "summary": "Fetch and parse an RSS or Atom feed",
         "tags": [
           "rss-parser"
         ],
+        "description": "Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link, description (truncated to 500 chars), author, publish date, and categories — so agents can monitor content sources, build news pipelines, and process any feed without building their own XML parser. A URL that isn't a parseable feed still returns 200 with feed_type:\"unknown\", empty items, and a parse_failed finding.",
         "parameters": [
           {
             "name": "url",
@@ -12436,10 +12568,11 @@
     "/username-check/lookup": {
       "get": {
         "operationId": "getUsernameCheckLookup",
-        "summary": "Check username availability across 20+ social platforms and developer sites simultaneously —…",
+        "summary": "Check username availability across 20+ platforms",
         "tags": [
           "username-check"
         ],
+        "description": "Check username availability across 20+ social platforms and developer sites simultaneously — returns which platforms have a profile registered under that handle so agents can find people, verify identities, scout brand handles, or check name availability before registration.",
         "parameters": [
           {
             "name": "username",
@@ -12559,10 +12692,11 @@
     "/wayback/lookup": {
       "get": {
         "operationId": "getWaybackLookup",
-        "summary": "Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the…",
+        "summary": "Check the Wayback Machine for archived snapshots",
         "tags": [
           "wayback"
         ],
+        "description": "Query the Internet Archive Wayback Machine to check if a URL has ever been archived, get the closest snapshot to a given date, retrieve the most recent capture, and return archival history stats — so agents can access historical web content, verify past content claims, and recover deleted pages.",
         "parameters": [
           {
             "name": "url",
@@ -12682,10 +12816,11 @@
     "/domain-age/check": {
       "get": {
         "operationId": "getDomainAgeCheck",
-        "summary": "Determine a domain's age from registration data and archival history — tries RDAP, then port-43…",
+        "summary": "Determine a domain's age from registration and archives",
         "tags": [
           "domain-age"
         ],
+        "description": "Determine a domain's age from registration data and archival history — tries RDAP, then port-43 WHOIS, then a Wayback-based estimate (age_source: rdap | whois | wayback_estimate | null), returning creation date, age in years, first Wayback capture, archived snapshot count, and a maturity signal so agents can assess trustworthiness and detect freshly registered domains used for fraud or phishing — including .io and TLDs without public RDAP.",
         "parameters": [
           {
             "name": "domain",
@@ -12808,10 +12943,11 @@
     "/web/fetch": {
       "get": {
         "operationId": "getWebFetch",
-        "summary": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe…",
+        "summary": "Fetch any URL and get the raw body back",
         "tags": [
           "web"
         ],
+        "description": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe server-side egress. For data APIs (ArcGIS, government/open-data portals, blob storage) that /web/extract's markdown conversion mangles. No API key, SSRF-guarded, billed only on a usable 2xx response. Pass url as ?url= (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -12847,10 +12983,11 @@
       },
       "post": {
         "operationId": "postWebFetch",
-        "summary": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe…",
+        "summary": "Fetch any URL and get the raw body back",
         "tags": [
           "web"
         ],
+        "description": "Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe server-side egress. For data APIs (ArcGIS, government/open-data portals, blob storage) that /web/extract's markdown conversion mangles. No API key, SSRF-guarded, billed only on a usable 2xx response. Pass url as ?url= (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -12898,10 +13035,11 @@
     "/exa/search": {
       "get": {
         "operationId": "getExaSearch",
-        "summary": "Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url,…",
+        "summary": "Exa neural web search for AI agents",
         "tags": [
           "exa"
         ],
+        "description": "Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url, published_date, author, score) with optional highlight snippets. Filter by category (news, research paper, github, company, pdf, and more), domain include/exclude, and publish date. For a direct answer use /exa/answer. No API key, pay per call on Base or Solana.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -12937,10 +13075,11 @@
       },
       "post": {
         "operationId": "postExaSearch",
-        "summary": "Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url,…",
+        "summary": "Exa neural web search for AI agents",
         "tags": [
           "exa"
         ],
+        "description": "Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url, published_date, author, score) with optional highlight snippets. Filter by category (news, research paper, github, company, pdf, and more), domain include/exclude, and publish date. For a direct answer use /exa/answer. No API key, pay per call on Base or Solana.",
         "requestBody": {
           "required": true,
           "content": {
@@ -12988,10 +13127,11 @@
     "/web/search": {
       "get": {
         "operationId": "getWebSearch",
-        "summary": "Web search for AI agents — one query in, ranked live results out (title, url, published_date,…",
+        "summary": "Web search for AI agents",
         "tags": [
           "web"
         ],
+        "description": "Web search for AI agents — one query in, ranked live results out (title, url, published_date, author, score, optional snippets). Neural + keyword modes, category/domain/date filters. For a direct answer use /exa/answer. Keyless x402, pay per call on Base or Solana.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -13027,10 +13167,11 @@
       },
       "post": {
         "operationId": "postWebSearch",
-        "summary": "Web search for AI agents — one query in, ranked live results out (title, url, published_date,…",
+        "summary": "Web search for AI agents",
         "tags": [
           "web"
         ],
+        "description": "Web search for AI agents — one query in, ranked live results out (title, url, published_date, author, score, optional snippets). Neural + keyword modes, category/domain/date filters. For a direct answer use /exa/answer. Keyless x402, pay per call on Base or Solana.",
         "requestBody": {
           "required": true,
           "content": {
@@ -13078,10 +13219,11 @@
     "/exa/contents": {
       "get": {
         "operationId": "getExaContents",
-        "summary": "Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered…",
+        "summary": "Fetch clean page text for up to 3 URLs via Exa",
         "tags": [
           "exa"
         ],
+        "description": "Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered and bot-walled pages that direct fetch can't read. Returns title, author, published_date and text per URL, with per-URL status. Pairs with /exa/search (search → contents). No API key, pay per call on Base or Solana.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -13117,10 +13259,11 @@
       },
       "post": {
         "operationId": "postExaContents",
-        "summary": "Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered…",
+        "summary": "Fetch clean page text for up to 3 URLs via Exa",
         "tags": [
           "exa"
         ],
+        "description": "Clean page text for up to 3 URLs in one call via Exa's index + live crawl — works on JS-rendered and bot-walled pages that direct fetch can't read. Returns title, author, published_date and text per URL, with per-URL status. Pairs with /exa/search (search → contents). No API key, pay per call on Base or Solana.",
         "requestBody": {
           "required": true,
           "content": {
@@ -13168,10 +13311,11 @@
     "/exa/answer": {
       "get": {
         "operationId": "getExaAnswer",
-        "summary": "Ask a question, get a direct answer grounded in a live web search, with numbered citations (title,…",
+        "summary": "Answer a question grounded in a live web search",
         "tags": [
           "exa"
         ],
+        "description": "Ask a question, get a direct answer grounded in a live web search, with numbered citations (title, url, published_date). One call replaces search + read + summarize. For ranked results instead of a synthesized answer use /exa/search. Keyless x402, pay per call on Base or Solana.",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -13207,10 +13351,11 @@
       },
       "post": {
         "operationId": "postExaAnswer",
-        "summary": "Ask a question, get a direct answer grounded in a live web search, with numbered citations (title,…",
+        "summary": "Answer a question grounded in a live web search",
         "tags": [
           "exa"
         ],
+        "description": "Ask a question, get a direct answer grounded in a live web search, with numbered citations (title, url, published_date). One call replaces search + read + summarize. For ranked results instead of a synthesized answer use /exa/search. Keyless x402, pay per call on Base or Solana.",
         "requestBody": {
           "required": true,
           "content": {
@@ -13258,10 +13403,11 @@
     "/github-intel/analyze": {
       "get": {
         "operationId": "getGithubIntelAnalyze",
-        "summary": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown,…",
+        "summary": "Fetch public metadata for any GitHub repository",
         "tags": [
           "github-intel"
         ],
+        "description": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown, license, contributors, last commit date, topics, and an activity/health score — so agents can evaluate dependencies, research projects, and assess open source health without the GitHub API complexity. Pass repo as ?repo=owner/repo (GET) or {\"repo\":\"owner/repo\"} (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -13297,10 +13443,11 @@
       },
       "post": {
         "operationId": "postGithubIntelAnalyze",
-        "summary": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown,…",
+        "summary": "Fetch public metadata for any GitHub repository",
         "tags": [
           "github-intel"
         ],
+        "description": "Fetch public metadata for any GitHub repository — stars, forks, open issues, language breakdown, license, contributors, last commit date, topics, and an activity/health score — so agents can evaluate dependencies, research projects, and assess open source health without the GitHub API complexity. Pass repo as ?repo=owner/repo (GET) or {\"repo\":\"owner/repo\"} (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -13348,10 +13495,11 @@
     "/holidays/check": {
       "get": {
         "operationId": "getHolidaysCheck",
-        "summary": "Look up public holidays for any country and year, check whether a specific date is a holiday, and…",
+        "summary": "Look up public holidays for a country and year",
         "tags": [
           "holidays"
         ],
+        "description": "Look up public holidays for any country and year, check whether a specific date is a holiday, and calculate the next business day — so agents can handle scheduling, SLA calculations, deadline setting, and date-aware workflows without hardcoding country-specific holiday rules.",
         "parameters": [
           {
             "name": "country_code",
@@ -13475,10 +13623,11 @@
     "/ip-geo/locate": {
       "get": {
         "operationId": "getIpGeoLocate",
-        "summary": "IP geolocation lookup (geoip / IP location API) — geolocate any IPv4 or IPv6 address to city,…",
+        "summary": "IP geolocation lookup (geoip / IP location API)",
         "tags": [
           "ip-geo"
         ],
+        "description": "IP geolocation lookup (geoip / IP location API) — geolocate any IPv4 or IPv6 address to city, region, country, latitude/longitude, timezone, and ISP/ASN as structured JSON so agents can localize content and enrich user records without a paid geolocation subscription. For proxy/VPN/anonymizer or hosting/datacenter detection, use /ip-risk/score or /ip-reputation/analyze.",
         "parameters": [
           {
             "name": "ip",
@@ -13632,10 +13781,12 @@
     "/jwt-inspector/decode": {
       "get": {
         "operationId": "getJwtInspectorDecode",
-        "summary": "Decode and inspect any JWT token — extracts header algorithm, payload claims, expiry status,…",
+        "summary": "Decode and inspect any JWT token",
         "tags": [
           "jwt-inspector"
         ],
+        "description": "Deprecated: sends the `token` in the URL, where it can be retained by edge logs, proxies and shell history. Use POST /jwt-inspector/decode and send it in the JSON body instead. This form still works and is still supported for existing callers.\n\nDecode and inspect any JWT token — extracts header algorithm, payload claims, expiry status, issued-at time, audience, issuer, and subject without requiring the secret — so agents can debug auth issues, check token expiry, and extract identity claims from tokens in pipelines.",
+        "deprecated": true,
         "parameters": [
           {
             "name": "token",
@@ -13772,10 +13923,11 @@
     "/lang-detect/analyze": {
       "post": {
         "operationId": "postLangDetectAnalyze",
-        "summary": "Detect the language of any text input using stopword-set matching and Unicode script analysis —…",
+        "summary": "Detect the language of a text input",
         "tags": [
           "lang-detect"
         ],
+        "description": "Detect the language of any text input using stopword-set matching and Unicode script analysis — returns the detected language, ISO code, a high/medium/low confidence level, and top alternative languages so agents can route multilingual content, trigger translation workflows, and classify text without a paid NLP API.",
         "requestBody": {
           "required": true,
           "content": {
@@ -13896,10 +14048,11 @@
     "/npm-intel/analyze": {
       "get": {
         "operationId": "getNpmIntelAnalyze",
-        "summary": "Fetch metadata for any npm package — download counts, latest version, version count,…",
+        "summary": "Fetch metadata for any npm package",
         "tags": [
           "npm-intel"
         ],
+        "description": "Fetch metadata for any npm package — download counts, latest version, version count, dependency/devDependency counts, maintainers, repository URL, license, and a health score based on maintenance signals — so agents can evaluate dependencies, audit package ecosystems, and assess supply chain risk. (Returns counts, not the full version/dependency lists.)",
         "parameters": [
           {
             "name": "package",
@@ -14076,10 +14229,11 @@
     "/sitemap-parser/fetch": {
       "get": {
         "operationId": "getSitemapParserFetch",
-        "summary": "Fetch and parse any XML sitemap or sitemap index file — returns URLs with their priority, change…",
+        "summary": "Fetch and parse any XML sitemap or sitemap index file",
         "tags": [
           "sitemap-parser"
         ],
+        "description": "Fetch and parse any XML sitemap or sitemap index file — returns URLs with their priority, change frequency, and last modified date, follows sitemap indexes one level deep (first 3 child sitemaps), and auto-discovers the sitemap from robots.txt or common paths when given a bare domain — so agents can enumerate site content for crawling, indexing, and SEO analysis.",
         "parameters": [
           {
             "name": "url",
@@ -14205,10 +14359,11 @@
     "/url-safety/check": {
       "get": {
         "operationId": "getUrlSafetyCheck",
-        "summary": "Check a URL against URLhaus malware database and heuristic phishing pattern analysis — returns…",
+        "summary": "Check a URL against malware and phishing signals",
         "tags": [
           "url-safety"
         ],
+        "description": "Check a URL against URLhaus malware database and heuristic phishing pattern analysis — returns threat classification, malware family if known, threat confidence, and risk score so agents can screen links before following them or sharing them in automated workflows.",
         "parameters": [
           {
             "name": "url",
@@ -14333,10 +14488,11 @@
     "/bulk-domain/check": {
       "post": {
         "operationId": "postBulkDomainCheck",
-        "summary": "Check availability of many domain names across multiple TLDs in a single call — submit up to 50…",
+        "summary": "Check availability of up to 50 domains in one call",
         "tags": [
           "bulk-domain"
         ],
+        "description": "Check availability of many domain names across multiple TLDs in a single call — submit up to 50 name/TLD combinations and get back per-domain registration status, registrar, and expiry concurrently, so agents can scan an entire naming shortlist or brand portfolio in one request instead of dozens. Caveat: when both RDAP and DNS are unreachable, status reads 'available' — re-check surprising availables on premium names.",
         "requestBody": {
           "required": true,
           "content": {
@@ -14477,10 +14633,11 @@
     "/domain-appraise/estimate": {
       "get": {
         "operationId": "getDomainAppraiseEstimate",
-        "summary": "Estimate the market value tier of a domain name using transparent heuristics — length, TLD premium,…",
+        "summary": "Estimate a domain's market value tier",
         "tags": [
           "domain-appraise"
         ],
+        "description": "Estimate the market value tier of a domain name using transparent heuristics — length, TLD premium, dictionary-word presence, pronounceability, keyword value, and numeric/hyphen penalties — returns a value tier and 0-100 quality score so agents can triage domain portfolios and prioritize acquisitions without a paid appraisal service.",
         "parameters": [
           {
             "name": "domain",
@@ -14606,10 +14763,11 @@
     "/domain-report/analyze": {
       "get": {
         "operationId": "getDomainReportAnalyze",
-        "summary": "One call returns a complete intelligence profile for a domain — WHOIS registration, DNS records,…",
+        "summary": "One call returns a complete intelligence profile for a domain",
         "tags": [
           "domain-report"
         ],
+        "description": "One call returns a complete intelligence profile for a domain — WHOIS registration, DNS records, SSL certificate, detected tech stack, and blacklist status — aggregated into a single risk-scored report so agents can fully vet a domain without orchestrating five separate lookups.",
         "parameters": [
           {
             "name": "domain",
@@ -14747,10 +14905,11 @@
     "/ip-risk/score": {
       "get": {
         "operationId": "getIpRiskScore",
-        "summary": "One call returns a complete risk profile for an IP address — geolocation, ASN/network owner,…",
+        "summary": "One call returns a complete risk profile for an IP address",
         "tags": [
           "ip-risk"
         ],
+        "description": "One call returns a complete risk profile for an IP address — geolocation, ASN/network owner, blacklist status across multiple DNSBLs, and proxy/VPN/hosting classification — aggregated into a single verdict so agents can make a block/allow decision without calling four separate IP endpoints.",
         "parameters": [
           {
             "name": "ip",
@@ -14870,10 +15029,11 @@
     "/name-gen/suggest": {
       "get": {
         "operationId": "getNameGenSuggest",
-        "summary": "Generate brandable startup/product names from a keyword using prefixes, suffixes, blends, and…",
+        "summary": "Generate brandable product names from a keyword",
         "tags": [
           "name-gen"
         ],
+        "description": "Generate brandable startup/product names from a keyword using prefixes, suffixes, blends, and phonetic patterns, then check .com (or any TLD) availability for each via DNS — returns available names ranked by a brandability heuristic so agents can find a claimable brand without manual brainstorming plus one-by-one availability checks.",
         "parameters": [
           {
             "name": "keyword",
@@ -15008,10 +15168,11 @@
     "/tld-price/compare": {
       "get": {
         "operationId": "getTldPriceCompare",
-        "summary": "Reference registration/renewal/transfer pricing from a curated table of ~21 common TLDs — Mode A:…",
+        "summary": "Compare registration and renewal pricing across TLDs",
         "tags": [
           "tld-price"
         ],
+        "description": "Reference registration/renewal/transfer pricing from a curated table of ~21 common TLDs — Mode A: price one TLD (typical register/renew/transfer cost + renewal-markup %); Mode B: price a name across all covered TLDs, sorted cheapest-first with cheapest/cheapest_premium picks. Reference prices, not live per-registrar quotes — for budgeting and spotting predatory renewal markups; TLDs outside the table return pricing:null.",
         "parameters": [
           {
             "name": "tld",
@@ -15139,10 +15300,11 @@
     "/typosquat/scan": {
       "get": {
         "operationId": "getTyposquatScan",
-        "summary": "Generate common typo and look-alike variations of a domain and check which are already registered —…",
+        "summary": "Find registered typo and look-alike domain variants",
         "tags": [
           "typosquat"
         ],
+        "description": "Generate common typo and look-alike variations of a domain and check which are already registered — catches character swaps, omissions, additions, homoglyphs, and alternate TLDs so agents can detect typosquatting and brand-impersonation domains targeting a company.",
         "parameters": [
           {
             "name": "domain",
@@ -15289,10 +15451,11 @@
     "/domain-due-diligence": {
       "get": {
         "operationId": "getDomainDueDiligence",
-        "summary": "One call combines domain availability, heuristic value appraisal, and TLD pricing into a single…",
+        "summary": "Combine domain availability, appraisal and TLD pricing",
         "tags": [
           "domain-due-diligence"
         ],
+        "description": "One call combines domain availability, heuristic value appraisal, and TLD pricing into a single acquisition brief — tells an agent whether a name is available, what it's worth, and what it costs across TLDs, concurrently and with graceful partial-failure handling.",
         "parameters": [
           {
             "name": "domain",
@@ -15423,10 +15586,11 @@
     "/domain-report/full": {
       "get": {
         "operationId": "getDomainReportFull",
-        "summary": "One premium call returns a complete six-part domain profile — DNS records, SSL certificate, WHOIS…",
+        "summary": "One premium call returns a complete six-part domain profile",
         "tags": [
           "domain-report"
         ],
+        "description": "One premium call returns a complete six-part domain profile — DNS records, SSL certificate, WHOIS registration, cloud fingerprint, technology stack, and security headers — each section run concurrently with graceful partial-failure handling, so agents get an entire domain workup in a single request instead of orchestrating six.",
         "parameters": [
           {
             "name": "domain",
@@ -15563,10 +15727,11 @@
     "/domain/vendor-risk": {
       "post": {
         "operationId": "postDomainVendorRisk",
-        "summary": "Composite 0-100 trust/risk score for a domain in one call — blends domain age, SSL/TLS, DNS health,…",
+        "summary": "Composite 0-100 trust/risk score for a domain in one call",
         "tags": [
           "domain"
         ],
+        "description": "Composite 0-100 trust/risk score for a domain in one call — blends domain age, SSL/TLS, DNS health, email auth (SPF/DKIM/DMARC), IP reputation, and certificate transparency into a single \"safe to do business with this domain?\" verdict with per-signal breakdown and actionable flags. Partial results never read as safe.",
         "requestBody": {
           "required": true,
           "content": {
@@ -15704,10 +15869,11 @@
     "/domain/vet": {
       "post": {
         "operationId": "postDomainVet",
-        "summary": "Vet and pick a domain in one call — give candidate names, get back a ranked verdict on which to use…",
+        "summary": "Vet and pick a domain in one call",
         "tags": [
           "domain"
         ],
+        "description": "Vet and pick a domain in one call — give candidate names, get back a ranked verdict on which to use and whether it's safe to build on: availability across TLDs, name quality, typosquat exposure, and a factual brand-collision check against similar existing names. Collapses the pick-a-brand-name funnel into one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -15719,7 +15885,8 @@
                     "type": "array",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "description": "Bare domain names to vet, without a TLD (e.g. [\"satsdesk\", \"payloop\"])."
                   },
                   "tlds": {
                     "type": "array",
@@ -15863,10 +16030,12 @@
     "/email-report/full": {
       "get": {
         "operationId": "getEmailReportFull",
-        "summary": "One call combines domain email authentication (SPF/DKIM/DMARC), email-address intelligence…",
+        "summary": "One call combines domain email authentication",
         "tags": [
           "email-report"
         ],
+        "description": "Deprecated: sends the `password` in the URL, where it can be retained by edge logs, proxies and shell history. Use POST /email-report/full and send it in the JSON body instead. This form still works and is still supported for existing callers.\n\nOne call combines domain email authentication (SPF/DKIM/DMARC), email-address intelligence (deliverability, disposable/role detection), and an optional password breach check into a single email-trust report — each section run concurrently with graceful partial-failure handling — so agents can fully vet an email and its domain in one request.",
+        "deprecated": true,
         "parameters": [
           {
             "name": "email",
@@ -15989,10 +16158,11 @@
     "/ip-report/full": {
       "get": {
         "operationId": "getIpReportFull",
-        "summary": "One premium call returns a complete five-part IP profile — geolocation, ASN/network ownership,…",
+        "summary": "One premium call returns a complete five-part IP profile",
         "tags": [
           "ip-report"
         ],
+        "description": "One premium call returns a complete five-part IP profile — geolocation, ASN/network ownership, multi-DNSBL blacklist status, threat reputation, and an aggregate risk verdict — run concurrently with graceful partial-failure handling, so agents get a full IP workup and a block/allow decision in a single request.",
         "parameters": [
           {
             "name": "ip",
@@ -16121,10 +16291,11 @@
     "/url-safety/full": {
       "get": {
         "operationId": "getUrlSafetyFull",
-        "summary": "One call vets a URL end to end — traces its full redirect chain, checks it against the URLhaus…",
+        "summary": "One call vets a URL end to end",
         "tags": [
           "url-safety"
         ],
+        "description": "One call vets a URL end to end — traces its full redirect chain, checks it against the URLhaus malware database plus phishing heuristics, audits its security headers, and inspects its SSL certificate — concurrent with graceful partial-failure handling, so agents get a complete safety verdict before following a link.",
         "parameters": [
           {
             "name": "url",

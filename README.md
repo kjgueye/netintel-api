@@ -8,10 +8,10 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 
 | Path | Method | Price | Description |
 |------|--------|-------|-------------|
-| `/dns/lookup` | GET | $0.002 | DNS lookup / nslookup / dig API — resolve the common DNS record types (A, AAAA, MX, TXT, NS, CNAME… |
+| `/dns/lookup` | GET | $0.002 | DNS lookup for any domain — resolve A, AAAA, MX, TXT, NS, CNAME, SOA and PTR records in one call… |
 | `/ssl/analyze` | GET | $0.007 | Performs a TLS handshake to inspect the certificate chain, probes supported TLS versions (1.0–1.3)… |
-| `/ssl/cert` | GET | $0.003 | Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until… |
-| `/ssl/cert` | POST | $0.003 | Fast SSL/TLS certificate facts for any domain — issuer, subject, SANs, valid from/to, days until… |
+| `/ssl/cert` | GET | $0.003 | SSL certificate check for any domain — issuer, subject, SANs, valid from/to, days until expiry… |
+| `/ssl/cert` | POST | $0.003 | SSL certificate check for any domain — issuer, subject, SANs, valid from/to, days until expiry… |
 | `/redirect/trace` | GET | $0.010 | Follows a URL through its full redirect chain (up to 20 hops), recording status codes, timing… |
 | `/security-headers/analyze` | GET | $0.010 | Fetches a URL and evaluates 10 security-critical response headers (CSP, HSTS… |
 | `/email-auth` | POST | $0.002 | Email deliverability & domain security check — validates SPF, DKIM (multi-selector), and DMARC… |
@@ -38,7 +38,7 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/openai/gpt-5-6-terra` | POST | $0.25 | Call OpenAI's gpt-5.6-terra via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/openai/gpt-5-6-luna` | POST | $0.06 | Call OpenAI's gpt-5.6-luna via a single pay-per-call x402 endpoint — no OpenAI account or API key… |
 | `/ai-image/generate` | POST | $0.25 | Generate agent-ready image assets (icons, logos, social graphics, thumbnails, banners) with… |
-| `/classify` | POST | $0.005 | Text classification API — zero-shot text classifier / categorization: caller supplies 2–20 labels… |
+| `/classify` | POST | $0.005 | Classify text into your own categories — zero-shot: supply 2–20 labels and Claude Haiku returns the… |
 | `/content-moderate` | POST | $0.005 | Moderate text content using Claude Haiku — flags categories like harassment, hate, sexual content… |
 | `/entity-extract` | POST | $0.050 | Extract named entities from text using Claude Haiku — people, organizations, locations, dates… |
 | `/extract/address` | POST | $0.01 | Parse and normalize a freeform address string using Claude Haiku — splits it into street, city… |
@@ -59,18 +59,18 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/translate/batch` | POST | $0.05 | Translate many independent strings in one request — each with a caller ID preserved in the response… |
 | `/translate/short` | POST | $0.01 | Translate text between languages — text translation API for short content: translate a sentence… |
 | `/asn-lookup/analyze` | GET | $0.030 | Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and… |
-| `/whois-rdap/lookup` | GET | $0.003 | WHOIS domain lookup via RDAP — registrar, creation/expiry/updated dates, nameservers, and status… |
+| `/whois-rdap/lookup` | GET | $0.003 | Domain registration lookup, WHOIS via RDAP — registrar, registration and expiry dates, last-updated… |
 | `/cert-transparency/lookup` | GET | $0.010 | Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever… |
 | `/subnet/calc` | GET | $0.005 | Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard… |
 | `/dns-propagation/check` | GET | $0.030 | Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously —… |
 | `/dnssec/validate` | GET | $0.030 | Validate a domain's DNSSEC configuration over DNS-over-HTTPS: DS records at the parent zone, DNSKEY… |
 | `/ip-blacklist/check` | GET | $0.050 | Check an IP address against 15 major DNS blacklists (Spamhaus, Barracuda, SORBS, etc.)… |
-| `/ip-reputation/analyze` | GET | $0.050 | Check an IP address against AbuseIPDB and AlienVault OTX threat feeds. Returns a composite risk… |
+| `/ip-reputation/analyze` | GET | $0.050 | IP reputation and malicious-IP check — screens an address against AbuseIPDB and AlienVault OTX… |
 | `/cron-parser/explain` | GET | $0.030 | Parse any cron expression into a human-readable explanation, validate its syntax, compute the next… |
 | `/currency-exchange/convert` | GET | $0.010 | Convert any amount between 32 fiat currencies (live European Central Bank rates) and major… |
 | `/crypto/market` | GET | $0.005 | Structured live crypto market data for ~50 top assets in one JSON call: spot price and 24h… |
 | `/gas/price` | GET | $0.002 | Live gas prices across Base, Ethereum, Arbitrum, Optimism, and Polygon with USD cost estimates for… |
-| `/crypto/price` | GET | $0.005 | Spot prices for up to 25 crypto assets in one call — USD, EUR, or GBP — from Coinbase with Kraken… |
+| `/crypto/price` | GET | $0.005 | Crypto prices for up to 25 coins in one call — live cryptocurrency spot prices for BTC, ETH, SOL… |
 | `/crypto/ohlc` | GET | $0.02 | Historical OHLC candles for any major crypto asset — hourly or daily, up to 300 candles, with… |
 | `/currency-exchange/batch` | GET | $0.02 | Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR… |
 | `/currency-exchange/history` | GET | $0.02 | Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto… |
@@ -100,11 +100,11 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/breach-check/password` | GET | $0.010 | Check if a password has appeared in known data breaches using the HaveIBeenPwned Pwned Passwords… |
 | `/domain-availability/check` | GET | $0.010 | Check if a domain name is available for registration by querying RDAP and DNS — pass a bare name… |
 | `/email-intel/analyze` | GET | $0.005 | Email verification & deliverability check (email validator / verifier) — validate an address… |
-| `/email/verify` | GET | $0.001 | Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in… |
-| `/email/verify` | POST | $0.001 | Verify an email address before you send: syntax + MX + disposable/role/free-provider detection in… |
+| `/email/verify` | GET | $0.001 | Validate an email address — email verification before you send: syntax + MX +… |
+| `/email/verify` | POST | $0.001 | Validate an email address — email verification before you send: syntax + MX +… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
-| `/web/extract` | GET | $0.003 | Extract article / main content from any URL or PDF to clean, LLM-ready Markdown (web scraper /… |
+| `/web/extract` | GET | $0.003 | Extract text from a web page or PDF as clean Markdown — HTML to Markdown for any URL: strips… |
 | `/phone-intel/analyze` | GET | $0.050 | Parse and validate any phone number in any format, identify its country and line type… |
 | `/robots-txt/analyze` | GET | $0.010 | Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs… |
 | `/rss-parser/fetch` | GET | $0.010 | Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link… |
