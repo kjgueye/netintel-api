@@ -56,7 +56,7 @@
         "tags": [
           "dns"
         ],
-        "description": "DNS lookup for any domain — resolve A, AAAA, MX, TXT, NS, CNAME, SOA and PTR records in one call. Parses SPF/DMARC from TXT plus DKIM at the default._domainkey selector, and cross-checks A records across Google/Cloudflare/Quad9 resolvers for propagation consistency. Also answers nslookup / dig style queries.",
+        "description": "DNS lookup for any domain — resolve A, AAAA, MX, TXT, NS, CNAME, SOA and PTR records in one call, with SPF and DMARC parsed from TXT.",
         "parameters": [
           {
             "name": "domain",
