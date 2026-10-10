@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 136 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 136 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "Network intelligence API — 137 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 137 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -4674,6 +4674,169 @@
                     "url": null,
                     "content_type": null
                   }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/pdf/parse": {
+      "post": {
+        "operationId": "postPdfParse",
+        "summary": "Parse a PDF to text and Markdown",
+        "tags": [
+          "pdf"
+        ],
+        "description": "Parse a PDF to text and Markdown: send a PDF url or base64 file, get clean Markdown with paragraphs rebuilt from the text layer, per-page character offsets for citing pages, metadata (title, author, dates, page count) and the page numbers that are scanned images with no text layer. Up to 50 pages per call. Text layer only, no OCR: an image-only PDF returns an uncharged 422.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Public URL of the PDF (up to 10 MB)"
+                  },
+                  "file_base64": {
+                    "type": "string",
+                    "description": "The PDF as base64 or a data: URL (up to ~700 KB). Send url OR file_base64."
+                  },
+                  "pages": {
+                    "type": "string",
+                    "description": "Pages to parse, 1-based, e.g. \"1-3,7\" (default: the first 50)"
+                  },
+                  "max_chars": {
+                    "type": "number",
+                    "description": "Cap on the markdown length (default 100000)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000",
+          "outputShape": "source, page_count, pages_parsed, metadata, markdown, pages, word_count, char_count, scanned_pages, truncated, findings"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "object"
+                    },
+                    "page_count": {
+                      "type": "number"
+                    },
+                    "pages_parsed": {
+                      "type": "number"
+                    },
+                    "metadata": {
+                      "type": "object"
+                    },
+                    "markdown": {
+                      "type": "string",
+                      "description": "All parsed pages, each after a <!-- page N --> marker"
+                    },
+                    "pages": {
+                      "type": "array",
+                      "description": "Per page: page, word_count, has_text, char_start, char_end (offsets into markdown)"
+                    },
+                    "word_count": {
+                      "type": "number"
+                    },
+                    "char_count": {
+                      "type": "number"
+                    },
+                    "scanned_pages": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "truncated": {
+                      "type": "boolean"
+                    },
+                    "findings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "source": {
+                    "type": "url",
+                    "url": "https://netintel.dev/samples/pdf-parse-sample.pdf",
+                    "final_url": "https://netintel.dev/samples/pdf-parse-sample.pdf",
+                    "bytes": 2236
+                  },
+                  "page_count": 3,
+                  "pages_parsed": 3,
+                  "metadata": {
+                    "title": "Quarterly Network Report (sample)",
+                    "author": "NetIntel",
+                    "created": "2026-10-10T00:00:00Z",
+                    "pdf_version": "1.4",
+                    "has_form": false
+                  },
+                  "markdown": "<!-- page 1 -->\n\n## Quarterly Network Report\n\nThis sample shows what POST /pdf/parse returns: paragraphs rebuilt from the text layer, ...",
+                  "pages": [
+                    {
+                      "page": 1,
+                      "word_count": 76,
+                      "has_text": true,
+                      "char_start": 0,
+                      "char_end": 507
+                    },
+                    {
+                      "page": 2,
+                      "word_count": 0,
+                      "has_text": false,
+                      "char_start": 509,
+                      "char_end": 581
+                    },
+                    {
+                      "page": 3,
+                      "word_count": 19,
+                      "has_text": true,
+                      "char_start": 583,
+                      "char_end": 730
+                    }
+                  ],
+                  "word_count": 95,
+                  "char_count": 730,
+                  "scanned_pages": [
+                    2
+                  ],
+                  "truncated": false,
+                  "findings": [
+                    "scanned_pages_present"
+                  ]
                 }
               }
             }

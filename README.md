@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -44,6 +44,7 @@ Network intelligence API with 136 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/extract/address` | POST | $0.01 | Parse and normalize a freeform address string using Claude Haiku — splits it into street, city… |
 | `/extract/contact` | POST | $0.01 | Extract structured contact details from text, an email signature, or webpage text using Claude… |
 | `/extract/invoice` | POST | $0.02 | Extract structured data from invoice or receipt text — or directly from an invoice URL (PDF, HTML… |
+| `/pdf/parse` | POST | $0.005 | Parse a PDF to text and Markdown: send a PDF url or base64 file, get clean Markdown with paragraphs… |
 | `/extract/resume` | POST | $0.02 | Extract structured data from resume/CV text using Claude Haiku — returns name, contact info… |
 | `/extract/table` | POST | $0.02 | Extract tabular data from messy text or HTML using Claude Haiku — detects columns and rows in… |
 | `/markdown/clean` | POST | $0.03 | Convert messy HTML or text into clean, well-structured Markdown using Claude Haiku — strips… |
