@@ -1203,7 +1203,7 @@
         "tags": [
           "messages"
         ],
-        "description": "OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array and get an assistant reply for Q&A, reasoning, agent planning, coding help, summarization, extraction, and classification. Body is OpenAI chat.completions-shaped ({model?, messages:[{role,content}], max_tokens?, temperature?}); response is a chat.completion object. Flat $0.06; inputs capped ~6KB, max_tokens 1024; no streaming in v1.",
+        "description": "OpenAI-compatible chat completions over x402, answered by Claude Sonnet 4.6 — send a messages array and get an assistant reply for Q&A, reasoning, agent planning, coding help, summarization, extraction, and classification. OpenAI chat.completions body and response. Vision: up to 4 https image_url parts. Flat $0.06; input ~24KB (each image counts 1,600 tokens), max_tokens 1024; no streaming.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1217,7 +1217,7 @@
                   },
                   "messages": {
                     "type": "array",
-                    "description": "Chat messages in OpenAI format. Each item is {role: 'system'|'user'|'assistant', content: string}. System messages are applied as the system prompt.",
+                    "description": "Chat messages in OpenAI format. Each item is {role: 'system'|'user'|'assistant', content: string}. System messages are applied as the system prompt. User content may also be an array of {type:'text',text} and up to 4 {type:'image_url',image_url:{url:'https://…'}} parts (JPEG/PNG/GIF/WebP).",
                     "items": {
                       "type": "object",
                       "properties": {
