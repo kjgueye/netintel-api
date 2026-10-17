@@ -51,7 +51,7 @@ Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/normalize/json` | POST | $0.05 | Conform messy or inconsistent JSON to a target schema using Claude Haiku — renames keys, coerces… |
 | `/text-to-json` | POST | $0.05 | Turn unstructured text into structured JSON matching a caller-supplied schema using Claude Haiku —… |
 | `/sentiment/analyze` | POST | $0.002 | Sentiment analysis API — analyze sentiment of text and get a text sentiment score in one call:… |
-| `/text-summarize` | POST | $0.005 | Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key… |
+| `/text-summarize` | POST | $0.005 | Summarize text, articles or documents — condense raw text, Markdown, or a URL into a TL;DR plus key… |
 | `/text/chunk` | POST | $0.001 | Split text into overlapping chunks for RAG ingestion — by characters or words, with configurable… |
 | `/text/stats` | GET | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
 | `/text/stats` | POST | $0.001 | Instant text statistics — characters (with/without spaces), words, unique words, sentences… |
@@ -60,7 +60,7 @@ Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/translate/batch` | POST | $0.05 | Translate many independent strings in one request — each with a caller ID preserved in the response… |
 | `/translate/short` | POST | $0.01 | Translate text between languages — text translation API for short content: translate a sentence… |
 | `/asn-lookup/analyze` | GET | $0.030 | Resolves an IP address or domain to its Autonomous System Number (ASN), network owner, country, and… |
-| `/whois-rdap/lookup` | GET | $0.003 | Domain registration lookup, WHOIS via RDAP — registrar, registration and expiry dates, last-updated… |
+| `/whois-rdap/lookup` | GET | $0.003 | WHOIS domain lookup via RDAP — domain registration data: registrar, registration and expiry dates… |
 | `/cert-transparency/lookup` | GET | $0.010 | Query the crt.sh certificate transparency log database to enumerate all SSL certificates ever… |
 | `/subnet/calc` | GET | $0.005 | Calculates IPv4/IPv6 subnet details from CIDR notation — network/broadcast, netmask, wildcard… |
 | `/dns-propagation/check` | GET | $0.030 | Query a domain's DNS record across 10 geographically distributed public resolvers simultaneously —… |
@@ -76,16 +76,16 @@ Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/currency-exchange/batch` | GET | $0.02 | Convert one base currency to up to 30 targets in a single call — fiat (~200 currencies incl. SAR… |
 | `/currency-exchange/history` | GET | $0.02 | Daily historical exchange-rate series for any currency pair — fiat via ECB reference data, crypto… |
 | `/token/info` | GET | $0.02 | Full profile for any ERC-20 token by contract address — name, symbol, decimals, supply from the… |
-| `/wallet/balance` | GET | $0.005 | Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD… |
+| `/wallet/balance` | GET | $0.005 | Token balance for any wallet — native coin, USDC and any ERC-20 on Base, Ethereum, or Solana, with… |
 | `/wallet/intel` | GET | $0.05 | Counterparty due-diligence for any Base or Ethereum wallet — age, funding origin, USDC flow… |
 | `/iban/validate` | GET | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
 | `/iban/validate` | POST | $0.005 | Validate any IBAN offline — mod-97 check digits, per-country structure, bank/branch extraction, and… |
-| `/weather/current` | GET | $0.002 | Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like… |
-| `/weather/current` | POST | $0.002 | Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like… |
+| `/weather/current` | GET | $0.002 | Current weather for any city or lat/lon worldwide, plus a 3-day forecast — temperature, feels-like… |
+| `/weather/current` | POST | $0.002 | Current weather for any city or lat/lon worldwide, plus a 3-day forecast — temperature, feels-like… |
 | `/weather/forecast` | GET | $0.003 | Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows… |
 | `/weather/forecast` | POST | $0.003 | Multi-day weather forecast for any city or lat/lon worldwide — up to 16 days of daily highs/lows… |
-| `/prediction/markets` | GET | $0.005 | Live prediction-market odds from Polymarket — list the top active markets by volume, or search by… |
-| `/prediction/markets` | POST | $0.005 | Live prediction-market odds from Polymarket — list the top active markets by volume, or search by… |
+| `/prediction/markets` | GET | $0.005 | Live prediction market odds from Polymarket — list the top active markets by volume, or search by… |
+| `/prediction/markets` | POST | $0.005 | Live prediction market odds from Polymarket — list the top active markets by volume, or search by… |
 | `/prediction/market` | GET | $0.003 | Full detail for ONE Polymarket prediction market by id or slug — question, description, every… |
 | `/prediction/market` | POST | $0.003 | Full detail for ONE Polymarket prediction market by id or slug — question, description, every… |
 | `/market/snapshot` | GET | $0.05 | One-call market briefing for agents — BTC/ETH/SOL spot + 24h moves, major fiat crosses (USD/EUR… |
@@ -105,7 +105,7 @@ Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/email/verify` | POST | $0.001 | Validate an email address — email verification before you send: syntax + MX +… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
-| `/web/extract` | GET | $0.003 | Extract text from a web page or PDF as clean Markdown — HTML to Markdown for any URL: strips… |
+| `/web/extract` | GET | $0.003 | Extract web content from any page or PDF as clean Markdown — web page text, HTML to Markdown for… |
 | `/phone-intel/analyze` | GET | $0.050 | Parse and validate any phone number in any format, identify its country and line type… |
 | `/robots-txt/analyze` | GET | $0.010 | Fetch and parse a domain's robots.txt file — returns all crawl rules by user-agent, sitemap URLs… |
 | `/rss-parser/fetch` | GET | $0.010 | Fetch and parse any RSS 2.0 or Atom feed URL and return structured articles with title, link… |

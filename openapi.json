@@ -5603,11 +5603,11 @@
     "/text-summarize": {
       "post": {
         "operationId": "postTextSummarize",
-        "summary": "Text summarizer / summarization API",
+        "summary": "Summarize text, articles or documents",
         "tags": [
           "text-summarize"
         ],
-        "description": "Text summarizer / summarization API — condense text, Markdown, or a URL into a TL;DR plus key bullet points using Claude Haiku. Accepts raw text or a URL (fetched and extracted), enforces an input cap, and returns a clean structured summary so agents can compress documents and articles in one call.",
+        "description": "Summarize text, articles or documents — condense raw text, Markdown, or a URL into a TL;DR plus key bullet points. Accepts raw text or a URL (fetched and extracted), enforces an input cap, and returns a clean structured summary so agents can compress documents and articles in one call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -6742,11 +6742,11 @@
     "/whois-rdap/lookup": {
       "get": {
         "operationId": "getWhoisRdapLookup",
-        "summary": "Domain registration lookup, WHOIS via RDAP",
+        "summary": "WHOIS domain lookup via RDAP",
         "tags": [
           "whois-rdap"
         ],
-        "description": "Domain registration lookup, WHOIS via RDAP — registrar, registration and expiry dates, last-updated date, nameservers, and status flags from the authoritative registry, plus an actionability score so agents can assess domain trustworthiness, ownership, or availability risk.",
+        "description": "WHOIS domain lookup via RDAP — domain registration data: registrar, registration and expiry dates, last-updated date, nameservers, and status flags from the authoritative registry, plus an actionability score so agents can assess domain trustworthiness, ownership, or availability risk.",
         "parameters": [
           {
             "name": "domain",
@@ -9183,7 +9183,7 @@
         "tags": [
           "wallet"
         ],
-        "description": "Native + USDC + custom-token balances for any wallet on Base, Ethereum, or Solana — with USD estimates — straight from public RPCs, no API key. Raw units as decimal strings plus formatted numbers; add up to 10 ERC-20 contracts via tokens=. 60s cache; an empty, never-used address is a real answer (zeros + no_activity_detected finding).",
+        "description": "Token balance for any wallet — native coin, USDC and any ERC-20 on Base, Ethereum, or Solana, with USD estimates — straight from public RPCs, no API key. Raw units as decimal strings plus formatted numbers; add up to 10 ERC-20 contracts via tokens=. 60s cache; an empty, never-used address is a real answer (zeros + no_activity_detected finding).",
         "parameters": [
           {
             "name": "address",
@@ -9704,11 +9704,11 @@
     "/weather/current": {
       "get": {
         "operationId": "getWeatherCurrent",
-        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide",
+        "summary": "Current weather for any city or lat/lon worldwide, plus a…",
         "tags": [
           "weather"
         ],
-        "description": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
+        "description": "Current weather for any city or lat/lon worldwide, plus a 3-day forecast — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9744,11 +9744,11 @@
       },
       "post": {
         "operationId": "postWeatherCurrent",
-        "summary": "Live weather + 3-day forecast for any city or lat/lon worldwide",
+        "summary": "Current weather for any city or lat/lon worldwide, plus a…",
         "tags": [
           "weather"
         ],
-        "description": "Live weather + 3-day forecast for any city or lat/lon worldwide — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
+        "description": "Current weather for any city or lat/lon worldwide, plus a 3-day forecast — temperature, feels-like, humidity, wind, precipitation, cloud cover, and a plain-language condition. Give a city name (geocoded for you) or coordinates. No API key, metric or imperial units. Pass params as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -9888,11 +9888,11 @@
     "/prediction/markets": {
       "get": {
         "operationId": "getPredictionMarkets",
-        "summary": "Live prediction-market odds from Polymarket",
+        "summary": "Live prediction market odds from Polymarket",
         "tags": [
           "prediction"
         ],
-        "description": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
+        "description": "Live prediction market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
         "parameters": [],
         "x-payment-info": {
           "price": {
@@ -9928,11 +9928,11 @@
       },
       "post": {
         "operationId": "postPredictionMarkets",
-        "summary": "Live prediction-market odds from Polymarket",
+        "summary": "Live prediction market odds from Polymarket",
         "tags": [
           "prediction"
         ],
-        "description": "Live prediction-market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
+        "description": "Live prediction market odds from Polymarket — list the top active markets by volume, or search by keyword. Each result has the question, outcomes with current prices (implied probabilities), 24h/total volume, liquidity, and resolution date. No API key. Great for agents tracking real-world event probabilities (elections, crypto, sports, econ). Pass params as query (GET) or a JSON body (POST).",
         "requestBody": {
           "required": true,
           "content": {
@@ -12220,11 +12220,11 @@
     "/web/extract": {
       "get": {
         "operationId": "getWebExtract",
-        "summary": "Extract text from a web page or PDF as clean Markdown",
+        "summary": "Extract web content from any page or PDF as clean Markdown",
         "tags": [
           "web"
         ],
-        "description": "Extract text from a web page or PDF as clean Markdown — HTML to Markdown for any URL: strips scripts, nav, ads, and boilerplate while preserving headings, links, lists, tables, code blocks, and blockquotes; extracts the text layer from PDFs. Returns Markdown body, title, word count, and a quality grade. Web scraper / reader for article and main content. For JS-rendered or bot-walled pages a plain fetch can't read, use /exa/contents.",
+        "description": "Extract web content from any page or PDF as clean Markdown — web page text, HTML to Markdown for any URL: strips scripts, nav, ads, and boilerplate while preserving headings, links, lists, tables, code blocks, and blockquotes; extracts the text layer from PDFs. Returns Markdown body, title, word count, and a quality grade. Web reader for article and main content. For JS-rendered or bot-walled pages a plain fetch can't read, use /exa/contents.",
         "parameters": [
           {
             "name": "url",
