@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 139 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -103,6 +103,8 @@ Network intelligence API with 137 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/email-intel/analyze` | GET | $0.005 | Email verification & deliverability check (email validator / verifier) — validate an address… |
 | `/email/verify` | GET | $0.001 | Validate an email address — email verification before you send: syntax + MX +… |
 | `/email/verify` | POST | $0.001 | Validate an email address — email verification before you send: syntax + MX +… |
+| `/lead/check` | GET | $0.005 | Check a sales lead before outreach — one call verifies the email address (syntax, MX… |
+| `/lead/check` | POST | $0.005 | Check a sales lead before outreach — one call verifies the email address (syntax, MX… |
 | `/og-scraper/extract` | GET | $0.010 | Fetch any public URL and extract structured metadata — Open Graph tags, Twitter Card tags… |
 | `/page-extract/read` | GET | $0.050 | Fetch any article or web page and extract clean readable text stripped of navigation, ads, and… |
 | `/web/extract` | GET | $0.003 | Extract web content from any page or PDF as clean Markdown — web page text, HTML to Markdown for… |

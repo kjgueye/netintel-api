@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "Network intelligence API — 137 endpoints, all pay-per-call via x402 micropayments (USDC on Base or Solana mainnet).\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 137 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "DNS lookup, WHOIS/RDAP, SSL/TLS certificate checks, email SPF/DKIM/DMARC and deliverability, email verification, IP geolocation and IP reputation, domain age and availability, web page fetch, extract and search, and an OpenAI-compatible LLM gateway — 139 pay-per-call endpoints over x402 (USDC on Base or Solana mainnet), no API keys or signup.\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 139 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -11927,6 +11927,98 @@
         "x-guidance": {
           "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
           "costObservedUsd": "0.001000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      }
+    },
+    "/lead/check": {
+      "get": {
+        "operationId": "getLeadCheck",
+        "summary": "Check a sales lead before outreach",
+        "tags": [
+          "lead"
+        ],
+        "description": "Check a sales lead before outreach — one call verifies the email address (syntax, MX, disposable/role/free-provider), the company's email setup (SPF/DKIM/DMARC) and its domain age, and returns a verdict: yes, risky or no, with machine-readable reasons. Free personal mailboxes skip the company checks. DNS-level only — no SMTP mailbox probe.",
+        "parameters": [],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required"
+          }
+        }
+      },
+      "post": {
+        "operationId": "postLeadCheck",
+        "summary": "Check a sales lead before outreach",
+        "tags": [
+          "lead"
+        ],
+        "description": "Check a sales lead before outreach — one call verifies the email address (syntax, MX, disposable/role/free-provider), the company's email setup (SPF/DKIM/DMARC) and its domain age, and returns a verdict: yes, risky or no, with machine-readable reasons. Free personal mailboxes skip the company checks. DNS-level only — no SMTP mailbox probe.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.005000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        },
+        "x-guidance": {
+          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
+          "costObservedUsd": "0.005000"
         },
         "responses": {
           "200": {
