@@ -1,6 +1,6 @@
 # NetIntel
 
-Network intelligence API with 139 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
+Network intelligence API with 142 pay-per-call endpoints for DNS, SSL, WHOIS, email security, web fingerprinting, threat intelligence, and OSINT — powered by [x402](https://www.x402.org/) micropayments.
 
 **Discover & call NetIntel on Coinbase's [Agentic.Market ↗](https://agentic.market/services/netintel-dev)** — all endpoints, live pricing, and a one-paste agent SKILL.md. Also: [llms.txt](https://netintel.dev/llms.txt) · [x402 manifest](https://netintel.dev/.well-known/x402) · MCP: `npx -y netintel-mcp`
 
@@ -116,6 +116,9 @@ Network intelligence API with 139 pay-per-call endpoints for DNS, SSL, WHOIS, em
 | `/domain-age/check` | GET | $0.030 | Determine a domain's age from registration data and archival history — tries RDAP, then port-43… |
 | `/web/fetch` | GET | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
 | `/web/fetch` | POST | $0.003 | Fetch any URL and get the raw body back — JSON parsed, everything else as text — from safe… |
+| `/web/monitor` | GET | $0.003 | Monitor a web page for changes — fetch a URL, compare it with your previous check and return… |
+| `/web/monitor` | POST | $0.003 | Monitor a web page for changes — fetch a URL, compare it with your previous check and return… |
+| `/domain/watch` | GET | $0.005 | Monitor a domain for changes — DNS records, nameservers, MX, SPF and DMARC, TLS certificate and… |
 | `/exa/search` | GET | $0.01 | Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url… |
 | `/exa/search` | POST | $0.01 | Exa neural web search for AI agents — POST or GET a query, get ranked live results (title, url… |
 | `/web/search` | GET | $0.01 | Web search for AI agents — one query in, ranked live results out (title, url, published_date… |
@@ -165,6 +168,18 @@ const res = await payFetch(
 );
 const data = await res.json();
 ```
+
+### Monitoring on a cron
+
+`/web/monitor` and `/domain/watch` are stateful: the first call stores a baseline, and every later call with the same `watch_id` returns only what changed (`changed` true/false, added/removed lines or field-level before/after, and plain `alerts` such as `ns_changed`, `cert_expiring_30d`, `new_ct_certificate`, `dmarc_removed`). Unchanged answers are a few hundred bytes — cheaper than re-reading the page through your model.
+
+```bash
+# first call = baseline; repeat hourly/daily with the same watch_id
+curl "https://netintel.dev/web/monitor?url=https://www.eia.gov/todayinenergy/&watch_id=eia-daily"
+curl "https://netintel.dev/domain/watch?domain=example.com&watch_id=brand-watch"
+```
+
+`watch_id` is any job id of yours (1–64 chars `A-Za-z0-9_.:-`); it keeps watches apart when one wallet serves many agents.
 
 ## Payment
 
