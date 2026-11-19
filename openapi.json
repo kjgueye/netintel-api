@@ -3,8 +3,8 @@
   "info": {
     "title": "NetIntel API",
     "version": "1.0.0",
-    "description": "DNS lookup, WHOIS/RDAP, SSL/TLS certificate checks, email SPF/DKIM/DMARC and deliverability, email verification, IP geolocation and IP reputation, domain age and availability, web page fetch, extract and search, and an OpenAI-compatible LLM gateway — 142 pay-per-call endpoints over x402 (USDC on Base or Solana mainnet), no API keys or signup.\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
-    "x-guidance": "NetIntel provides 142 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
+    "description": "DNS lookup, WHOIS/RDAP, SSL/TLS certificate checks, email SPF/DKIM/DMARC and deliverability, email verification, IP geolocation and IP reputation, domain age and availability, web page fetch, extract and search, and an OpenAI-compatible LLM gateway — 141 pay-per-call endpoints over x402 (USDC on Base or Solana mainnet), no API keys or signup.\n\nNetIntel is agent fair-trade aligned: transparent per-call pricing in USDC on Base or Solana via x402, no API keys or signup, and automatic no-charge on server errors, upstream failures, and input-validation rejections — failed calls are never billed across NetIntel's network, domain, and data-intelligence endpoints.",
+    "x-guidance": "NetIntel provides 141 network intelligence endpoints covering DNS, SSL/TLS, WHOIS/RDAP, email security, web fingerprinting, and OSINT. Every endpoint is pay-per-call via x402 micropayments (USDC on Base or Solana mainnet — no API keys, no subscriptions). Call any endpoint normally; if unpaid it returns HTTP 402 with payment requirements, then pay and retry. The per-call price is in each operation's x-payment-info.",
     "contact": {
       "email": "support@netintel.dev"
     },
@@ -2118,7 +2118,7 @@
         "tags": [
           "v1"
         ],
-        "description": "OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape, model chosen in the body (gpt-4.1-mini, gpt-5.4-nano, gpt-4o-mini, gpt-4.1-nano, gpt-5-nano). Flat $0.005 per call in USDC via x402, no OpenAI account or API key. Supports response_format json_object. Pricier models have dedicated endpoints; GET /v1/models (free) lists every model with its endpoint and price.",
+        "description": "OpenAI-compatible chat completions gateway — standard /v1/chat/completions path and request shape, model chosen in the body (gpt-4.1-mini, gpt-5.4-nano, gpt-4o-mini, gpt-5-nano). Flat $0.005 per call in USDC via x402, no OpenAI account or API key. Supports response_format json_object. Pricier models have dedicated endpoints; GET /v1/models (free) lists every model with its endpoint and price.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2344,141 +2344,6 @@
                   "object": "chat.completion",
                   "created": 1735689600,
                   "model": "gpt-4o-mini",
-                  "choices": [
-                    {
-                      "index": 0,
-                      "message": {
-                        "role": "assistant",
-                        "content": "Hi!"
-                      },
-                      "finish_reason": "stop"
-                    }
-                  ],
-                  "usage": {
-                    "prompt_tokens": 11,
-                    "completion_tokens": 2,
-                    "total_tokens": 13
-                  }
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment Required"
-          }
-        }
-      }
-    },
-    "/openai/gpt-4-1-nano": {
-      "post": {
-        "operationId": "postOpenaiGpt41Nano",
-        "summary": "Call OpenAI's gpt-4.1-nano, pay per call",
-        "tags": [
-          "openai"
-        ],
-        "description": "Call OpenAI's gpt-4.1-nano via a single pay-per-call x402 endpoint — no OpenAI account or API key needed, pay $0.005 per request in USDC. Standard OpenAI chat.completions request/response shape, capped input and output.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "messages": {
-                    "type": "array",
-                    "description": "OpenAI chat messages: [{role:'system'|'user'|'assistant', content:string}]. Input capped ~24000 chars total.",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "role": {
-                          "type": "string",
-                          "description": "system, user, or assistant"
-                        },
-                        "content": {
-                          "type": "string",
-                          "description": "Message text"
-                        }
-                      },
-                      "required": [
-                        "role",
-                        "content"
-                      ]
-                    }
-                  },
-                  "max_tokens": {
-                    "type": "number",
-                    "description": "Max output tokens. Optional — defaults to 1024, capped at 1024."
-                  },
-                  "temperature": {
-                    "type": "number",
-                    "description": "Sampling temperature. Optional."
-                  },
-                  "top_p": {
-                    "type": "number",
-                    "description": "Nucleus sampling. Optional."
-                  }
-                },
-                "required": [
-                  "messages"
-                ]
-              }
-            }
-          }
-        },
-        "x-payment-info": {
-          "price": {
-            "mode": "fixed",
-            "currency": "USD",
-            "amount": "0.005000"
-          },
-          "protocols": [
-            {
-              "x402": {}
-            }
-          ]
-        },
-        "x-guidance": {
-          "approvalRequirement": "APPROVAL_REQUIREMENT_NOT_REQUIRED",
-          "costObservedUsd": "0.005000",
-          "outputShape": "id, object, created, model, choices, usage"
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "object": {
-                      "type": "string",
-                      "description": "Always 'chat.completion'"
-                    },
-                    "created": {
-                      "type": "number",
-                      "description": "Unix timestamp (seconds)"
-                    },
-                    "model": {
-                      "type": "string"
-                    },
-                    "choices": {
-                      "type": "array",
-                      "description": "Assistant message + finish_reason."
-                    },
-                    "usage": {
-                      "type": "object",
-                      "description": "prompt_tokens, completion_tokens, total_tokens"
-                    }
-                  }
-                },
-                "example": {
-                  "id": "chatcmpl-abc123",
-                  "object": "chat.completion",
-                  "created": 1735689600,
-                  "model": "gpt-4.1-nano",
                   "choices": [
                     {
                       "index": 0,
@@ -8241,7 +8106,7 @@
           {
             "name": "symbols",
             "in": "query",
-            "required": false,
+            "required": true,
             "description": "Comma list of 1–25 tickers or full names (\"BTC,ETH\" or \"bitcoin\"); a leading $ is fine. Aliases: symbol, coins, coin, tickers, ticker, assets",
             "schema": {
               "type": "string"
